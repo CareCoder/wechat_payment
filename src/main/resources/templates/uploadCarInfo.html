@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta charset="UTF-8"/>
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <title>上传车牌信息</title>
+    <style type="text/css">
+        .my_container{
+            margin:0 auto;
+            width: 90%;
+            height: 100%;
+        }
+        #my_header{
+            text-align: center;
+        }
+        #car_no_divs{
+            width: 100%;
+            height: 100%;
+            margin-top: 10%;
+        }
+        .car_no_div{
+            display: inline;
+        }
+        .car_no_div input{
+            width: 11%;
+            height: auto;
+            display: inline;
+            padding: 6px 10px;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="my_container">
+    <div id="my_header">
+        <h2>请输入车牌</h2>
+    </div>
+    <div id="car_no_divs">
+        <div class="car_no_div"><input maxlength="1" type="text" name="car_no_0" value="粤"></div>
+        <div class="car_no_div"><input maxlength="1" type="text" name="car_no_1" value="B"></div>
+        <div class="car_no_div"><span style="font-size: 30px">.</span></div>
+        <div class="car_no_div"><input maxlength="1" type="text" name="car_no_2"></div>
+        <div class="car_no_div"><input maxlength="1" type="text" name="car_no_3"></div>
+        <div class="car_no_div"><input maxlength="1" type="text" name="car_no_4"></div>
+        <div class="car_no_div"><input maxlength="1" type="text" name="car_no_5"></div>
+        <div class="car_no_div"><input maxlength="1" type="text" name="car_no_6"></div>
+        <div class="car_no_div"><input maxlength="1" type="text" name="car_no_7"></div>
+    </div>
+    <div style="margin-top: 10%;">
+        <button type="button" class="upload_btn btn btn-primary btn-block">提交</button>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    var openId = [[${openId}]];
+    console.log("openId: " + openId);
+
+    var target_input = $('.car_no_div input').eq(2).focus();
+    $(function(){
+        $('.car_no_div input').on('input', function(){
+            var val = $(this).val();
+            var name = $(this).attr('name');
+            var index = name.split("_")[2];
+            if(val.length == 0){
+                //代表删除
+                index --;
+            }else{
+                //代表增加
+                index ++;
+                //判断大小写
+                if(/[a-z]/.test(val)){
+                    $(this).val(val.toUpperCase());
+                }
+            }
+            if(index < 0 || index > 7){
+                return;
+            }
+            var target_input = $('.car_no_div input').eq(index);
+            var temp_val = target_input.val();
+            target_input.val("");
+            target_input.focus();
+            target_input.val(temp_val);
+        });
+
+        $('.upload_btn').click(function(){
+            var carNo = getCarNo();
+            if(carNo.length < 7){
+                alert("请填写完整车牌信息");
+                return;
+            }
+            $.ajax({
+                method: 'GET',
+                url:"/park/uploadCarInfo?openId=" + openId + "&carNo=" + carNo,
+                success:function(){
+                    alert("上传车牌成功，待会为你生成订单信息");
+                    WeixinJSBridge.call('closeWindow');
+                },
+                error:function(){
+                    alert("上传失败");
+                }
+            });
+        });
+    });
+
+    function getCarNo(){
+        var carNo = "";
+        $('.car_no_div input').each(function(){
+            carNo += $(this).val();
+        })
+        return carNo;
+    }
+</script>
+</body>
+</html>

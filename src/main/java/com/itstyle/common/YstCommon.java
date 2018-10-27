@@ -1,0 +1,37 @@
+package com.itstyle.common;
+
+/**
+ * 常量配置
+ * 
+ * @author Administrator
+ *
+ */
+public class YstCommon {
+	public static final String SIGNATURE = "";
+	public static final String TIMESTAMP = "";
+	public static final String NONCE = "";
+	public static final String ECHOSTR = "";
+	// 第三方用户唯一ID
+	public static String APPID = "wxeae418507d27aeeb";
+	// 第三方用户唯一凭证密码
+	public static String APP_SECRET = "4736f21c4eec49efe9bce00f249f82f9";
+	// 商户ID
+	public static String MCH_ID = "1271069001";
+	// 微信商户平台-账户设置-安全设置-api安全,配置32位key
+	public static String KEY = "hrzx1818hrzx1818hrzx1818hrzx1818";
+	// 交易类型
+	public static String TRADE_TYPE_JS = "JSAPI";
+	public static String SERVER = "isparking.cn";
+	// 微信支付回调url
+	public static String NOTIFY_URL = "http://" + SERVER + "/wx/pay_notify";
+	public static String wechat_token = "test";
+
+	//系统常用常量
+	public static String INNER_MC_NO = "000";
+
+	/**模版消息id*/
+	//停车缴费提醒
+	public static String ORDER_TEMPLATE_ID = "T0h-ClnbHr_yBdFf6JIo6KR0Z0F9WfV-JpDTEPZE0-8";
+	//完善资料通知
+	public static String UPLOAD_INFO_TEMPLATE_ID = "F7Ij0kuiPBkrD4OrENzONw4uUifvwUTD_n4nQm7EIjE";
+}
