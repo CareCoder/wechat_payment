@@ -32,7 +32,7 @@ public class TemplateUtils {
         keyword2.setColor("#000");
 
         TemplateData keyword3 = new TemplateData();
-        keyword3.setValue("华睿智兴");
+        keyword3.setValue("蓝天出行");
         keyword3.setColor("#000");
 
         SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
@@ -73,7 +73,7 @@ public class TemplateUtils {
      * 生成订单，发送模板
      */
     public static String createOrder(ParkCarOrder order, String token, boolean done) {
-        String url = "http://" + YstCommon.SERVER + "/pay.html";
+        String url = "http://" + YstCommon.SERVER;
         if (done) {
             url = "";
         }

@@ -42,23 +42,16 @@ public class AssessTokenTask {
 
 	@PostConstruct
 	public void task() {
-		JSONObject token = new JSONObject();
-		try {
-			token = MessageUtil
-					.httpRequest("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
-							+ YstCommon.APPID + "&secret=" + YstCommon.APP_SECRET, "GET", null);
+		JSONObject token = MessageUtil
+				.httpRequest("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="
+						+ YstCommon.APPID + "&secret=" + YstCommon.APP_SECRET, "GET", null);
 
-			JSONObject ticketStr = MessageUtil
-					.httpRequest("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="
-							+ token.getString("access_token") + "&type=jsapi", "GET", null);
+		JSONObject ticketStr = MessageUtil
+				.httpRequest("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="
+						+ token.getString("access_token") + "&type=jsapi", "GET", null);
 
-			setAssessToken(token.getString("access_token"));
-			setTicket(ticketStr.getString("ticket"));
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("[AssessTokenTask] error token = {}", token.toString());
-		}
-
+		setAssessToken(token.getString("access_token"));
+		setTicket(ticketStr.getString("ticket"));
 	}
 
 	@Scheduled(cron = "0 0 */1 * * ?")

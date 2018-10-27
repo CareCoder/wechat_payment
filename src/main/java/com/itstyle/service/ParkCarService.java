@@ -88,6 +88,8 @@ public class ParkCarService {
             parkCarMap.put(order.mcNo, parkCar);
             writeRedisOrder(openId, order);
             writeRedis(order.mcNo, parkCarMap);
+            //特殊版本代码，自动生成计费信息，和订单模版
+            uploadBill(order.mcNo, carNo, 1000L, 1, openId, System.currentTimeMillis());
         } catch (Exception e) {
             log.error("[ParkCarService] uploadInfo error", e);
             return Status.ERROR;
@@ -140,10 +142,10 @@ public class ParkCarService {
             if (parkCars == null) {
                 parkCars = new HashMap<>();
             }
-            if (parkCars.containsKey(openId)) {
-                log.error("[ParkCarService] ready already exist warn");
-                return Status.WARN_ALREAD_EXIST;
-            }
+//            if (parkCars.containsKey(openId)) {
+//                log.error("[ParkCarService] ready already exist warn");
+//                return Status.WARN_ALREAD_EXIST;
+//            }
             ParkCar parkCar = new ParkCar();
             parkCar.openId = openId;
             parkCar.operTime = System.currentTimeMillis();
@@ -155,6 +157,8 @@ public class ParkCarService {
                 writeRedis(mcNo, parkCars);
             }
             makeOrderRecord(parkCar);
+            //特殊版本代码，自动生成计费信息，和订单模版
+            uploadBill(mcNo, "", 1000L, 1, openId, System.currentTimeMillis());
         } catch (Exception e) {
             log.error("[ParkCarService] ready error", e);
             return Status.ERROR;

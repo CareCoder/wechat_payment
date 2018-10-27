@@ -18,7 +18,7 @@ public class XmlUtils {
 
 	public static void main(String[] args) throws DocumentException {
 		String xml = "<xml><return_code><![CDATA[SUCCESS]]></return_code>\r\n"
-				+ "<return_msg><![CDATA[OK]]></return_msg>\r\n" + "<appid><![CDATA[wxeae418507d27aeeb]]></appid>\r\n"
+				+ "<return_msg><![CDATA[OK]]></return_msg>\r\n" + "<appid><![CDATA[wxd49da7cb176f674b]]></appid>\r\n"
 				+ "<mch_id><![CDATA[1271069001]]></mch_id>\r\n"
 				+ "<nonce_str><![CDATA[aoNIggasHptDINoh]]></nonce_str>\r\n"
 				+ "<sign><![CDATA[75592D30A1A120D42CFD9F7D70F84A69]]></sign>\r\n"
