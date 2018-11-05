@@ -7,6 +7,7 @@ import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.ParkCarService;
 import com.itstyle.utils.WxPayUtil;
 import com.itstyle.utils.enums.Status;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -22,10 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Controller
 @RequestMapping("/park")
 public class ParkCarController {
-    private static final Logger log = LoggerFactory.getLogger(ParkCarController.class);
     private static Gson gson = new Gson();
 
     @Resource
