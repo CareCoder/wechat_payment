@@ -1,6 +1,6 @@
 package com.itstyle.control;
 
-import com.itstyle.domain.bean.CarInfo;
+import com.itstyle.domain.carinfo.CarInfo;
 import com.itstyle.service.CarInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

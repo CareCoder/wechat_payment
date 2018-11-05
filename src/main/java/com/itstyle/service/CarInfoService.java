@@ -1,6 +1,6 @@
 package com.itstyle.service;
 
-import com.itstyle.domain.bean.CarInfo;
+import com.itstyle.domain.carinfo.CarInfo;
 import com.itstyle.mapper.CarInfoMapper;
 import org.springframework.stereotype.Service;
 
