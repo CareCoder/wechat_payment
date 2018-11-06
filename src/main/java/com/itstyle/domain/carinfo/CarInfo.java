@@ -2,6 +2,8 @@ package com.itstyle.domain.carinfo;
 
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
 public class CarInfo {
     private Long id;
@@ -14,9 +16,9 @@ public class CarInfo {
 
     private String remarks;
 
-    private Long createTime;
+    private Timestamp createTime;
 
-    private Long modifyTime;
+    private Timestamp modifyTime;
 
     private Boolean isFree;
 

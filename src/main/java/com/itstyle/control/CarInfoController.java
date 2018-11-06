@@ -7,10 +7,12 @@ import com.itstyle.service.CarInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/carinfo")
@@ -22,8 +24,7 @@ public class CarInfoController {
     @ResponseBody
     public PageResponse<CarInfo> list(Integer page, Integer limit) {
         Pagination<CarInfo> pagination = new Pagination<>();
-        PageResponse<CarInfo> execute = pagination.execute(page, limit, () -> carInfoService.list());
-        return execute;
+        return pagination.execute(page, limit, () -> carInfoService.list());
     }
 
     @RequestMapping("/get/{id}")
@@ -38,24 +39,27 @@ public class CarInfoController {
         return carInfoService.getByCarNum(carNum);
     }
 
-    @RequestMapping("/save")
+    @PostMapping("/save")
+    @ResponseBody
     public void save(CarInfo carInfo) {
         carInfoService.save(carInfo);
     }
 
-    @RequestMapping("/delete")
-    public void save(Long id) {
+    @RequestMapping("/delete/{id}")
+    @ResponseBody
+    public void delete(@PathVariable ("id") Long id) {
         carInfoService.delete(id);
     }
 
     @RequestMapping("/update")
+    @ResponseBody
     public void update(CarInfo carInfo) {
         carInfoService.update(carInfo);
     }
 
     @RequestMapping("/carinfo.html")
-    public String carinfoUI(String type, Model model) {
-        model.addAttribute("type", type);
+    public String carinfoUI(String type, HttpServletRequest request) {
+        request.setAttribute("type", type);
         return "/backend/carinfo";
     }
 
