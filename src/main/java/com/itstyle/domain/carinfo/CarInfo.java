@@ -1,4 +1,4 @@
-package com.itstyle.domain.bean;
+package com.itstyle.domain.carinfo;
 
 import lombok.Data;
 
@@ -17,4 +17,8 @@ public class CarInfo {
     private Long createTime;
 
     private Long modifyTime;
+
+    private Boolean isFree;
+
+    private Boolean isBlackList;
 }
