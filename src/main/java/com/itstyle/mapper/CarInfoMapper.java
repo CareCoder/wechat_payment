@@ -22,7 +22,21 @@ public interface CarInfoMapper {
     @ResultType(List.class)
     List<CarInfo> getAll();
 
+    @ResultMap("userResultMap")
+    @Select("SELECT * FROM carinfo WHERE id = #{id}")
+    CarInfo getById(Long id);
+
+    @ResultMap("userResultMap")
+    @Select("SELECT * FROM carinfo WHERE car_num = #{carNum}")
+    CarInfo getByCarNum(String carNum);
+
     @Insert("INSERT INTO carinfo(name,carNum,phone,remarks,createTime,modifyTime,isFree,isBlackList) +" +
             " VALUES(#{name},#{carNum},#{phone},#{remarks},#{createTime},#{modifyTime},#{isFree},#{isBlackList})")
     void insert(CarInfo carInfo);
+
+    @Delete("DELETE FROM carinfo WHERE id = #{id}")
+    void delete(Long id);
+
+    @UpdateProvider(type = CarInfoProvider.class, method = "update")
+    void update(CarInfo carInfo);
 }
