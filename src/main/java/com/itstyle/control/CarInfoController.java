@@ -3,6 +3,7 @@ package com.itstyle.control;
 import com.itstyle.domain.carinfo.CarInfo;
 import com.itstyle.service.CarInfoService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,5 +48,17 @@ public class CarInfoController {
     @RequestMapping("/update")
     public void update(CarInfo carInfo) {
         carInfoService.update(carInfo);
+    }
+
+    @RequestMapping("/carinfo.html")
+    public String carinfoUI(String type, Model model) {
+        model.addAttribute("type", type);
+        return "/backend/carinfo";
+    }
+
+    @RequestMapping("/carinfo-add.html")
+    public String carinfo_addUI(String type, Model model) {
+        model.addAttribute("type", type);
+        return "/backend/carinfo-add";
     }
 }
