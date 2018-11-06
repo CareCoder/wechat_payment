@@ -1,14 +1,16 @@
 package com.itstyle.control;
 
+import com.itstyle.common.PageResponse;
+import com.itstyle.common.Pagination;
 import com.itstyle.domain.carinfo.CarInfo;
 import com.itstyle.service.CarInfoService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Controller
 @RequestMapping("/carinfo")
@@ -18,8 +20,10 @@ public class CarInfoController {
 
     @RequestMapping("/list")
     @ResponseBody
-    public List<CarInfo> list() {
-        return carInfoService.list();
+    public PageResponse<CarInfo> list(Integer page, Integer limit) {
+        Pagination<CarInfo> pagination = new Pagination<>();
+        PageResponse<CarInfo> execute = pagination.execute(page, limit, () -> carInfoService.list());
+        return execute;
     }
 
     @RequestMapping("/get/{id}")
@@ -47,5 +51,17 @@ public class CarInfoController {
     @RequestMapping("/update")
     public void update(CarInfo carInfo) {
         carInfoService.update(carInfo);
+    }
+
+    @RequestMapping("/carinfo.html")
+    public String carinfoUI(String type, Model model) {
+        model.addAttribute("type", type);
+        return "/backend/carinfo";
+    }
+
+    @RequestMapping("/carinfo-add.html")
+    public String carinfo_addUI(String type, Model model) {
+        model.addAttribute("type", type);
+        return "/backend/carinfo-add";
     }
 }

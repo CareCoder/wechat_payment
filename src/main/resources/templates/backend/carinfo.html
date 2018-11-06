@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <title>用户列表</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="lib/layui/css/layui.css">
-    <link rel="stylesheet" href="css/scroll-bar.css">
-    <link rel="stylesheet" href="css/sub-page.css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_693759_wytlyqhtdtj1nhfr.css">
-    <link rel="stylesheet" href="lib/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
 </head>
 <body>
 <div class="ok-body">
@@ -16,46 +15,25 @@
     <div class="ok-body-breadcrumb">
             <span class="layui-breadcrumb">
                 <a><cite>首页</cite></a>
-                <a><cite>常用页面</cite></a>
-                <a><cite>用户列表</cite></a>
+                <a><cite>车辆管理</cite></a>
+                <a><cite>免费车辆管理</cite></a>
             </span>
         <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
             <i class="layui-icon layui-icon-refresh"></i>
         </a>
     </div>
-    <!--模糊搜索区域-->
-    <div class="layui-row">
-        <form class="layui-form layui-col-md12 ok-search">
-            <input class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
-            <input class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
-            <input class="layui-input" placeholder="请输入用户名" autocomplete="off">
-            <button class="layui-btn" lay-submit="" lay-filter="search">
-                <i class="layui-icon layui-icon-search"></i>
-            </button>
-        </form>
-    </div>
     <!--工具栏-->
     <okToolbar>
-        <button class="layui-btn layui-btn-normal" id="batchEnabled">
-            <i class="iconfont icon-shangsheng"></i>批量启用
+        <button class="layui-btn" id="addCarInfo">
+            <i class="layui-icon">&#xe61f;</i>添加免费车辆
         </button>
-        <button class="layui-btn layui-btn-warm" id="batchDisabled">
-            <i class="iconfont icon-web-icon-"></i>批量停用
-        </button>
-        <button class="layui-btn layui-btn-danger" id="batchDel">
-            <i class="layui-icon layui-icon-delete"></i>批量删除
-        </button>
-        <button class="layui-btn" id="addUser">
-            <i class="layui-icon">&#xe61f;</i>添加用户
-        </button>
-        <span>共有数据：<i id="countNum"></i> 条</span>
     </okToolbar>
     <!--数据表格-->
     <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
 </div>
 <!--js逻辑-->
-<script src="lib/layui/layui.js"></script>
-<script src="lib/nprogress/nprogress.js"></script>
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
 <script>
     NProgress.start();
     window.onload = function () {
@@ -80,22 +58,21 @@
 
         table.render({
             elem: '#tableId',
-            url: 'data/user.json',
-            limit: 10,
+            url: '/carinfo/list',
+            limit: 5,
             page: true,
-            cols: [[
+            cols: [
+                [
                 {type: 'checkbox'},
-                {field: 'id', title: 'ID', width: 80, sort: true},
-                {field: 'username', title: '用户名', width: 100},
-                {field: 'name', title: '姓名', width: 100},
-                {field: 'password', title: '密码', width: 100},
-                {field: 'status', title: '状态', width: 85, templet: '#statusTpl'},
-                {field: 'role', title: '角色', width: 100, templet: '#roleTpl'},
-                {field: 'email', title: '邮箱', width: 200},
-                {field: 'createTime', title: '创建时间', width: 200},
-                {field: 'logins', title: '登陆次数', width: 100},
+                {field: 'id', title: 'ID', width: 80},
+                {field: 'name', title: '用户名', width: 100},
+                {field: 'carNum', title: '车牌号', width: 100},
+                {field: 'phone', title: '手机', width: 100},
+                {field: 'remarks', title: '备注', width: 85},
+                {field: 'createTime', title: '创建时间', width: 150},
                 {title: '操作', width: 200, templet: '#operationTpl', align: 'center'}
-            ]],
+            ]
+            ],
             done: function (res, curr, count) {
                 $("#countNum").text(count);
             }
@@ -130,84 +107,18 @@
             }
         });
 
-        $("#batchEnabled").click(function () {
-            layer.confirm("确定要批量启用吗？", {skin: 'layui-layer-lan', icon: 3, title: '提示', anim: 1}, function () {
-                var checkStatus = table.checkStatus('tableId');
-                var rows = checkStatus.data.length;
-                if (rows > 0) {
-                    var idsStr = "";
-                    for (var i = 0; i < checkStatus.data.length; i++) {
-                        idsStr += checkStatus.data[i].id + ',';
-                    }
-                    console.log("选择的id-->" + idsStr);
-                    layer.msg("操作成功！", {icon: 1, time: 1000}, function () {
-                        $(".layui-laypage-btn")[0].click();
-                    });
-                } else {
-                    layer.msg('未选择有效数据', {
-                        offset: 't',
-                        anim: 6
-                    });
-                }
-            });
-        })
-
-        $("#batchDisabled").click(function () {
-            layer.confirm("确定要批量停用吗？", {skin: 'layui-layer-lan', icon: 3, title: '提示', anim: 2}, function () {
-                var checkStatus = table.checkStatus('tableId');
-                var rows = checkStatus.data.length;
-                if (rows > 0) {
-                    var idsStr = "";
-                    for (var i = 0; i < checkStatus.data.length; i++) {
-                        idsStr += checkStatus.data[i].id + ',';
-                    }
-                    console.log("选择的id-->" + idsStr);
-                    layer.msg("操作成功！", {icon: 1, time: 1000}, function () {
-                        $(".layui-laypage-btn")[0].click();
-                    });
-                } else {
-                    layer.msg('未选择有效数据', {
-                        offset: 't',
-                        anim: 6
-                    });
-                }
-            });
-        })
-
-        $("#batchDel").click(function () {
-            layer.confirm("确定要批量删除吗？", {skin: 'layui-layer-lan', icon: 2, title: '提示', anim: 6}, function () {
-                var checkStatus = table.checkStatus('tableId');
-                var rows = checkStatus.data.length;
-                if (rows > 0) {
-                    var idsStr = "";
-                    for (var i = 0; i < checkStatus.data.length; i++) {
-                        idsStr += checkStatus.data[i].id + ',';
-                    }
-                    console.log("选择的id-->" + idsStr);
-                    layer.msg("操作成功！", {icon: 1, time: 1000}, function () {
-                        $(".layui-laypage-btn")[0].click();
-                    });
-                } else {
-                    layer.msg('未选择有效数据', {
-                        offset: 't',
-                        anim: 6
-                    });
-                }
-            });
-        })
-
-        $("#addUser").click(function () {
+        $("#addCarInfo").click(function () {
+            console.log("添加免费车辆")
             layer.open({
-                title: '添加用户',
+                title: '添加免费车辆',
                 type: 2,
                 shade: false,
                 maxmin: true,
                 shade: 0.5,
                 anim: 4,
                 area: ['90%', '90%'],
-                content: 'user-add.html',
+                content: '/carinfo/carinfo-add.html',
                 zIndex: layer.zIndex,
-                // skin: 'layui-layer-molv',
                 end: function () {
                     $(".layui-laypage-btn")[0].click();
                 }
