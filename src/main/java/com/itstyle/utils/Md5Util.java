@@ -66,4 +66,9 @@ public class Md5Util {
 		}
 	}
 
+	public static void main(String[] args) throws Exception {
+		String md5 = getMD5("123456");
+		System.out.println(md5);
+	}
+
 }
