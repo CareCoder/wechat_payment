@@ -1,5 +1,6 @@
 package com.itstyle.service;
 
+import com.itstyle.common.PageResponse;
 import com.itstyle.domain.carinfo.CarInfo;
 import com.itstyle.mapper.CarInfoMapper;
 import com.itstyle.utils.BeanUtilIgnore;
@@ -8,15 +9,14 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Service
 public class CarInfoService {
     @Resource
     private CarInfoMapper carInfoMapper;
 
-    public List<CarInfo> list() {
-        return carInfoMapper.findAll();
+    public PageResponse<CarInfo> list(int page , int limit) {
+        return PageResponse.build(carInfoMapper.findAll(PageResponse.getPageRequest(page, limit)));
     }
 
     public CarInfo getById(Long id) {

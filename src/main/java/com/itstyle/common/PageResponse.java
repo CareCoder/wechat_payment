@@ -1,6 +1,8 @@
 package com.itstyle.common;
 
 import lombok.Data;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -12,6 +14,8 @@ public class PageResponse<T> {
     private List<T> data;
 
     public PageResponse(Long count, List<T> data) {
+        code = 0;
+        msg = "";
         this.count = count;
         this.data = data;
     }
@@ -21,5 +25,13 @@ public class PageResponse<T> {
         this.msg = msg;
         this.count = count;
         this.data = data;
+    }
+
+    public static PageResponse build(Page page) {
+        return new PageResponse<>(page.getTotalElements(), page.getContent());
+    }
+
+    public static PageRequest getPageRequest(int page, int limit) {
+        return new PageRequest(page - 1, limit);
     }
 }
