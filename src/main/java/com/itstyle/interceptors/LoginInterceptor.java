@@ -15,14 +15,14 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        request.setAttribute("startTime", System.currentTimeMillis());
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
         if (account == null) {
-            request.getRequestDispatcher("/login.html").forward(request, response);
+            request.getRequestDispatcher("/backend/login.html").forward(request, response);
             return false;
         } else {
             CustomContext.setAccount(account);
-            request.setAttribute("startTime", System.currentTimeMillis());
             return true;
         }
     }
