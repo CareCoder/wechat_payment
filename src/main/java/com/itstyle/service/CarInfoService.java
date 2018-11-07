@@ -23,7 +23,7 @@ public class CarInfoService {
         }else if(type.equals("blacklist")){
             carInfo.setIsBlackList(true);
         }
-        Example<? extends CarInfo> exapmle = Example.of(carInfo);
+        Example<CarInfo> exapmle = Example.of(carInfo);
         return PageResponse.build(carInfoMapper.findAll(exapmle,PageResponse.getPageRequest(page, limit)));
     }
 

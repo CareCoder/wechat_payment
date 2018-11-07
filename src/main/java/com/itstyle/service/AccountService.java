@@ -3,10 +3,11 @@ package com.itstyle.service;
 import com.itstyle.common.PageResponse;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.account.req.RequestAccount;
+import com.itstyle.domain.account.resp.ResponseAccount;
 
 public interface AccountService {
 
-    PageResponse<Account> list(int page, int limit);
+    PageResponse<ResponseAccount> list(int page, int limit);
 
     Account insert(Account account);
 

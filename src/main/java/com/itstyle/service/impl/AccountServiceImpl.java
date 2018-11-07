@@ -2,19 +2,26 @@ package com.itstyle.service.impl;
 
 import com.itstyle.common.PageResponse;
 import com.itstyle.domain.account.Account;
+import com.itstyle.domain.account.Role;
 import com.itstyle.domain.account.req.RequestAccount;
+import com.itstyle.domain.account.resp.ResponseAccount;
 import com.itstyle.exception.AssertUtil;
 import com.itstyle.exception.BusinessException;
 import com.itstyle.mapper.AccountMapper;
+import com.itstyle.mapper.RoleMapper;
 import com.itstyle.service.AccountService;
 import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.utils.Md5Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -22,15 +29,27 @@ public class AccountServiceImpl implements AccountService {
 
 
     private AccountMapper accountMapper;
+    private RoleMapper roleMapper;
 
     @Autowired
-    public AccountServiceImpl(AccountMapper accountMapper) {
+    public AccountServiceImpl(AccountMapper accountMapper, RoleMapper roleMapper) {
         this.accountMapper = accountMapper;
+        this.roleMapper = roleMapper;
     }
 
     @Override
-    public PageResponse<Account> list(int page, int limit) {
-        return PageResponse.build(accountMapper.findAll(PageResponse.getPageRequest(page, limit)));
+    public PageResponse<ResponseAccount> list(int page, int limit) {
+        Page<Account> accounts = accountMapper.findAll(PageResponse.getPageRequest(page, limit));
+        List<Account> content = accounts.getContent();
+        List<Role> roles = roleMapper.findAll();
+        Map<Long, String> mapRole = roles.stream().collect(Collectors.toMap(Role::getId, Role::getName));
+        List<ResponseAccount> responseAccounts = content.stream().map(account -> {
+            ResponseAccount responseAccount = new ResponseAccount();
+            BeanUtilIgnore.copyPropertiesIgnoreNull(account, responseAccount);
+            responseAccount.setRoleName(mapRole.get(responseAccount.getId()));
+            return responseAccount;
+        }).collect(Collectors.toList());
+        return new PageResponse<>(accounts.getTotalElements(), responseAccounts);
     }
 
     @Override
