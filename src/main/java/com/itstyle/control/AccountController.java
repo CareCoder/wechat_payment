@@ -5,6 +5,7 @@ import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.account.req.RequestAccount;
+import com.itstyle.domain.account.resp.ResponseAccount;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.exception.AssertUtil;
 import com.itstyle.exception.BusinessException;
@@ -35,9 +36,9 @@ public class AccountController {
 
     @GetMapping("/list")
     @ResponseBody
-    public PageResponse<Account> list(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                         @RequestParam(value = "size", required = false, defaultValue = "20") int limit) {
-        PageResponse<Account> pageResponse = accountService.list(page, limit);
+    public PageResponse<ResponseAccount> list(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                              @RequestParam(value = "size", required = false, defaultValue = "20") int limit) {
+        PageResponse<ResponseAccount> pageResponse = accountService.list(page, limit);
         log.info("[AccountController] data is [{}]", pageResponse.getData());
         return pageResponse;
     }
