@@ -87,4 +87,21 @@ public class AccountServiceImpl implements AccountService {
 //        }
         log.info("[AccountServiceImp]  delete account id [{}] success [{}]", id);
     }
+
+    @Override
+    public Account login(String account, String password) {
+        Account oAccount = accountMapper.selectByAccount(account);
+        AssertUtil.assertNotNull(oAccount, () -> new BusinessException("账号不存在"));
+        String pass = oAccount.getPassword();
+        try {
+            String md5Password = Md5Util.getMD5(password);
+            AssertUtil.assertNull(md5Password.equals(pass), () -> new BusinessException("密码不正确"));
+        } catch (Exception e) {
+            log.error("encryption error", e);
+            throw new BusinessException("加密出错");
+        }
+        return oAccount;
+    }
+
+
 }

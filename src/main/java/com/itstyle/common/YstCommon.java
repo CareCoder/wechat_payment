@@ -34,4 +34,6 @@ public class YstCommon {
 	public static String ORDER_TEMPLATE_ID = "T0h-ClnbHr_yBdFf6JIo6KR0Z0F9WfV-JpDTEPZE0-8";
 	//完善资料通知
 	public static String UPLOAD_INFO_TEMPLATE_ID = "F7Ij0kuiPBkrD4OrENzONw4uUifvwUTD_n4nQm7EIjE";
+	// 登陆成功，session中存储的属性名
+	public static String LOGIN_ACCOUNT = "login_account";
 }

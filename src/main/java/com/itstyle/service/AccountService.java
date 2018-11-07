@@ -13,4 +13,6 @@ public interface AccountService {
     RequestAccount edit(RequestAccount account);
 
     void delete(Long id);
+
+    Account login(String account, String password);
 }
