@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -19,12 +18,10 @@ import java.util.Queue;
 public class LogServiceImpl implements LogService {
 
     private LogMapper logMapper;
-    private EntityManager entityManager;
 
     @Autowired
-    public LogServiceImpl(LogMapper logMapper, EntityManager entityManager) {
+    public LogServiceImpl(LogMapper logMapper) {
         this.logMapper = logMapper;
-        this.entityManager = entityManager;
     }
 
 
@@ -42,10 +39,8 @@ public class LogServiceImpl implements LogService {
         if (list.size() == 0) {
             return 0;
         }
-        entityManager.persist(list);
-        entityManager.flush();
-        entityManager.clear();
-        return list.size();
+        List<SysLogger> loggers = logMapper.save(list);
+        return loggers.size();
     }
 
     @Override

@@ -78,25 +78,26 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam("account") String account,
+    @ResponseBody
+    public Response login(@RequestParam("account") String account,
                         @RequestParam("password") String password, HttpSession session) {
         AssertUtil.assertNotNull(account, () -> new BusinessException("账号不能为空"));
         AssertUtil.assertNotNull(password, () -> new BusinessException("密码不能为空"));
         Account loginAccount = accountService.login(account, password);
         session.setAttribute(YstCommon.LOGIN_ACCOUNT, loginAccount);
         SystemLoggerHelper.log(loginAccount.getUsername(), "登陆", "登陆系统");
-        // 登陆成功重定向到首页
-        return "redirect:/main.html";
+        return Response.build(Status.NORMAL, null, null);
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
+    @ResponseBody
+    public Response logout(HttpSession session) {
         Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
         if (account != null) {
             session.removeAttribute(YstCommon.LOGIN_ACCOUNT);
             SystemLoggerHelper.log(account.getUsername(), "登出", "登出系统");
         }
-        return "redirect:/login.html";
+        return Response.build(Status.NORMAL, null, null);
     }
 
 }

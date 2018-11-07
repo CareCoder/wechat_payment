@@ -105,13 +105,14 @@ public class AccountServiceImpl implements AccountService {
         Account oAccount = accountMapper.findByAccount(account);
         AssertUtil.assertNotNull(oAccount, () -> new BusinessException("账号不存在"));
         String pass = oAccount.getPassword();
+        String md5Password;
         try {
-            String md5Password = Md5Util.getMD5(password);
-            AssertUtil.assertNull(md5Password.equals(pass), () -> new BusinessException("密码不正确"));
+            md5Password = Md5Util.getMD5(password);
         } catch (Exception e) {
             log.error("encryption error", e);
             throw new BusinessException("加密出错");
         }
+        AssertUtil.assertTrue(md5Password.equals(pass), () -> new BusinessException("密码不正确"));
         return oAccount;
     }
 
