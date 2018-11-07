@@ -1,7 +1,6 @@
 package com.itstyle.service.impl;
 
 import com.itstyle.common.PageResponse;
-import com.itstyle.common.Pagination;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.account.req.RequestAccount;
 import com.itstyle.exception.AssertUtil;
@@ -10,14 +9,12 @@ import com.itstyle.mapper.AccountMapper;
 import com.itstyle.service.AccountService;
 import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.utils.Md5Util;
-import com.itstyle.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.OptionalDouble;
 
 @Slf4j
 @Service
@@ -32,9 +29,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public PageResponse<Account> getAll(int page, int size) {
-        Pagination<Account> pagination = new Pagination<>();
-        return pagination.execute(page, size, Status.NORMAL, null, () -> accountMapper.findAll());
+    public PageResponse<Account> list(int page, int limit) {
+        return PageResponse.build(accountMapper.findAll(PageResponse.getPageRequest(page, limit)));
     }
 
     @Override
@@ -82,9 +78,23 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void delete(Long id) {
         accountMapper.delete(id);
-//        if (i == null || i != 1) {
-//            throw new BusinessException("删除失败，请稍后重试");
-//        }
         log.info("[AccountServiceImp]  delete account id [{}] success [{}]", id);
     }
+
+    @Override
+    public Account login(String account, String password) {
+        Account oAccount = accountMapper.findByAccount(account);
+        AssertUtil.assertNotNull(oAccount, () -> new BusinessException("账号不存在"));
+        String pass = oAccount.getPassword();
+        try {
+            String md5Password = Md5Util.getMD5(password);
+            AssertUtil.assertNull(md5Password.equals(pass), () -> new BusinessException("密码不正确"));
+        } catch (Exception e) {
+            log.error("encryption error", e);
+            throw new BusinessException("加密出错");
+        }
+        return oAccount;
+    }
+
+
 }

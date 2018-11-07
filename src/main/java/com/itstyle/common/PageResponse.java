@@ -27,7 +27,7 @@ public class PageResponse<T> {
         this.data = data;
     }
 
-    public static PageResponse build(Page page) {
+    public static <T> PageResponse<T> build(Page<T> page) {
         return new PageResponse<>(page.getTotalElements(), page.getContent());
     }
 
