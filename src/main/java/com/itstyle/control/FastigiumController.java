@@ -5,12 +5,14 @@ import com.itstyle.service.FastigiumService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @Controller
+@RequestMapping("/fastigium")
 public class FastigiumController {
     @Resource
     private FastigiumService fastigiumService;

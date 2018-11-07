@@ -1,6 +1,5 @@
 package com.itstyle.domain.fastigium;
 
-import com.itstyle.utils.hibernate.BaseEntity;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -10,10 +9,10 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "car_info")
+@Table(name = "fastigium")
 @DynamicUpdate
 @EntityListeners(AuditingEntityListener.class)
-public class Fastigium extends BaseEntity {
+public class Fastigium{
     @Id
     @GeneratedValue
     private Long id;
