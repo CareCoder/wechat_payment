@@ -4,6 +4,8 @@ import com.itstyle.common.PageResponse;
 import com.itstyle.common.Pagination;
 import com.itstyle.domain.carinfo.CarInfo;
 import com.itstyle.service.CarInfoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +25,7 @@ public class CarInfoController {
     @RequestMapping("/list")
     @ResponseBody
     public PageResponse<CarInfo> list(Integer page, Integer limit) {
-        Pagination<CarInfo> pagination = new Pagination<>();
-        return pagination.execute(page, limit, () -> carInfoService.list());
+        return carInfoService.list(page, limit);
     }
 
     @RequestMapping("/get/{id}")
