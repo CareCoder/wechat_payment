@@ -16,7 +16,7 @@
             <span class="layui-breadcrumb">
                 <a><cite>首页</cite></a>
                 <a><cite>车辆管理</cite></a>
-                <a><cite>免费车辆管理</cite></a>
+                <a><cite>车辆管理</cite></a>
             </span>
         <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
             <i class="layui-icon layui-icon-refresh"></i>
@@ -25,7 +25,7 @@
     <!--工具栏-->
     <okToolbar>
         <button class="layui-btn" id="addCarInfo">
-            <i class="layui-icon">&#xe61f;</i>添加免费车辆
+            <i class="layui-icon">&#xe61f;</i>添加车辆
         </button>
     </okToolbar>
     <!--数据表格-->
@@ -59,7 +59,7 @@
 
         table.render({
             elem: '#tableId',
-            url: '/carinfo/list',
+            url: '/carinfo/list?type=' + type,
             limit: 5,
             page: true,
             cols: [
@@ -94,7 +94,7 @@
                     maxmin: true,
                     shade: 0.5,
                     area: ['90%', '90%'],
-                    content: 'user-edit.html',
+                    content: '/carinfo/carinfo-edit.html?id=',
                     zIndex: layer.zIndex,
                     end: function () {
                         $(".layui-laypage-btn")[0].click();
@@ -119,9 +119,9 @@
         });
 
         $("#addCarInfo").click(function () {
-            console.log("添加免费车辆")
+            console.log("添加车辆")
             layer.open({
-                title: '添加免费车辆',
+                title: '添加车辆',
                 type: 2,
                 shade: false,
                 maxmin: true,

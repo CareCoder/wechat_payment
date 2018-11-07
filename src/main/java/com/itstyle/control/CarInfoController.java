@@ -1,11 +1,8 @@
 package com.itstyle.control;
 
 import com.itstyle.common.PageResponse;
-import com.itstyle.common.Pagination;
 import com.itstyle.domain.carinfo.CarInfo;
 import com.itstyle.service.CarInfoService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/carinfo")
@@ -24,8 +20,8 @@ public class CarInfoController {
 
     @RequestMapping("/list")
     @ResponseBody
-    public PageResponse<CarInfo> list(Integer page, Integer limit) {
-        return carInfoService.list(page, limit);
+    public PageResponse<CarInfo> list(Integer page, Integer limit, String type) {
+        return carInfoService.list(page, limit, type);
     }
 
     @RequestMapping("/get/{id}")
@@ -58,9 +54,9 @@ public class CarInfoController {
         carInfoService.update(carInfo);
     }
 
-    @RequestMapping("/carinfo.html")
-    public String carinfoUI(String type, HttpServletRequest request) {
-        request.setAttribute("type", type);
+    @RequestMapping("/carinfo/{type}")
+    public String carinfoUI(@PathVariable("type") String type, Model model) {
+        model.addAttribute("type", type);
         return "/backend/carinfo";
     }
 
@@ -68,5 +64,12 @@ public class CarInfoController {
     public String carinfo_addUI(String type, Model model) {
         model.addAttribute("type", type);
         return "/backend/carinfo-add";
+    }
+
+    @RequestMapping("/carinfo-edit.html")
+    public String carinfo_editUI(Long id, Model model) {
+        CarInfo carInfo = carInfoService.getById(id);
+        model.addAttribute("car_info", carInfo);
+        return "/backend/carinfo-edit";
     }
 }

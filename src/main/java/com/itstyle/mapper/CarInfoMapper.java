@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface CarInfoMapper extends JpaRepository<CarInfo, Long> {
-    CarInfo getByCarNum(String carNum);
+    CarInfo findByCarNum(String carNum);
 }
