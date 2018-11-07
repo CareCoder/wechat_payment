@@ -17,11 +17,11 @@
         <div class="head"></div>
         <div class="input-box">
             <form class="layui-form" action="">
-                <input type="text" name="username" required lay-verify="required" placeholder="邮箱/手机号/平台账号" autocomplete="off" class="layui-input">
+                <input type="text" name="account" required lay-verify="required" placeholder="平台账号" autocomplete="off" class="layui-input">
                 <input type="password" name="password" required lay-verify="required" placeholder="密码" autocomplete="off" class="layui-input">
                 <div class="remember-me">
                     <span>记住我：</span>
-                    <input type="checkbox" name="zzz" lay-skin="switch" lay-text="是|否">
+                        <input type="checkbox" name="zzz" id="selectCheckbox" lay-skin="switch" lay-text="是|否">
                 </div>
                 <input type="submit" value="登 录" lay-submit lay-filter="login">
             </form>
@@ -45,14 +45,40 @@
 		NProgress.start();
 		window.onload = function() {
 		    NProgress.done();
-		}
+            if (localStorage.hasOwnProperty("ACCOUNT") && localStorage.hasOwnProperty("PASSWORD")) {
+                document.getElementsByName("account")[0].value = localStorage.getItem("ACCOUNT");
+                document.getElementsByName("password")[0].value = localStorage.getItem("PASSWORD");
+                document.getElementById("selectCheckbox").checked = true;
+            }
+        }
         layui.use(['form', 'jquery'], function () {
             var form = layui.form;
             var $ = layui.jquery;
 
             form.on('submit(login)', function (data) {
-                layer.msg("登陆中...", {icon: 6, time: 1000, anim: 4}, function () {
-                    window.location = "index.html";
+                var account = data.field.account;
+                var password = data.field.password;
+                $.ajax({
+                    url : "/account/login",
+                    type : "POST",
+                    data : data.field,
+                    success : function (resp) {
+                        console.log("登陆成功..." + resp);
+                        if (resp.status == 200) {
+                            if (document.getElementById("selectCheckbox").checked) {
+                                localStorage.setItem("ACCOUNT", account);
+                                localStorage.setItem("PASSWORD", password);
+                            } else {
+                                localStorage.removeItem("ACCOUNT");
+                                localStorage.removeItem("PASSWORD");
+                            }
+                            window.location = "index.html";
+                        } else {
+                            localStorage.removeItem("ACCOUNT");
+                            localStorage.removeItem("PASSWORD");
+                            alert(resp.msg);
+                        }
+                    }
                 });
                 return false;
             });

@@ -13,6 +13,7 @@ public class BackendController {
 
     @RequestMapping("/index.html")
     public String index() {
+        System.out.println("登陆成功。。。。");
         return "/backend/index";
     }
 }
