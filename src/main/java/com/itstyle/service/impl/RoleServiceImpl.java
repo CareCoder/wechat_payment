@@ -23,15 +23,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role insert(Role role) {
-        Long id = roleMapper.insert(role);
-        role.setId(id);
-        return role;
+        return roleMapper.save(role);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(List<Long> ids) {
-        Integer i = roleMapper.delete(ids);
-        log.info("[RoleServiceImpl] delete role ids [{}] size [{}] success [{}]", ids, ids.size(), i);
+        ids.forEach(id -> roleMapper.delete(id));
+        log.info("[RoleServiceImpl] delete role ids [{}] size [{}]", ids, ids.size());
     }
 }

@@ -1,13 +1,17 @@
 package com.itstyle.domain.carinfo;
 
+import com.itstyle.utils.hibernate.BaseEntity;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
-import java.sql.Timestamp;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Data
-public class CarInfo {
-    private Long id;
-
+@Entity
+@Table(name = "car_info")
+@DynamicUpdate
+public class CarInfo extends BaseEntity {
     private String name;
 
     private String carNum;
@@ -15,10 +19,6 @@ public class CarInfo {
     private String phone;
 
     private String remarks;
-
-    private Timestamp createTime;
-
-    private Timestamp modifyTime;
 
     private Boolean isFree;
 
