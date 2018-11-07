@@ -19,7 +19,7 @@ public class SystemTask {
 
     @Scheduled(fixedRate = 5000L)
     public void doSystemLogSave() {
-        Long aLong = logService.doSystemLogSave();
+        Integer aLong = logService.doSystemLogSave();
         if (aLong > 0) {
             log.info("[SystemTask] 定时任务：成功入库 " + aLong + " 条系统日志");
         }

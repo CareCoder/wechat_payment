@@ -2,13 +2,14 @@ package com.itstyle.service.impl;
 
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.SystemLogQueue;
-import com.itstyle.domain.SysLogger;
+import com.itstyle.domain.log.SysLogger;
 import com.itstyle.mapper.LogMapper;
 import com.itstyle.service.LogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -18,15 +19,17 @@ import java.util.Queue;
 public class LogServiceImpl implements LogService {
 
     private LogMapper logMapper;
+    private EntityManager entityManager;
 
     @Autowired
-    public LogServiceImpl(LogMapper logMapper) {
+    public LogServiceImpl(LogMapper logMapper, EntityManager entityManager) {
         this.logMapper = logMapper;
+        this.entityManager = entityManager;
     }
 
 
     @Override
-    public Long doSystemLogSave() {
+    public Integer doSystemLogSave() {
         List<SysLogger> list = new ArrayList<>();
         Queue<SysLogger> queue = SystemLogQueue.SYSTEM_LOG_QUEUE;
         while (!queue.isEmpty()) {
@@ -37,13 +40,16 @@ public class LogServiceImpl implements LogService {
             list.add(log);
         }
         if (list.size() == 0) {
-            return 0L;
+            return 0;
         }
-        return logMapper.insertBatch(list);
+        entityManager.persist(list);
+        entityManager.flush();
+        entityManager.clear();
+        return list.size();
     }
 
     @Override
-    public PageResponse<SysLogger> getAll(int page, int size) {
-        return null;
+    public PageResponse<SysLogger> list(int page, int limit) {
+        return PageResponse.build(logMapper.findAll(PageResponse.getPageRequest(page, limit)));
     }
 }

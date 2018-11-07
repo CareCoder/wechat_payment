@@ -1,17 +1,21 @@
 package com.itstyle.domain.account;
 
-import com.itstyle.utils.hibernate.BaseEntity;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "role")
 @DynamicUpdate
-public class Role extends BaseEntity {
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public class Role implements Serializable {
+    @Id
+    @GeneratedValue
     private Long id;
     private String name;
 }

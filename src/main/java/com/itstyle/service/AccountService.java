@@ -6,7 +6,7 @@ import com.itstyle.domain.account.req.RequestAccount;
 
 public interface AccountService {
 
-    PageResponse<Account> getAll(int page, int size);
+    PageResponse<Account> list(int page, int limit);
 
     Account insert(Account account);
 

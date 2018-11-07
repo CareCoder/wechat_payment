@@ -1,6 +1,6 @@
 package com.itstyle.common;
 
-import com.itstyle.domain.SysLogger;
+import com.itstyle.domain.log.SysLogger;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;

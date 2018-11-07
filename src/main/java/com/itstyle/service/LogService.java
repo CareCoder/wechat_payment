@@ -1,11 +1,11 @@
 package com.itstyle.service;
 
 import com.itstyle.common.PageResponse;
-import com.itstyle.domain.SysLogger;
+import com.itstyle.domain.log.SysLogger;
 
 public interface LogService {
 
-    Long doSystemLogSave();
+    Integer doSystemLogSave();
 
-    PageResponse<SysLogger> getAll(int page, int size);
+    PageResponse<SysLogger> list(int page, int limit);
 }

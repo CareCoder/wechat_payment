@@ -33,11 +33,11 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("/list")
     @ResponseBody
-    public PageResponse<Account> getAll(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                         @RequestParam(value = "size", required = false, defaultValue = "20") int size) {
-        PageResponse<Account> pageResponse = accountService.getAll(page, size);
+    public PageResponse<Account> list(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                         @RequestParam(value = "size", required = false, defaultValue = "20") int limit) {
+        PageResponse<Account> pageResponse = accountService.list(page, limit);
         log.info("[AccountController] data is [{}]", pageResponse.getData());
         return pageResponse;
     }
@@ -46,6 +46,7 @@ public class AccountController {
     @ResponseBody
     public Response save(@RequestBody Account account) {
         AssertUtil.assertNotNull(account, () -> new BusinessException("account is null"));
+        AssertUtil.assertNotEmpty(account.getUsername(), () -> new BusinessException("用户名不能为空"));
         AssertUtil.assertNotEmpty(account.getAccount(), () -> new BusinessException("账号不能为空"));
         AssertUtil.assertNotEmpty(account.getPassword(), () -> new BusinessException("密码不能为空"));
         AssertUtil.assertNotNull(account.getRoleId(), () -> new BusinessException("类型不能为空"));
