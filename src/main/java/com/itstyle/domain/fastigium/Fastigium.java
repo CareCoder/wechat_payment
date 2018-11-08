@@ -2,20 +2,18 @@ package com.itstyle.domain.fastigium;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class Fastigium {
-    private Date startTime;
+    private Long startTime;
 
-    private Date endTime;
+    private Long endTime;
 
-    private boolean status;
+    private boolean status = false;
 
     public static Fastigium buildDefault() {
         Fastigium fastigium = new Fastigium();
-        fastigium.setStartTime(new Date());
-        fastigium.setEndTime(new Date());
+        fastigium.setStartTime(0L);
+        fastigium.setEndTime(0L);
         fastigium.setStatus(false);
         return fastigium;
     }

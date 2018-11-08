@@ -3,10 +3,8 @@ package com.itstyle.control;
 import com.itstyle.domain.fastigium.Fastigium;
 import com.itstyle.service.FastigiumService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -16,10 +14,10 @@ public class FastigiumController {
     @Resource
     private FastigiumService fastigiumService;
 
-    @GetMapping("/get")
-    @ResponseBody
-    public Fastigium list() {
-        return fastigiumService.get();
+    @GetMapping("/list")
+    public String list(Model model) {
+        model.addAttribute("fastigium", fastigiumService.get());
+        return "/backend/fastigium";
     }
 
     @PostMapping("/set")

@@ -22,6 +22,9 @@ public class FastigiumService {
         try {
             String hget = redisDao.hget(YstCommon.CONFIGURE_FIELD, FASTIGIUM_KEY);
             fastigium = JSON.parseObject(hget, Fastigium.class);
+            if (fastigium == null) {
+                return Fastigium.buildDefault();
+            }
         } catch (Exception e) {
             log.error("[FastigiumService] get error", e);
             return Fastigium.buildDefault();
