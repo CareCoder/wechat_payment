@@ -36,4 +36,10 @@ public class YstCommon {
 	public static String UPLOAD_INFO_TEMPLATE_ID = "F7Ij0kuiPBkrD4OrENzONw4uUifvwUTD_n4nQm7EIjE";
 	// 登陆成功，session中存储的属性名
 	public static String LOGIN_ACCOUNT = "login_account";
+
+
+	/**
+	 * redis的field
+	 */
+	public static final String CONFIGURE_FIELD = "CONFIGURE_FIELD";
 }

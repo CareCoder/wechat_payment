@@ -1,25 +1,23 @@
 package com.itstyle.domain.fastigium;
 
 import lombok.Data;
-import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Data
-@Entity
-@Table(name = "fastigium")
-@DynamicUpdate
-@EntityListeners(AuditingEntityListener.class)
-public class Fastigium{
-    @Id
-    @GeneratedValue
-    private Long id;
-
+public class Fastigium {
     private Date startTime;
 
     private Date endTime;
 
     private boolean status;
+
+    public static Fastigium buildDefault() {
+        Fastigium fastigium = new Fastigium();
+        fastigium.setStartTime(new Date());
+        fastigium.setEndTime(new Date());
+        fastigium.setStatus(false);
+        return fastigium;
+    }
+
 }
