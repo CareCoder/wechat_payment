@@ -1,7 +1,7 @@
 package com.itstyle.service;
 
 import com.itstyle.common.PageResponse;
-import com.itstyle.domain.carinfo.CarInfo;
+import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.mapper.CarInfoMapper;
 import com.itstyle.utils.BeanUtilIgnore;
 import org.springframework.data.domain.Example;

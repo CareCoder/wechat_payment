@@ -6,18 +6,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-@Configuration
+//@Configuration
 public class MvcConfig {
 
-    @Bean
-    public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
-        WebMvcConfigurerAdapter adapter = new WebMvcConfigurerAdapter() {
-            @Override
-            public void addInterceptors(InterceptorRegistry registry) {
-                registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**")
-                        .excludePathPatterns("/", "/backend/login.html", "/account/login");
-            }
-        };
-        return adapter;
-    }
+//    @Bean
+//    public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
+//        WebMvcConfigurerAdapter adapter = new WebMvcConfigurerAdapter() {
+//            @Override
+//            public void addInterceptors(InterceptorRegistry registry) {
+//                registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**")
+//                        .excludePathPatterns("/", "/backend/login.html", "/account/login");
+//            }
+//        };
+//        return adapter;
+//    }
 }

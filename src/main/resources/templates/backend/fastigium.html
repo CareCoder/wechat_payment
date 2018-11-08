@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>高峰期管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>车辆管理</cite></a>
+                <a><cite>高峰期管理</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form id="fastigium_form" class="layui-form layui-col-md12 ok-search">
+            <div class="layui-form-item">
+                <label class="layui-form-label">开始日期 :</label>
+                <div class="layui-input-block">
+                    <input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">截止日期 :</label>
+                <div class="layui-input-block">
+                    <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">开关 :</label>
+                <div class="layui-input-block">
+                    <input id="fastigium_switch" type="checkbox" name="status" lay-skin="switch" value="true" lay-text="启用|停用" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    }
+    var status = '[[${fastigium?.status}]]';
+    var startTime = '[[${fastigium?.startTime}]]';
+    var endTime = '[[${fastigium?.endTime}]]';
+    if (startTime === '') {
+        startTime = new Date().getTime();
+    }
+    if (endTime === '') {
+        endTime = new Date().getTime();
+    }
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+
+        if (status === 'true') {
+            $('#fastigium_switch').attr('checked', 'checked');
+        }
+
+        laydate.render({
+            elem: '#startTime',
+            type: "datetime",
+            value: new Date(parseInt(startTime))
+        });
+
+        laydate.render({
+            elem: '#endTime',
+            type: "datetime",
+            value: new Date(parseInt(endTime))
+        });
+
+        form.on('submit(add)', function (data) {
+            $.ajax({
+                url:"/gs/set/fastigium",
+                type:"POST",
+                data:{
+                    startTime:new Date(data.field.startTime).getTime(),
+                    endTime:new Date(data.field.endTime).getTime(),
+                    status:data.field.status
+                },
+                success:function(resp){
+                    console.log(resp);
+                    layer.msg("修改成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                },
+                error:function(){
+                    layer.msg("修改失败！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }
+            });
+            return false;
+        });
+
+        form.render();
+    });
+</script>
+</body>
+</html>
