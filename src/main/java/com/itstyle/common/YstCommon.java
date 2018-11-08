@@ -39,7 +39,8 @@ public class YstCommon {
 
 
 	/**
-	 * redis的field
+	 * redis的field和key
 	 */
-	public static final String CONFIGURE_FIELD = "CONFIGURE_FIELD";
+	public static final String GLOBAL_SETTIING_FIELD = "GLOBAL_SETTIING_FIELD";
+	public static final String FASTIGIUM_KEY = "FASTIGIUM_KEY";
 }
