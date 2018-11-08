@@ -1,4 +1,4 @@
-package com.itstyle.domain.fastigium;
+package com.itstyle.domain.car.manager;
 
 import lombok.Data;
 

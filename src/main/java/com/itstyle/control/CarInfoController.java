@@ -1,7 +1,7 @@
 package com.itstyle.control;
 
 import com.itstyle.common.PageResponse;
-import com.itstyle.domain.carinfo.CarInfo;
+import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.service.CarInfoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

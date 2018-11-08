@@ -1,6 +1,6 @@
 package com.itstyle.mapper;
 
-import com.itstyle.domain.carinfo.CarInfo;
+import com.itstyle.domain.car.manager.CarInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

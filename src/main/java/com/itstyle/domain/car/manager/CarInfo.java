@@ -1,4 +1,4 @@
-package com.itstyle.domain.carinfo;
+package com.itstyle.domain.car.manager;
 
 import com.itstyle.utils.hibernate.BaseEntity;
 import lombok.Data;

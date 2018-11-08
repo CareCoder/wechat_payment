@@ -1,6 +1,6 @@
 package com.itstyle.control;
 
-import com.itstyle.domain.fastigium.Fastigium;
+import com.itstyle.domain.car.manager.Fastigium;
 import com.itstyle.service.FastigiumService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

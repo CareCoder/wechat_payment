@@ -3,7 +3,7 @@ package com.itstyle.service;
 import com.alibaba.fastjson.JSON;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
-import com.itstyle.domain.fastigium.Fastigium;
+import com.itstyle.domain.car.manager.Fastigium;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
