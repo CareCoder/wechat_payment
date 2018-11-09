@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>添加用户</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>车辆管理</cite></a>
+                <a><cite>车辆管理</cite></a>
+                <a><cite>添加车辆管理</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--form表单-->
+    <form class="layui-form layui-form-pane ok-form">
+        <input type="hidden" name="id">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" placeholder="请输入用户名" readonly autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="tAccount" placeholder="请输入账号" readonly autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">旧密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="oldPassword" placeholder="请输入旧密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="newPassword" placeholder="请输入新密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <select name="roleId">
+            </select>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="remark" placeholder="请输入备注" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script>
+    layui.use(['element', 'form', 'jquery', 'laydate'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+
+        $("input[name='id']").val('[[${account_info.id}]]');
+        $("input[name='username']").val('[[${account_info.username}]]');
+        $("input[name='tAccount']").val('[[${account_info.tAccount}]]');
+        $("input[name='remark']").val('[[${account_info.remark}]]');
+
+        laydate.render({
+            elem: '#birthday',
+            type: "datetime"
+        });
+
+        $.ajax({
+            url : "/role/list",
+            type : "GET",
+            success : function (resp) {
+                var data = resp.data;
+                if (data != null) {
+                    var str = '';
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                    }
+                    $("select[name='roleId']").append(str);
+                    $("select[name='roleId']").val('[[${account_info.roleId}]]');
+                }
+                form.render('select');
+            }
+
+        });
+
+        form.on('submit(add)', function (data) {
+            $.ajax({
+                url:"/account/edit",
+                type:"POST",
+                data:data.field,
+                success:function(resp){
+                    if (resp.status == 200) {
+                        layer.msg("编辑成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                            window.parent.location.reload();
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    }
+                    if (resp.status == 500) {
+                        layer.msg(resp.msg, {icon: 2, time: 2000});
+                    }
+
+                },
+                error:function(){
+                    layer.msg("添加失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }
+            });
+            return false;
+        });
+    })
+</script>
+</body>
+</html>
