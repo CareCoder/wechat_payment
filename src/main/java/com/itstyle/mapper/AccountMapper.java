@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AccountMapper extends JpaRepository<Account, Long> {
 
-    Account findByAccount(String account);
+    Account findByTAccount(String tAccount);
 }

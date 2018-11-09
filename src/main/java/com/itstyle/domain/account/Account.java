@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @DynamicUpdate
 public class Account extends BaseEntity {
     private String username;
-    private String account;
+    private String tAccount;
     private String password;
     private Long roleId;
     private String remark;

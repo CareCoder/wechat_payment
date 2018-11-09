@@ -9,4 +9,6 @@ public interface RoleService {
     Role insert(Role role);
 
     void delete(List<Long> ids);
+
+    List<Role> list();
 }

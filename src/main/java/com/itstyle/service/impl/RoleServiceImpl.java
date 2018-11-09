@@ -32,4 +32,9 @@ public class RoleServiceImpl implements RoleService {
         ids.forEach(id -> roleMapper.delete(id));
         log.info("[RoleServiceImpl] delete role ids [{}] size [{}]", ids, ids.size());
     }
+
+    @Override
+    public List<Role> list() {
+        return roleMapper.findAll();
+    }
 }

@@ -16,4 +16,6 @@ public interface AccountService {
     void delete(Long id);
 
     Account login(String account, String password);
+
+    Account getById(Long id);
 }
