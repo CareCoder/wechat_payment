@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加用户</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>车辆设置</cite></a>
+                <a><cite>出入权限设置</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <button class="layui-btn layui-btn-fluid">可通过该车道的车辆类型</button>
+    <!--form表单-->
+    <form name="pass_form" class="layui-form layui-form-pane ok-form">
+        <div th:each="item,iterstat:${data}">
+            <div class="layui-form-item">
+                <label class="layui-form-label" th:text="${item.channelDesc}"></label>
+                <div class="layui-input-block">
+                    <input type="checkbox" th:attr='name=${item.name}' th:checked="${item.status}==1" lay-skin="switch" lay-text="允许|禁止">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script>
+    var type = '[[${type}]]';
+    layui.use(['element', 'form', 'jquery', 'laydate'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#birthday',
+            type: "datetime"
+        });
+
+        form.on('submit(add)', function (data) {
+            $.ajax({
+                url : "/account/save",
+                type : "POST",
+                data : data.field,
+                success : function(resp){
+                    if (resp.status == 200) {
+                        layer.msg("添加成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                            window.parent.location.reload();
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    }
+                    if (resp.status == 500) {
+                        layer.msg(resp.msg, {icon: 2, time: 2000});
+                    }
+                },
+                error : function(){
+                    layer.msg("添加失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }
+            });
+            return false;
+        });
+    })
+</script>
+</body>
+</html>
