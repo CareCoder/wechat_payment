@@ -43,6 +43,7 @@ public class YstCommon {
 	 */
 	public static final String GLOBAL_SETTIING_FIELD = "GLOBAL_SETTIING_FIELD";
 	public static final String FASTIGIUM_KEY = "FASTIGIUM_KEY";
+    public static final String BANLISTMANAGER_KEY = "BANLISTMANAGER_KEY";
 	/** 车场名称设置 */
 	public static final String CAR_YARD_NAME = "CAR_YARD_NAME";
 }
