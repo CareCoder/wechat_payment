@@ -26,46 +26,32 @@
     <form class="layui-form layui-form-pane ok-form">
         <input type="hidden" name="id">
         <div class="layui-form-item">
-            <label class="layui-form-label">用户名</label>
+            <label class="layui-form-label">原名称</label>
             <div class="layui-input-block">
-                <input type="text" name="username" placeholder="请输入用户名" readonly autocomplete="off" class="layui-input" lay-verify="required">
+                <input type="text" name="oldName" readonly autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">账号</label>
+            <label class="layui-form-label">原车位数</label>
             <div class="layui-input-block">
-                <input type="text" name="tAccount" placeholder="请输入账号" readonly autocomplete="off" class="layui-input" lay-verify="required">
+                <input type="text" name="oldParkNum" readonly autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">旧密码</label>
+            <label class="layui-form-label">新名称</label>
             <div class="layui-input-block">
-                <input type="password" name="oldPassword" placeholder="请输入旧密码" autocomplete="off" class="layui-input">
+                <input type="text" name="name" placeholder="请输入停车场名称" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">新密码</label>
+            <label class="layui-form-label">新车位数</label>
             <div class="layui-input-block">
-                <input type="password" name="newPassword" placeholder="请输入新密码" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">类型</label>
-            <div class="layui-input-block">
-                <select name="roleId">
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">备注</label>
-            <div class="layui-input-block">
-                <input type="text" name="remark" placeholder="请输入备注" autocomplete="off" class="layui-input">
+                <input type="text" name="parkNum" placeholder="请输入车位数" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
@@ -80,44 +66,23 @@
         var $ = layui.jquery;
         var laydate = layui.laydate;
 
-        $("input[name='id']").val('[[${account_info.id}]]');
-        $("input[name='username']").val('[[${account_info.username}]]');
-        $("input[name='tAccount']").val('[[${account_info.tAccount}]]');
-        $("input[name='remark']").val('[[${account_info.remark}]]');
+        $("input[name='oldName']").val('[[${car_yard_name.name}]]');
+        $("input[name='oldParkNum']").val('[[${car_yard_name.parkNum}]]');
 
         laydate.render({
             elem: '#birthday',
             type: "datetime"
         });
 
-        $.ajax({
-            url : "/role/list",
-            type : "GET",
-            success : function (resp) {
-                var data = resp.data;
-                if (data != null) {
-                    var str = '';
-                    for (var i = 0; i < data.length; i++) {
-                        str += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
-                    }
-                    $("select[name='roleId']").append(str);
-                    $("select[name='roleId']").val('[[${account_info.roleId}]]');
-                }
-                form.render('select');
-            }
-
-        });
-
         form.on('submit(add)', function (data) {
             $.ajax({
-                url:"/account/edit",
+                url:"/set/name/save",
                 type:"POST",
                 data:data.field,
                 success:function(resp){
                     if (resp.status == 200) {
-                        layer.msg("编辑成功！", {icon: 6, time: 1000, anim: 4}, function () {
-                            window.parent.location.reload();
-                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        layer.msg("修改成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                            window.location.href = "javascript:location.replace(location.href);";
                         });
                     }
                     if (resp.status == 500) {
@@ -126,7 +91,7 @@
 
                 },
                 error:function(){
-                    layer.msg("编辑失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
+                    layer.msg("修改失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                     });
                 }
