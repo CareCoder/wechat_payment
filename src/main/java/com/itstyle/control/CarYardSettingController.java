@@ -1,8 +1,9 @@
 package com.itstyle.control;
 
-import com.google.gson.Gson;
+import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.caryard.CarYardName;
+import com.itstyle.domain.caryard.EquipmentStatus;
 import com.itstyle.domain.caryard.PassCarStatus;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.exception.AssertUtil;
@@ -10,16 +11,17 @@ import com.itstyle.exception.BusinessException;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.service.PassPermissionService;
 import com.itstyle.utils.enums.Status;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 @RequestMapping("/set")
 public class CarYardSettingController {
@@ -59,5 +61,30 @@ public class CarYardSettingController {
         List<PassCarStatus> list = passPermissionService.list();
         model.addAttribute("data", list);
         return "/backend/pass-permission";
+    }
+
+    @PostMapping("/permission/edit")
+    @ResponseBody
+    public Response editCarPassPermission(@RequestParam Map<String, String> map) {
+        log.info("[CarYardSettingController] request param is [{}]", map);
+        List<PassCarStatus> list = passPermissionService.list();
+        List<PassCarStatus> collect = list.stream().map(passCarStatus -> {
+            passCarStatus.setStatus(Integer.parseInt(map.get(passCarStatus.getName())));
+            return passCarStatus;
+        }).collect(Collectors.toList());
+        passPermissionService.update(collect);
+        return Response.build(Status.NORMAL, null, null);
+    }
+
+    @GetMapping("/equipment/page")
+    public String equipmentPage() {
+        return "/backend/equipment-info";
+    }
+
+    @GetMapping("/equipment/query")
+    @ResponseBody
+    public PageResponse<EquipmentStatus> equipmentList(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                       @RequestParam(value = "limit", required = false, defaultValue = "20") int limit) {
+        return passPermissionService.equipmentList(page, limit);
     }
 }

@@ -56,15 +56,19 @@
         });
 
         form.on('submit(add)', function (data) {
+            var edit_form = data.form;
+            var json = {};
+            for (var i = 0; i < edit_form.length - 1; i++) {
+                json[edit_form[i].name] = edit_form[i].checked ? 1 : 0;
+            }
             $.ajax({
-                url : "/account/save",
+                url : "/set/permission/edit",
                 type : "POST",
-                data : data.field,
+                data : json,
                 success : function(resp){
                     if (resp.status == 200) {
                         layer.msg("添加成功！", {icon: 6, time: 1000, anim: 4}, function () {
-                            window.parent.location.reload();
-                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            window.location.href = "javascript:location.replace(location.href);";
                         });
                     }
                     if (resp.status == 500) {
