@@ -1,0 +1,17 @@
+version: '2.3'
+services:
+  spring-boot-pay:
+    image: hrxz/spring-boot-pay:0.0.1
+    container_name: spring-boot-pay
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_PORT=8080
+      - REDIS_HOST=111.230.157.97
+      - REDIS_PORT=6380
+      - MYSQL_HOST=192.168.10.4
+      - MYSQL_PORT=3306
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+      - ADMIN_USER_ID=1
+      - JAVA_OPTIONS=-XX:CompressedClassSpaceSize=32m
