@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>车辆设置</cite></a>
+                <a><cite>设备状态显示</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--数据表格-->
+    <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    var type = '[[${type}]]';
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    }
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#startTime',
+            type: "datetime"
+        });
+
+        laydate.render({
+            elem: '#endTime',
+            type: "datetime"
+        });
+
+        table.render({
+            elem: '#tableId',
+            url: '/set/equipment/query',
+            limit: 5,
+            page: true,
+            cols: [
+                [
+                    {field: 'id', title: 'ID', width: 80, align: 'center'},
+                    {field: 'equipmentName', title: '设备名称', width: 100, align: 'center'},
+                    {field: 'entranceOneStatus', title: '入口1设备连接状态', templet: '#entranceOneIcon', width: 200, align: 'center'},
+                    {field: 'entranceTwoStatus', title: '入口2设备连接状态', templet: '#entranceTwoIcon', width: 200, align: 'center'},
+                    {field: 'exportOneStatus', title: '出口1设备连接状态', templet: '#exportOneIcon', width: 200, align: 'center'},
+                    {field: 'exportTwoStatus', title: '出口2设备连接状态', templet: '#exportTwoIcon', width: 200, align: 'center'}
+                ]
+            ],
+            done: function (res, curr, count) {
+                $("#countNum").text(count);
+            }
+        });
+
+        form.on('submit(search)', function () {
+            layer.msg('正在查询，请稍后...');
+            return false;
+        });
+
+
+    })
+</script>
+<script type="text/html" id="entranceOneIcon">
+    {{# if(d.entranceOneStatus == '1'){ }}
+        <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+        <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="entranceTwoIcon">
+    {{# if(d.entranceTwoStatus == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="exportOneIcon">
+    {{# if(d.exportOneStatus == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="exportTwoIcon">
+    {{# if(d.exportTwoStatus == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+</body>
+</html>
