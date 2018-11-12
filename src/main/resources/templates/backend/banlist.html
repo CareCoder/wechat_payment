@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>禁入车辆管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>车辆管理</cite></a>
+                <a><cite>禁入车辆管理</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form id="fastigium_form" class="layui-form layui-col-md12 ok-search">
+            <div class="layui-form-item">
+                <label class="layui-form-label">开始日期 :</label>
+                <div class="layui-input-block">
+                    <input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">截止日期 :</label>
+                <div class="layui-input-block">
+                    <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">临时车A :</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="tempCarA" lay-skin="switch" value="true" lay-text="启用|停用" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">临时车B :</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="tempCarB" lay-skin="switch" value="true" lay-text="启用|停用" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">临时车C :</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="tempCarC" lay-skin="switch" value="true" lay-text="启用|停用" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">月租车A :</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="monthCarA" lay-skin="switch" value="true" lay-text="启用|停用" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">月租车B :</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="monthCarB" lay-skin="switch" value="true" lay-text="启用|停用" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">月租车C :</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="monthCarC" lay-skin="switch" value="true" lay-text="启用|停用" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">贵宾车 :</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="vipCar" lay-skin="switch" value="true" lay-text="启用|停用" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="update">立即修改</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    }
+    var startTime = '[[${banlist?.startTime}]]';
+    var endTime = '[[${banlist?.endTime}]]';
+    var tempCarA = '[[${banlist?.tempCarA}]]';
+    var tempCarB = '[[${banlist?.tempCarB}]]';
+    var tempCarC = '[[${banlist?.tempCarC}]]';
+    var monthCarA = '[[${banlist?.monthCarA}]]';
+    var monthCarB = '[[${banlist?.monthCarB}]]';
+    var monthCarC = '[[${banlist?.monthCarC}]]';
+    var vipCar = '[[${banlist?.vipCar}]]';
+    if (startTime === '') {
+        startTime = new Date().getTime();
+    }
+    if (endTime === '') {
+        endTime = new Date().getTime();
+    }
+    layui.use(['form', 'jquery', 'laydate'], function () {
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+
+        if (tempCarA === 'true') {
+            $("input[name='tempCarA']").attr('checked', 'checked');
+        }
+        if (tempCarB === 'true') {
+            $("input[name='tempCarB']").attr('checked', 'checked');
+        }
+        if (tempCarC === 'true') {
+            $("input[name='tempCarC']").attr('checked', 'checked');
+        }
+        if (monthCarA === 'true') {
+            $("input[name='monthCarA']").attr('checked', 'checked');
+        }
+        if (monthCarB === 'true') {
+            $("input[name='monthCarB']").attr('checked', 'checked');
+        }
+        if (monthCarC === 'true') {
+            $("input[name='monthCarC']").attr('checked', 'checked');
+        }
+        if (vipCar === 'true') {
+            $("input[name='vipCar']").attr('checked', 'checked');
+        }
+
+        laydate.render({
+            elem: '#startTime',
+            type: "datetime",
+            value: new Date(parseInt(startTime))
+        });
+
+        laydate.render({
+            elem: '#endTime',
+            type: "datetime",
+            value: new Date(parseInt(endTime))
+        });
+
+        form.on('submit(update)', function (data) {
+            $.ajax({
+                url:"/gs/set/banlist",
+                type:"POST",
+                data:{
+                    startTime:new Date(data.field.startTime).getTime(),
+                    endTime:new Date(data.field.endTime).getTime(),
+                    tempCarA:data.field.tempCarA,
+                    tempCarB:data.field.tempCarB,
+                    tempCarC:data.field.tempCarC,
+                    monthCarA:data.field.monthCarA,
+                    monthCarB:data.field.monthCarB,
+                    monthCarC:data.field.monthCarC,
+                    vipCar:data.field.vipCar
+                },
+                success:function(resp){
+                    console.log(resp);
+                    layer.msg("修改成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                },
+                error:function(){
+                    layer.msg("修改失败！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }
+            });
+            return false;
+        });
+
+        form.render();
+    });
+</script>
+</body>
+</html>
