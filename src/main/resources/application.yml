@@ -4,7 +4,7 @@ server:
 spring:
   thymeleaf:
     cache: false
-    prefix: classpath:/templates/
+    prefix: classpath:/templates
     suffix: .html
   redis:
     database: 0 # 使用0号库
