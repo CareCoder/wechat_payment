@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "wm_file_resource",indexes = {@Index(name = "uuid_index", columnList = "uuid")})
+@Table(name = "file_resource",indexes = {@Index(name = "uuid_index", columnList = "uuid")})
 public class FileResource extends BaseEntity {
     /**
      * 原文件名

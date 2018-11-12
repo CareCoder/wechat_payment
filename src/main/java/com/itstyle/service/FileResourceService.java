@@ -25,7 +25,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class FileResourceService {
-    @Value("filePath")
+    @Value("${filePath}")
     private String filePath;
     @Value("${fileUrlPrefix}")
     private String fileUrlPrefix;
