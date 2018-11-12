@@ -20,7 +20,12 @@ public class PassCarStatus {
     @Id
     @GeneratedValue
     private Long id;
-    private String name;
-    private Integer status;
-    private String channelDesc;
+    private Long channelTypeId;
+    private Integer tempCarA;
+    private Integer tempCarB;
+    private Integer tempCarC;
+    private Integer monthCarA;
+    private Integer monthCarB;
+    private Integer monthCarC;
+    private Integer vipCar;
 }
