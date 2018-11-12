@@ -23,9 +23,9 @@ public class MonthCarInfo extends BaseEntity {
 
     private String carType;
 
-    private String startTime;
+    private Long startTime;
 
-    private String endTime;
+    private Long endTime;
 
     private String carGroup;
 
