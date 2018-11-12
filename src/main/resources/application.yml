@@ -1,3 +1,6 @@
+filePath: ${FILE_PATH:D:/hrzx-file/file/}
+fileUrlPrefix: ${FILE_URL_PREFIX:/file/}
+
 server:
   port: ${SERVER_PORT:8080}
 

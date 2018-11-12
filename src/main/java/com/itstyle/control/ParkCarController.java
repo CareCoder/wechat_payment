@@ -52,7 +52,7 @@ public class ParkCarController {
             return "/error/500";
         }
         request.setAttribute("openId", openId);
-        return "uploadCarInfo";
+        return "/uploadCarInfo";
     }
 
     @RequestMapping("/polling")
