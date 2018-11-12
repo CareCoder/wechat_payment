@@ -53,7 +53,7 @@ public class WxPayAllController {
 			log.info("获取用户信息的CODE" + code);
 			Map<String, Object> openIdByCode = WxPayUtil.getOpenIdByCode(code);
 			if (openIdByCode == null) {
-				return "error/404";
+				return "/error/404";
 			}
 			// 获取客户端id
 			String ip = WxPayUtil.getIpAddr(request);
@@ -65,7 +65,7 @@ public class WxPayAllController {
 			ParkCarOrder order = parkCarService.queryPay(openid);
 			if (order == null || order.fee == null) {
 				//订单已经产生了，但是订单金额还没获取到
-				return "nopay";
+				return "/nopay";
 			}
 			result = WxPayUtil.unifiedOrder("测试订单", order.orderNo + "", order.fee, ip, openid);// 创建预订单
 			Map<String, Object> resultMap = XmlUtils.Dom2Map(result);
@@ -92,7 +92,7 @@ public class WxPayAllController {
 			log.error("创建订单出错{}", e);
 			return "/error/404";
 		}
-		return "pay";
+		return "/pay";
 	}
 
 	/**
