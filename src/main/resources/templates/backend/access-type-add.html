@@ -14,9 +14,9 @@
     <div class="ok-body-breadcrumb">
             <span class="layui-breadcrumb">
                 <a><cite>首页</cite></a>
-                <a><cite>账号管理</cite></a>
-                <a><cite>账号列表</cite></a>
-                <a><cite>添加账号</cite></a>
+                <a><cite>车场设置</cite></a>
+                <a><cite>出入类型设置</cite></a>
+                <a><cite>增加通道</cite></a>
             </span>
         <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
             <i class="layui-icon layui-icon-refresh"></i>
@@ -25,38 +25,32 @@
     <!--form表单-->
     <form class="layui-form layui-form-pane ok-form">
         <div class="layui-form-item">
-            <label class="layui-form-label">用户名</label>
+            <label class="layui-form-label">通道名称</label>
             <div class="layui-input-block">
-                <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input" lay-verify="required">
+                <input type="text" name="channelName" placeholder="请输入通道名称" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">账号</label>
+            <label class="layui-form-label">通道IP</label>
             <div class="layui-input-block">
-                <input type="text" name="tAccount" placeholder="请输入账号" autocomplete="off" class="layui-input" lay-verify="required">
+                <input type="text" name="ip" placeholder="请输入通道IP" autocomplete="off" class="layui-input" lay-verify="ip">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">密码</label>
+            <label class="layui-form-label">辅助相机</label>
             <div class="layui-input-block">
-                <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input" lay-verify="required">
+                <input type="text" name="camera" placeholder="请输入辅助相机" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">类型</label>
+            <label class="layui-form-label">通道类型</label>
             <div class="layui-input-block">
-                <select name="roleId">
+                <select name="channelTypeId">
                     <!--<option value="0">公告</option>-->
                     <!--<option value="1">言情</option>-->
                     <!--<option value="2">都市</option>-->
                     <!--<option value="3">修仙</option>-->
                 </select>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">备注</label>
-            <div class="layui-input-block">
-                <input type="text" name="remark" placeholder="请输入备注" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
@@ -83,8 +77,15 @@
             type: "datetime"
         });
 
+        form.verify({
+            ip: [
+                /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+                ,'IP地址不符合规则'
+            ]
+        });
+
         $.ajax({
-            url : "/role/list",
+            url : "/type/all/channel",
             type : "GET",
             success : function (resp) {
                 var data = resp.data;
@@ -93,7 +94,7 @@
                     for (var i = 0; i < data.length; i++) {
                         str += '<option value="' + data[i].id + '">' + data[i].name + '</option>>';
                     }
-                    $("select[name='roleId']").append(str);
+                    $("select[name='channelTypeId']").append(str);
                 }
                 form.render('select');
             }
@@ -101,7 +102,7 @@
 
         form.on('submit(add)', function (data) {
             $.ajax({
-                url : "/account/save",
+                url : "/type/save",
                 type : "POST",
                 data : data.field,
                 success : function(resp){
