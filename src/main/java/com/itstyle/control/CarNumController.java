@@ -1,7 +1,5 @@
 package com.itstyle.control;
 
-import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
 import com.itstyle.domain.car.manager.CarNumVo;
 import com.itstyle.domain.car.manager.enums.CarNumType;
 import com.itstyle.domain.park.resp.Response;
@@ -64,6 +62,6 @@ public class CarNumController {
         } catch (Exception e) {
             return Response.build(Status.ERROR, "系统错误", null);
         }
-        return Response.build(Status.NORMAL, "", new Gson().toJsonTree(vo));
+        return Response.build(Status.NORMAL, "", vo);
     }
 }
