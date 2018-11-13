@@ -1,6 +1,8 @@
 package com.itstyle.domain.car.manager.enums;
 
 public enum CarNumType {
-    BIG,
-    SMALL
+    ENTER_BIG,
+    ENTER_SMALL,
+    LEAVE_BIG,
+    LEAVE_SMALL
 }

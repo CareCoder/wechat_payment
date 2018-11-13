@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
 
@@ -18,7 +19,8 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
     @Resource
     private MonthCarInfoMapper monthCarInfoMapper;
 
-    public MonthCarInfoService() {
+    @PostConstruct
+    private void init() {
         jpaRepository = monthCarInfoMapper;
     }
 
@@ -42,5 +44,18 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         monthCarInfo.setEndTime(endTime);
         monthCarInfo.setId(id);
         update(monthCarInfo.getId(), monthCarInfo);
+    }
+
+    public void edit(MonthCarInfo monthCarInfo) {
+        if (monthCarInfo.getId() == null) {
+            //add
+            monthCarInfo.setStartTime(System.currentTimeMillis());
+            add(monthCarInfo);
+        }else{
+            //update 这个接口不得修改 startTime 和 endTime ，如果需要修改需要去续费接口
+            monthCarInfo.setStartTime(null);
+            monthCarInfo.setEndTime(null);
+            update(monthCarInfo.getId(), monthCarInfo);
+        }
     }
 }

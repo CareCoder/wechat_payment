@@ -1,5 +1,6 @@
 package com.itstyle.domain.car.manager;
 
+import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.utils.hibernate.BaseEntity;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
@@ -15,13 +16,13 @@ import javax.persistence.Table;
 @Table(name = "month_car_info")
 @DynamicUpdate
 public class MonthCarInfo extends BaseEntity {
-    private String carNum;
+    private String name;
 
-    private String carOwnerName;
+    private String carNum;
 
     private String phone;
 
-    private String carType;
+    private CarType carType;
 
     private Long startTime;
 
@@ -30,4 +31,9 @@ public class MonthCarInfo extends BaseEntity {
     private String carGroup;
 
     private String remarks;
+
+    /**
+     * 身份证号码
+     */
+    private String idCardNum;
 }

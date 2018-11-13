@@ -5,6 +5,7 @@ import com.itstyle.domain.FileResource.FileResourceBo;
 import com.itstyle.mapper.FileResourceMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -33,11 +34,13 @@ public class FileResourceService {
     @Resource
     private FileResourceMapper fileResourceMapper;
 
-    public String upload(@RequestParam("file") MultipartFile file) {
+    public String upload(@RequestParam("file") MultipartFile file, String uuid) {
         if (file.isEmpty()) {
             return "";
         }
-        String uuid = UUID.randomUUID().toString();
+        if (StringUtils.isEmpty(uuid)) {
+            uuid = UUID.randomUUID().toString();
+        }
         try {
             if (file.getSize() > 0) {
                 //获取文件信息和保存

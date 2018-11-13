@@ -23,8 +23,8 @@ public class BaseDaoService<BEAN, ID extends Serializable> {
         jpaRepository.delete(id);
     }
 
-    public void findById(ID id) {
-        jpaRepository.findOne(id);
+    public BEAN findById(ID id) {
+        return jpaRepository.findOne(id);
     }
 
     public void update(ID id, BEAN bean) {
