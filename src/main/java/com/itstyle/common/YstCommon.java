@@ -47,4 +47,6 @@ public class YstCommon {
 	public static final String FIXEDCARMANAGER_KEY = "FIXEDCARMANAGER_KEY";
 	/** 车场名称设置 */
 	public static final String CAR_YARD_NAME = "CAR_YARD_NAME";
+	/** 车场功能性设置 */
+	public static final String CAR_YARD_FEATURE_SETTING = "CAR_YARD_FEATURE_SETTING";
 }

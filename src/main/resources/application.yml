@@ -36,3 +36,24 @@ super-admin:
 
 filePath: ${FILE_PATH:D:/hrzx-file/file/}
 fileUrlPrefix: ${FILE_URL_PREFIX:/file/}
+
+feature:
+  settings:
+    - feature-name: 无牌车收费
+      feature-definition: 启用后无牌车、识别错误车牌均按首段费用处理
+      enable: true
+    - feature-name: 月租车允许过期
+      feature-definition: 过期后还可以允许免费进出3天
+      enable: true
+    - feature-name: 线上自助续费期
+      feature-definition: 勾选后车主可以自主在公众号APP等客户端进行月租车的缴费续期操作
+      enable: true
+    - feature-name: 免费车位
+      feature-definition: 勾选后固定车辆进出不消耗车位，不受车位满位限制
+      enable: true
+    - feature-name: 预制车牌
+      feature-definition: 勾选后同一辆车在周期内多次进出场时累计到最高收费后，后续的进出场不再计费（同一个周期类）
+      enable: true
+    - feature-name: 按车辆类型收费
+      feature-definition: 启用后，将按照蓝牌、新能源。黄牌区分收费标准。蓝牌对应临时车收费A、新能源对应临时车收费B、黄牌对应临时车收费C。需提前设置好ABC三种类型收费标准及模式。不启用则按临时车A收费
+      enable: true
