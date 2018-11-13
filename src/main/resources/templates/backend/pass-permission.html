@@ -32,7 +32,8 @@
         <thead>
             <tr>
                 <th lay-data="{field:'id', width:80, align:'center'}" rowspan="2">ID</th>
-                <th lay-data="{field:'channelTypeName', width:160, align:'center'}" rowspan="2">通道名称</th>
+                <th lay-data="{field:'channelName', width:160, align:'center'}" rowspan="2">通道名称</th>
+                <th lay-data="{field:'channelTypeName', width:160, align:'center'}" rowspan="2">通道类型</th>
                 <th lay-data="{align:'center'}" colspan="7">可通过的车辆类型</th>
                 <th lay-data="{fixed:'right', width: 160, align: 'center', templet:'#operationTpl'}" rowspan="2">操作</th>
             </tr>
@@ -52,7 +53,7 @@
 <script src="/lib/layui/layui.js"></script>
 <script>
     var type = '[[${type}]]';
-    layui.use(['element', 'form', 'jquery', 'laydate'], function () {
+    layui.use(['element', 'form', 'jquery', 'laydate', 'table'], function () {
         var element = layui.element;
         var table = layui.table;
         var form = layui.form;
@@ -62,9 +63,6 @@
         laydate.render({
             elem: '#birthday',
             type: "datetime"
-        });
-
-        layui.use('table', function(){
         });
 
         form.on('submit(search)', function () {
@@ -92,7 +90,7 @@
             } else if (layEvent === 'del') {
                 layer.confirm("确定要删除吗？", {skin: 'layui-layer-lan', icon: 2, title: '提示', anim: 6}, function () {
                     $.ajax({
-                        url:"/type/delete/" + data.id,
+                        url:"/set/permission/delete/" + data.id,
                         type:"GET",
                         success:function(resp){
                             if (resp.status == 200) {

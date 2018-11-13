@@ -20,6 +20,7 @@ public class PassCarStatus {
     @Id
     @GeneratedValue
     private Long id;
+    private String channelName;
     private Long channelTypeId;
     private Integer tempCarA;
     private Integer tempCarB;

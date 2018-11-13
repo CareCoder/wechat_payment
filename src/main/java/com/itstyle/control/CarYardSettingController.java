@@ -73,12 +73,15 @@ public class CarYardSettingController {
     @PostMapping("/permission/add")
     @ResponseBody
     public Response addCarPassPermission(PassCarStatus passCarStatus) {
+        AssertUtil.assertNotNull(passCarStatus, () -> new BusinessException("pass cat status is null"));
+        AssertUtil.assertNotEmpty(passCarStatus.getChannelName(), () -> new BusinessException("通道名称不能为空"));
+        AssertUtil.assertNotNull(passCarStatus.getChannelTypeId(), () -> new BusinessException("通道类型不能为空"));
         passPermissionService.save(passCarStatus);
         return Response.build(Status.NORMAL, null, null);
     }
 
-    @GetMapping("/pass-permission-edit.html/{id}")
-    public String editCarPassPermissionPage(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/pass-permission-edit.html")
+    public String editCarPassPermissionPage(Long id, Model model) {
         PassCarStatus passCarStatus = passPermissionService.getById(id);
         model.addAttribute("pass_car_status", passCarStatus);
         return "/backend/pass-permission-edit";
