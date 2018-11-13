@@ -5,6 +5,7 @@ import com.itstyle.common.YstCommon;
 import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.caryard.EquipmentStatus;
 import com.itstyle.domain.caryard.PassCarStatus;
+import com.itstyle.domain.caryard.ResponsePassCarStatus;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.exception.AssertUtil;
 import com.itstyle.exception.BusinessException;
@@ -16,10 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -56,23 +53,48 @@ public class CarYardSettingController {
         return Response.build(Status.NORMAL, null, null);
     }
 
-    @GetMapping("/permission/query")
-    public String getCarPassPermission(Model model) {
-        List<PassCarStatus> list = passPermissionService.list();
-        model.addAttribute("data", list);
+    @GetMapping("/permission/page")
+    public String getCarPassPermissionPage() {
         return "/backend/pass-permission";
+    }
+
+    @GetMapping("/permission/list")
+    @ResponseBody
+    public PageResponse<ResponsePassCarStatus> getCarPassPermissionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                                        @RequestParam(value = "limit", required = false, defaultValue = "20") int limit) {
+        return passPermissionService.list(page, limit);
+    }
+
+    @GetMapping("/pass-permission-add.html")
+    public String addCarPassPermissionPage() {
+        return "/backend/pass-permission-add";
+    }
+
+    @PostMapping("/permission/add")
+    @ResponseBody
+    public Response addCarPassPermission(PassCarStatus passCarStatus) {
+        passPermissionService.save(passCarStatus);
+        return Response.build(Status.NORMAL, null, null);
+    }
+
+    @GetMapping("/pass-permission-edit.html/{id}")
+    public String editCarPassPermissionPage(@PathVariable("id") Long id, Model model) {
+        PassCarStatus passCarStatus = passPermissionService.getById(id);
+        model.addAttribute("pass_car_status", passCarStatus);
+        return "/backend/pass-permission-edit";
     }
 
     @PostMapping("/permission/edit")
     @ResponseBody
-    public Response editCarPassPermission(@RequestParam Map<String, String> map) {
-        log.info("[CarYardSettingController] request param is [{}]", map);
-        List<PassCarStatus> list = passPermissionService.list();
-        List<PassCarStatus> collect = list.stream().map(passCarStatus -> {
-//            passCarStatus.setStatus(Integer.parseInt(map.get(passCarStatus.getName())));
-            return passCarStatus;
-        }).collect(Collectors.toList());
-        passPermissionService.update(collect);
+    public Response editCarPassPermission(PassCarStatus passCarStatus) {
+        passPermissionService.update(passCarStatus);
+        return Response.build(Status.NORMAL, null, null);
+    }
+
+    @GetMapping("/permission/delete/{id}")
+    @ResponseBody
+    public Response deleteCarPassPermission(@PathVariable("id") Long id) {
+        passPermissionService.delete(id);
         return Response.build(Status.NORMAL, null, null);
     }
 

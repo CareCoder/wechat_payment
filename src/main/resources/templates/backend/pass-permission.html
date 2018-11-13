@@ -21,23 +21,32 @@
             <i class="layui-icon layui-icon-refresh"></i>
         </a>
     </div>
-    <button class="layui-btn layui-btn-fluid">可通过该车道的车辆类型</button>
-    <!--form表单-->
-    <form name="pass_form" class="layui-form layui-form-pane ok-form">
-        <div th:each="item,iterstat:${data}">
-            <div class="layui-form-item">
-                <label class="layui-form-label" th:text="${item.channelDesc}"></label>
-                <div class="layui-input-block">
-                    <input type="checkbox" th:attr='name=${item.name}' th:checked="${item.status}==1" lay-skin="switch" lay-text="允许|禁止">
-                </div>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
-            </div>
-        </div>
-    </form>
+    <!--工具栏-->
+    <okToolbar>
+        <button class="layui-btn" id="addCarInfo">
+            <i class="layui-icon">&#xe61f;</i>创建出入权限
+        </button>
+    </okToolbar>
+    <!--数据表格-->
+    <table class="layui-table" id="tableId" lay-filter="tableFilter" lay-data="{url:'/set/permission/list', cellMinWidth: 80, page: true}">
+        <thead>
+            <tr>
+                <th lay-data="{field:'id', width:80, align:'center'}" rowspan="2">ID</th>
+                <th lay-data="{field:'channelTypeName', width:160, align:'center'}" rowspan="2">通道名称</th>
+                <th lay-data="{align:'center'}" colspan="7">可通过的车辆类型</th>
+                <th lay-data="{fixed:'right', width: 160, align: 'center', templet:'#operationTpl'}" rowspan="2">操作</th>
+            </tr>
+            <tr>
+                <th lay-data="{field:'tempCarA', width:150, align:'center', templet:'#tempCarAIcon'}">临时车A</th>
+                <th lay-data="{field:'tempCarB', width:150, align:'center', templet:'#tempCarBIcon'}">临时车B</th>
+                <th lay-data="{field:'tempCarC', width:150, align:'center', templet:'#tempCarCIcon'}">临时车C</th>
+                <th lay-data="{field:'monthCarA', width:150, align:'center', templet:'#monthCarAIcon'}">月租车A</th>
+                <th lay-data="{field:'monthCarB', width:150, align:'center', templet:'#monthCarBIcon'}">月租车B</th>
+                <th lay-data="{field:'monthCarC', width:150, align:'center', templet:'#monthCarCIcon'}">月租车C</th>
+                <th lay-data="{field:'vipCar', width:150, align:'center', templet:'#vipCarIcon'}">贵宾车</th>
+            </tr>
+        </thead>
+    </table>
 </div>
 <!--js逻辑-->
 <script src="/lib/layui/layui.js"></script>
@@ -55,35 +64,124 @@
             type: "datetime"
         });
 
-        form.on('submit(add)', function (data) {
-            var edit_form = data.form;
-            var json = {};
-            for (var i = 0; i < edit_form.length - 1; i++) {
-                json[edit_form[i].name] = edit_form[i].checked ? 1 : 0;
-            }
-            $.ajax({
-                url : "/set/permission/edit",
-                type : "POST",
-                data : json,
-                success : function(resp){
-                    if (resp.status == 200) {
-                        layer.msg("添加成功！", {icon: 6, time: 1000, anim: 4}, function () {
-                            window.location.href = "javascript:location.replace(location.href);";
-                        });
-                    }
-                    if (resp.status == 500) {
-                        layer.msg(resp.msg, {icon: 2, time: 2000});
-                    }
-                },
-                error : function(){
-                    layer.msg("添加失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
-                        parent.layer.close(parent.layer.getFrameIndex(window.name));
-                    });
-                }
-            });
+        layui.use('table', function(){
+        });
+
+        form.on('submit(search)', function () {
+            layer.msg('正在查询，请稍后...');
             return false;
         });
+
+        table.on('tool(tableFilter)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'edit') {
+                layer.open({
+                    title: '修改权限设置',
+                    type: 2,
+                    shade: false,
+                    maxmin: true,
+                    shade: 0.5,
+                    area: ['90%', '90%'],
+                    content: '/set/pass-permission-edit.html?id=' + data.id,
+                    zIndex: layer.zIndex,
+                    end: function () {
+                        $(".layui-laypage-btn")[0].click();
+                    }
+                });
+            } else if (layEvent === 'del') {
+                layer.confirm("确定要删除吗？", {skin: 'layui-layer-lan', icon: 2, title: '提示', anim: 6}, function () {
+                    $.ajax({
+                        url:"/type/delete/" + data.id,
+                        type:"GET",
+                        success:function(resp){
+                            if (resp.status == 200) {
+                                layer.msg("操作成功！", {icon: 1, time: 1000}, function () {
+                                    window.location.href = "javascript:location.replace(location.href);";
+                                });
+                            }
+                            if (resp.status == 500) {
+                                layer.msg(resp.msg, {icon: 2, time: 2000});
+                            }
+                        },
+                        error:function(){
+                            layer.msg("删除失败！", {icon: 2, time: 1000});
+                        }
+                    });
+                });
+            }
+        });
+
+        $("#addCarInfo").click(function () {
+            layer.open({
+                title: '创建出入权限',
+                type: 2,
+                shade: false,
+                maxmin: true,
+                shade: 0.5,
+                anim: 4,
+                area: ['90%', '90%'],
+                content: '/set/pass-permission-add.html',
+                zIndex: layer.zIndex,
+                end: function () {
+                    $(".layui-laypage-btn")[0].click();
+                }
+            });
+        })
     })
+</script>
+<script type="text/html" id="tempCarAIcon">
+    {{# if(d.tempCarA == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="tempCarBIcon">
+    {{# if(d.tempCarB == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="tempCarCIcon">
+    {{# if(d.tempCarC == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="monthCarAIcon">
+    {{# if(d.monthCarA == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="monthCarBIcon">
+    {{# if(d.monthCarB == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="monthCarCIcon">
+    {{# if(d.monthCarC == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="vipCarIcon">
+    {{# if(d.vipCar == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="operationTpl">
+    <a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
+    <a href="javascript:;" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
 </script>
 </body>
 </html>
