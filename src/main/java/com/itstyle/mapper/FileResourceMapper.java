@@ -15,6 +15,6 @@ public interface FileResourceMapper extends JpaRepository<FileResource, Long> {
      */
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM wm_file_resource WHERE uuid=?1",nativeQuery = true)
+    @Query(value = "DELETE FROM file_resource WHERE uuid=?1",nativeQuery = true)
     void deleteByUuid(String uuid);
 }
