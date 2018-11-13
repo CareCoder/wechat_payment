@@ -1,49 +1,61 @@
 package com.itstyle.control;
 
 import com.itstyle.common.FeatureSettingConfig;
-import com.itstyle.common.YstCommon;
 import com.itstyle.domain.caryard.FeatureSetting;
 import com.itstyle.domain.park.resp.Response;
-import com.itstyle.service.GlobalSettingService;
+import com.itstyle.exception.AssertUtil;
+import com.itstyle.exception.BusinessException;
+import com.itstyle.service.FeatureSettingService;
 import com.itstyle.utils.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/feature")
 public class FeatureSettingController {
 
-    private GlobalSettingService globalSettingService;
+    private FeatureSettingService featureSettingService;
     private FeatureSettingConfig featureSettingConfig;
 
     @Autowired
-    public FeatureSettingController(GlobalSettingService globalSettingService,
+    public FeatureSettingController(FeatureSettingService featureSettingService,
                                     FeatureSettingConfig featureSettingConfig) {
-        this.globalSettingService = globalSettingService;
+        this.featureSettingService = featureSettingService;
         this.featureSettingConfig = featureSettingConfig;
-    }
-
-    @PostConstruct
-    public void init() {
-        List<FeatureSetting> o = (List<FeatureSetting>) globalSettingService.get(YstCommon.CAR_YARD_FEATURE_SETTING, List.class);
-        if (o == null) {
-            List<FeatureSetting> settings = featureSettingConfig.getSettings();
-            globalSettingService.set(YstCommon.CAR_YARD_FEATURE_SETTING, settings);
-        }
     }
 
     @GetMapping("/setting/get")
     @ResponseBody
     public Response getFeatureSetting() {
-        List<FeatureSetting> o = (List<FeatureSetting>) globalSettingService.get(YstCommon.CAR_YARD_FEATURE_SETTING, List.class);
-        return Response.build(Status.NORMAL, null, o);
+        List<FeatureSetting> list = featureSettingService.list();
+        if (list == null) {
+            List<FeatureSetting> settings = featureSettingConfig.getSettings();
+            return Response.build(Status.NORMAL, null, settings);
+        } else {
+            return Response.build(Status.NORMAL, null, list);
+        }
+    }
+
+    @PostMapping("/setting/edit")
+    @ResponseBody
+    public Response edit(FeatureSetting featureSetting) {
+        AssertUtil.assertNotNull(featureSetting, () -> new BusinessException("feature setting is null"));
+        AssertUtil.assertNotNull(featureSetting.getId(), () -> new BusinessException("功能id不能为空"));
+        AssertUtil.assertNotEmpty(featureSetting.getFeatureName(), () -> new BusinessException("功能名称不能为空"));
+        AssertUtil.assertNotEmpty(featureSetting.getFeatureDefinition(), () -> new BusinessException("功能定义不能为空"));
+        featureSettingService.update(featureSetting);
+        return Response.build(Status.NORMAL, null, null);
+    }
+
+    @GetMapping("/setting/page")
+    public String getFeatureSettingPage() {
+        return "/backend/feature-setting";
     }
 
 }
