@@ -1,6 +1,5 @@
 package com.itstyle.control;
 
-import com.alibaba.fastjson.TypeReference;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.car.manager.BanListManager;
@@ -10,10 +9,12 @@ import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.service.GlobalSettingService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 

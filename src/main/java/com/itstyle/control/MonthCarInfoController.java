@@ -6,6 +6,7 @@ import com.itstyle.service.MonthCarInfoService;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -17,16 +18,24 @@ public class MonthCarInfoController {
     @Resource
     private MonthCarInfoService monthCarInfoService;
 
+    @GetMapping("/monthcarinfo.html")
+    public String monthcarinfo() {
+        return "/backend/monthcarinfo";
+    }
+
+    @GetMapping("/monthcarinfo-edit.html")
+    public String monthcarinfoEdit(Long id, Model model) {
+        if (id != null) {
+            MonthCarInfo monthCarInfo = monthCarInfoService.findById(id);
+            model.addAttribute("monthCarInfo", monthCarInfo);
+        }
+        return "/backend/monthcarinfo-edit";
+    }
+
     @GetMapping("/list")
     @ResponseBody
     public PageResponse<MonthCarInfo> list(int page, int limit, String query) {
         return monthCarInfoService.queryLimit(page, limit, query);
-    }
-
-    @PostMapping("/add")
-    @ResponseBody
-    public void add(MonthCarInfo monthCarInfo) {
-        monthCarInfoService.add(monthCarInfo);
     }
 
     @GetMapping("/delete/{id}")
@@ -44,13 +53,12 @@ public class MonthCarInfoController {
 
     /**
      * 这个接口不得修改 startTime 和 endTime ，如果需要修改需要去续费接口
+     * 如果数据不存在则新增
      */
-    @PostMapping("/update")
+    @PostMapping("/edit")
     @ResponseBody
-    public void update(MonthCarInfo monthCarInfo) {
-        monthCarInfo.setStartTime(null);
-        monthCarInfo.setEndTime(null);
-        monthCarInfoService.update(monthCarInfo.getId(), monthCarInfo);
+    public void edit(MonthCarInfo monthCarInfo) {
+        monthCarInfoService.edit(monthCarInfo);
     }
 
     /**

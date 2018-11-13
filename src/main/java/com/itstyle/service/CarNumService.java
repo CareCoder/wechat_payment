@@ -46,7 +46,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     }
 
     public void delete(Long id) {
+        CarNumVo one = carNumMapper.findOne(id);
         carNumMapper.delete(id);
+        fileResourceService.deleteByUuid(one.getUuid());
     }
 
     public CarNumVo query(String carNum, CarNumType carNumType) {
