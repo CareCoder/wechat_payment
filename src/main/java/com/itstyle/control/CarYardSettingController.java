@@ -69,7 +69,7 @@ public class CarYardSettingController {
         log.info("[CarYardSettingController] request param is [{}]", map);
         List<PassCarStatus> list = passPermissionService.list();
         List<PassCarStatus> collect = list.stream().map(passCarStatus -> {
-            passCarStatus.setStatus(Integer.parseInt(map.get(passCarStatus.getName())));
+//            passCarStatus.setStatus(Integer.parseInt(map.get(passCarStatus.getName())));
             return passCarStatus;
         }).collect(Collectors.toList());
         passPermissionService.update(collect);
