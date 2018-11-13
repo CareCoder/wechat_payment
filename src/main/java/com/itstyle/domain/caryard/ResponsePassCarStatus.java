@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class ResponsePassCarStatus {
     private Long id;
+    private String channelName;
     private Long channelTypeId;
     private Integer tempCarA;
     private Integer tempCarB;
