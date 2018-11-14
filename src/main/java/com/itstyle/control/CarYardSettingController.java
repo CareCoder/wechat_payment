@@ -80,7 +80,7 @@ public class CarYardSettingController {
         return Response.build(Status.NORMAL, null, null);
     }
 
-    @GetMapping("/pass-permission-edit.html")
+    @GetMapping("/pass-permission-edzit.html")
     public String editCarPassPermissionPage(Long id, Model model) {
         PassCarStatus passCarStatus = passPermissionService.getById(id);
         model.addAttribute("pass_car_status", passCarStatus);

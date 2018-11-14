@@ -1,6 +1,7 @@
 package com.itstyle.control;
 
 import com.itstyle.common.FeatureSettingConfig;
+import com.itstyle.common.PageResponse;
 import com.itstyle.domain.caryard.FeatureSetting;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.exception.AssertUtil;
@@ -32,13 +33,14 @@ public class FeatureSettingController {
 
     @GetMapping("/setting/get")
     @ResponseBody
-    public Response getFeatureSetting() {
+    public PageResponse<FeatureSetting> getFeatureSetting() {
         List<FeatureSetting> list = featureSettingService.list();
-        if (list == null) {
+        if (list == null || list.size() == 0) {
             List<FeatureSetting> settings = featureSettingConfig.getSettings();
-            return Response.build(Status.NORMAL, null, settings);
+            featureSettingService.save(settings);
+            return new PageResponse<>(0L, settings);
         } else {
-            return Response.build(Status.NORMAL, null, list);
+            return new PageResponse<>(0L, list);
         }
     }
 
