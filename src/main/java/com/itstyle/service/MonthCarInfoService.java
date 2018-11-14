@@ -38,12 +38,12 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         return PageResponse.build(all);
     }
 
-    public void payment(Long startTime, Long endTime, Long id) {
-        MonthCarInfo monthCarInfo = new MonthCarInfo();
-        monthCarInfo.setStartTime(startTime);
-        monthCarInfo.setEndTime(endTime);
-        monthCarInfo.setId(id);
-        update(monthCarInfo.getId(), monthCarInfo);
+    public void payment(Long day, Long id) {
+        MonthCarInfo one = findById(id);
+        Long endTime = one.getEndTime();
+        endTime = endTime + (day * 24 * 60 * 60 * 1000);
+        one.setEndTime(endTime);
+        update(one.getId(), one);
     }
 
     public void edit(MonthCarInfo monthCarInfo) {

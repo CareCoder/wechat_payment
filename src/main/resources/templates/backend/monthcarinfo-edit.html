@@ -91,13 +91,17 @@
         var $ = layui.jquery;
         var laydate = layui.laydate;
 
-        $("input[name='id']").val('[[${monthCarInfo?.id}]]');
         $("input[name='name']").val('[[${monthCarInfo?.name}]]');
         $("input[name='phone']").val('[[${monthCarInfo?.phone}]]');
         $("input[name='remarks']").val('[[${monthCarInfo?.remarks}]]');
-
         $("input[name='carGroup']").val('[[${monthCarInfo?.carGroup}]]');
         $("input[name='idCardNum']").val('[[${monthCarInfo?.idCardNum}]]');
+
+        var id = '[[${monthCarInfo?.id}]]';
+        $("input[name='id']").val(id);
+        if (id != '') {
+            $("input[name='endTime']").attr("disabled", "disabled");
+        }
 
         var carNum = '[[${monthCarInfo?.carNum}]]';
         var carNumHead = "京";
