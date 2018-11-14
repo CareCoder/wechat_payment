@@ -32,6 +32,13 @@ public class MonthCarInfoController {
         return "/backend/monthcarinfo-edit";
     }
 
+    @GetMapping("/monthcarinfo-payment.html")
+    public String monthcarinfoPayment(Long id, Model model) {
+        MonthCarInfo monthCarInfo = monthCarInfoService.findById(id);
+        model.addAttribute("monthCarInfo", monthCarInfo);
+        return "/backend/monthcarinfo-payment";
+    }
+
     @GetMapping("/list")
     @ResponseBody
     public PageResponse<MonthCarInfo> list(int page, int limit, String query) {
@@ -66,9 +73,8 @@ public class MonthCarInfoController {
      */
     @PostMapping("/payment")
     @ResponseBody
-    public void payment(@RequestParam Long startTime,
-                        @RequestParam Long endTime,
+    public void payment(@RequestParam Long day,
                         @RequestParam Long id) {
-        monthCarInfoService.payment(startTime, endTime, id);
+        monthCarInfoService.payment(day, id);
     }
 }

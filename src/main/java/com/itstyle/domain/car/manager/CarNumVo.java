@@ -11,14 +11,12 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "car_num", indexes = {@Index(name="carNum1Type_index",columnList="carNum1Type", unique=true)})
+@Table(name = "car_num", indexes = {@Index(name = "path_index", columnList = "path", unique = true)})
 @DynamicUpdate
 public class CarNumVo extends BaseEntity {
     private String carNum;
-    private String carNum1Type;
+    private CarNumType carNumType;
+    private Long time;
+    private String path;
     private String uuid;
-
-    public static String buildCarNumAndType(String carNum, CarNumType carNumType) {
-        return carNum + carNumType;
-    }
 }

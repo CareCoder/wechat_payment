@@ -117,6 +117,20 @@
                         }
                     });
                 });
+            } else if (layEvent === 'payment') {
+                layer.open({
+                    title: '缴费',
+                    type: 2,
+                    shade: false,
+                    maxmin: true,
+                    shade: 0.5,
+                    area: ['90%', '90%'],
+                    content: '/monthcarinfo/monthcarinfo-payment.html?id=' + data.id,
+                    zIndex: layer.zIndex,
+                    end: function () {
+                        $(".layui-laypage-btn")[0].click();
+                    }
+                });
             }
         });
 
@@ -175,6 +189,7 @@
 <script type="text/html" id="operationTpl">
     <a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
     <a href="javascript:;" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
+    <a href="javascript:;" title="缴费" lay-event="payment"><i class="layui-icon">&#xe65e;</i></a>
 </script>
 </body>
 </html>
