@@ -20,8 +20,8 @@ public class CarInfoController {
 
     @RequestMapping("/list")
     @ResponseBody
-    public PageResponse<CarInfo> list(Integer page, Integer limit, String type) {
-        return carInfoService.list(page, limit, type);
+    public PageResponse<CarInfo> list(Integer page, Integer limit, String type, String query) {
+        return carInfoService.list(page, limit, type, query);
     }
 
     @RequestMapping("/get/{id}")
