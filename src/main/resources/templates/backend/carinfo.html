@@ -22,6 +22,15 @@
             <i class="layui-icon layui-icon-refresh"></i>
         </a>
     </div>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 ok-search">
+            <input name="query" class="layui-input" placeholder="车牌字母或手机号码" autocomplete="off">
+            <button class="layui-btn" lay-submit="" lay-filter="search">
+                <i class="layui-icon layui-icon-search"></i>
+            </button>
+        </form>
+    </div>
     <!--工具栏-->
     <okToolbar>
         <button class="layui-btn" id="addCarInfo">
@@ -80,6 +89,16 @@
 
         form.on('submit(search)', function () {
             layer.msg('正在查询，请稍后...');
+            var query = $("input[name='query']").val();
+            table.reload('tableId', {
+                url: '/carinfo/list?type=' + type,
+                where: {
+                    query: query
+                },
+                page: {
+                    curr: 1
+                }
+            });
             return false;
         });
 
