@@ -22,6 +22,15 @@
             <i class="layui-icon layui-icon-refresh"></i>
         </a>
     </div>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 ok-search">
+            <input name="query" class="layui-input" placeholder="车牌字母或手机号码" autocomplete="off">
+            <button class="layui-btn" lay-submit="" lay-filter="search">
+                <i class="layui-icon layui-icon-search"></i>
+            </button>
+        </form>
+    </div>
     <!--工具栏-->
     <okToolbar>
         <button class="layui-btn" id="addCarInfo">
@@ -62,18 +71,18 @@
             page: true,
             cols: [
                 [
-                {field: 'id', title: 'ID', width: 80},
-                {field: 'carNum', title: '车牌号', width: 100},
-                {field: 'name', title: '姓名', width: 100},
-                {field: 'phone', title: '手机', width: 100},
-                {field: 'carType', title: '车辆类型', width: 100, templet:'#carType'},
-                {field: 'startTime', title: '发行时间', width: 150, templet:'#startTime'},
-                {field: 'endTime', title: '截止时间', width: 150, templet:'#endTime'},
-                {field: 'carGroup', title: '车位组', width: 100},
-                {field: 'idCardNum', title: '身份证号码', width: 100},
-                {field: 'remarks', title: '备注', width: 100},
-                {title: '操作', width: 200, templet: '#operationTpl', align: 'center'}
-            ]
+                    {field: 'id', title: 'ID', width: 80},
+                    {field: 'carNum', title: '车牌号', width: 100},
+                    {field: 'name', title: '姓名', width: 100},
+                    {field: 'phone', title: '手机', width: 100},
+                    {field: 'carType', title: '车辆类型', width: 100, templet: '#carType'},
+                    {field: 'startTime', title: '发行时间', width: 150, templet: '#startTime'},
+                    {field: 'endTime', title: '截止时间', width: 150, templet: '#endTime'},
+                    {field: 'carGroup', title: '车位组', width: 100},
+                    {field: 'idCardNum', title: '身份证号码', width: 100},
+                    {field: 'remarks', title: '备注', width: 100},
+                    {title: '操作', width: 200, templet: '#operationTpl', align: 'center'}
+                ]
             ],
             done: function (res, curr, count) {
                 $("#countNum").text(count);
@@ -82,6 +91,16 @@
 
         form.on('submit(search)', function () {
             layer.msg('正在查询，请稍后...');
+            var query = $("input[name='query']").val();
+            table.reload('tableId', {
+                url: '/monthcarinfo/list',
+                where: {
+                    query: query
+                },
+                page: {
+                    curr: 1
+                }
+            });
             return false;
         });
 
@@ -105,14 +124,14 @@
             } else if (layEvent === 'del') {
                 layer.confirm("确定要删除吗？", {skin: 'layui-layer-lan', icon: 2, title: '提示', anim: 6}, function () {
                     $.ajax({
-                        url:"/monthcarinfo/delete/" + data.id,
-                        type:"GET",
-                        data:data.field,
-                        success:function(resp){
+                        url: "/monthcarinfo/delete/" + data.id,
+                        type: "GET",
+                        data: data.field,
+                        success: function (resp) {
                             layer.msg("操作成功！", {icon: 1, time: 1000});
                             window.location.href = "javascript:location.replace(location.href);";
                         },
-                        error:function(){
+                        error: function () {
                             layer.msg("操作失败！", {icon: 1, time: 1000});
                         }
                     });
@@ -150,7 +169,7 @@
                     $(".layui-btn")[0].click();
                 }
             });
-        })
+        });
     })
 
 </script>
@@ -173,7 +192,7 @@
 
 <script type="text/html" id="carType">
     {{#  if(d.carType === 'MONTH_CAR_A'){ }}
-        月租车A
+    月租车A
     {{#  } }}
     {{#  if(d.carType === 'MONTH_CAR_B'){ }}
     月租车B
