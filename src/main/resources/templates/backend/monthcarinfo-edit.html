@@ -30,7 +30,11 @@
                 <input type="text" name="name" placeholder="请输入姓名" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
             <label class="layui-form-label">车牌号码</label>
-            <div class="layui-input-block">
+            <div class="layui-input-inline">
+                <select id="province_select", name="carNumHead" lay-verify="required">
+                </select>
+            </div>
+            <div class="layui-input-inline">
                 <input type="text" name="carNum" placeholder="请输入车牌号码" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
@@ -89,12 +93,20 @@
 
         $("input[name='id']").val('[[${monthCarInfo?.id}]]');
         $("input[name='name']").val('[[${monthCarInfo?.name}]]');
-        $("input[name='carNum']").val('[[${monthCarInfo?.carNum}]]');
         $("input[name='phone']").val('[[${monthCarInfo?.phone}]]');
         $("input[name='remarks']").val('[[${monthCarInfo?.remarks}]]');
 
         $("input[name='carGroup']").val('[[${monthCarInfo?.carGroup}]]');
         $("input[name='idCardNum']").val('[[${monthCarInfo?.idCardNum}]]');
+
+        var carNum = '[[${monthCarInfo?.carNum}]]';
+        var carNumHead = "京";
+        var carNumBody = "";
+        if (carNum != '') {
+            carNumHead = carNum.substring(0, 1);
+            carNumBody = carNum.substring(1, carNum.length);
+        }
+        $("input[name='carNum']").val(carNumBody);
 
         var carType = '[[${monthCarInfo?.carType}]]';
         if (carType === '') {
@@ -115,6 +127,7 @@
 
         form.on('submit(add)', function (data) {
             data.field.endTime = new Date(data.field.endTime).getTime();
+            data.field.carNum = data.field.carNumHead + data.field.carNum;
             console.log(data.field);
             $.ajax({
                 url:"/monthcarinfo/edit",
@@ -135,6 +148,14 @@
             return false;
         });
 
+        var province = ["京", "津", "沪", "渝", "冀", "晋", "辽", "吉", "黑", "苏", "浙", "皖", "闽", "赣", "鲁", "豫", "鄂", "湘", "粤", "琼", "川", "黔", "云", "陕", "甘", "青", "藏", "桂", "蒙", "宁", "新"];
+        province.forEach(function (value, i) {
+            if (value == carNumHead) {
+                $('#province_select').append("<option selected value='"+value+"'>"+value+"</option>");
+            }else{
+                $('#province_select').append("<option value='"+value+"'>"+value+"</option>");
+            }
+        });
         form.render();
     })
 </script>
