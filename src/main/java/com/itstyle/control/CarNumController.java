@@ -1,12 +1,14 @@
 package com.itstyle.control;
 
+import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
-import com.itstyle.domain.car.manager.enums.CarNumType;
+import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.CarNumService;
 import com.itstyle.utils.enums.Status;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +22,10 @@ public class CarNumController {
     private CarNumService carNumService;
 
     @GetMapping("/tempcarinfo.html")
-    public String tempcarinfo() {
+    public String tempcarinfo(CarNumQueryVo queryVo, Model model) {
+        List<CarNumVo> carNumVos = carNumService.query(queryVo);
+        model.addAttribute("carNumVos", carNumVos);
+        model.addAttribute("queryVo", queryVo);
         return "/backend/tempcarinfo";
     }
 
