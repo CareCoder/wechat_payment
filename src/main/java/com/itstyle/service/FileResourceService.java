@@ -79,7 +79,7 @@ public class FileResourceService {
             headers.add("Content-Type", "application/octet-stream");
             headers.add("Connection", "close");
             headers.add("Accept-Ranges", "bytes");
-            headers.add("Content-Disposition", "attachment;filename=" + bo.getOriginalName());
+            headers.add("Content-Disposition", "attachment;filename=" + new String(bo.getOriginalName().getBytes("GB2312"), "ISO8859-1"));
             //将文件字节数组，header，状态码封装到ResponseEntity
             entity = new ResponseEntity<>(res, headers, HttpStatus.OK);
         } catch (IOException e) {

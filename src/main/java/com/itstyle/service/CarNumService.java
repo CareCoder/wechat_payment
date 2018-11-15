@@ -43,10 +43,14 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         return status;
     }
 
-    public ResponseEntity<byte[]> download(String carNum, CarNumType carNumType, Long time) {
-        CarNumVo vo = carNumMapper.findByCarNumAndCarNumTypeAndTime(carNum, carNumType, time);
-        String uuid = vo.getUuid();
-        return fileResourceService.downloadByUuid(uuid);
+    public ResponseEntity<byte[]> download(CarNumVo carNumVo) {
+        List<CarNumVo> all = carNumMapper.findAll(Example.of(carNumVo));
+        if (all != null && !all.isEmpty()) {
+            CarNumVo vo = all.get(0);
+            String uuid = vo.getUuid();
+            return fileResourceService.downloadByUuid(uuid);
+        }
+        return null;
     }
 
     public ResponseEntity<byte[]> download(String path) {

@@ -36,7 +36,7 @@ public class CarNumController {
         return Response.build(status, "", null);
     }
 
-    @RequestMapping("/download")
+    @GetMapping("/download")
     @ResponseBody
     public ResponseEntity<byte[]> download(@RequestParam String path) {
         return carNumService.download(path);
@@ -44,10 +44,8 @@ public class CarNumController {
 
     @RequestMapping("/download2")
     @ResponseBody
-    public ResponseEntity<byte[]> download2(@RequestParam String carNum,
-                                            @RequestParam CarNumType carNumType,
-                                            @RequestParam Long time) {
-        return carNumService.download(carNum, carNumType, time);
+    public ResponseEntity<byte[]> download2(CarNumVo carNumVo) {
+        return carNumService.download(carNumVo);
     }
 
     @RequestMapping("/delete/{path}")
