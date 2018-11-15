@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>人工搜索车牌</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+    <style>
+        .main-body img {
+            width: 100%;
+            height: auto;
+        }
+        .grid {
+            padding: 10px;
+            line-height: 30px;
+            text-align: center;
+            background-color: #79C48C;
+            color: #fff;
+        }
+        .center{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>车辆管理</cite></a>
+                <a><cite>人工搜索车牌</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 ok-search">
+            <div class="layui-form-item">
+                <select name="carType">
+                    <option value="MONTH_CAR_A" selected>月租车A</option>
+                    <option value="MONTH_CAR_B">月租车B</option>
+                    <option value="MONTH_CAR_C">月租车C</option>
+                    <option value="TEMP_CAR_A">临时车A</option>
+                    <option value="TEMP_CAR_B">临时车B</option>
+                    <option value="TEMP_CAR_C">临时车C</option>
+                    <option value="VIP_CAR">贵宾车</option>
+                </select>
+                <input name="startTime" class="layui-input" placeholder="入场时间" autocomplete="off" id="startTime">
+                <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
+            </div>
+        </form>
+    </div>
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 ok-search">
+            <div class="layui-form-item">
+                <input name="query" class="layui-input" placeholder="车牌" autocomplete="off">
+                <button class="layui-btn" lay-submit="" lay-filter="search">
+                    <i class="layui-icon layui-icon-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="layui-row main-body layui-col-space30">
+        <div class="layui-col-md3">
+            <div class="layui-row">
+                <!--第一张图-->
+                <div class="layui-col-md12">
+                    <img src="/file/2a2492e4-d145-41b6-9a55-25cb1e509006.jpg">
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <!--第二张图-->
+                <div class="layui-col-md12">
+                    <img src="/file/48515c85-dc50-4012-9401-a048c606c7b7.jpg">
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6 grid">
+                    粤A12345
+                </div>
+                <div class="layui-col-md6 grid">
+                    2018/10/15 10:11:18
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6 layui-col-md-offset3 center">
+                    <button class="layui-btn layui-btn-radius">去缴费</button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-row">
+                <!--第一张图-->
+                <div class="layui-col-md12">
+                    <img src="/file/2a2492e4-d145-41b6-9a55-25cb1e509006.jpg">
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <!--第二张图-->
+                <div class="layui-col-md12">
+                    <img src="/file/48515c85-dc50-4012-9401-a048c606c7b7.jpg">
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6 grid">
+                    粤A12345
+                </div>
+                <div class="layui-col-md6 grid">
+                    2018/10/15 10:11:18
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6 layui-col-md-offset3 center">
+                    <button class="layui-btn layui-btn-radius">去缴费</button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-row">
+                <!--第一张图-->
+                <div class="layui-col-md12">
+                    <img src="/file/2a2492e4-d145-41b6-9a55-25cb1e509006.jpg">
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <!--第二张图-->
+                <div class="layui-col-md12">
+                    <img src="/file/48515c85-dc50-4012-9401-a048c606c7b7.jpg">
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6 grid">
+                    粤A12345
+                </div>
+                <div class="layui-col-md6 grid">
+                    2018/10/15 10:11:18
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6 layui-col-md-offset3 center">
+                    <button class="layui-btn layui-btn-radius">去缴费</button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-row">
+                <!--第一张图-->
+                <div class="layui-col-md12">
+                    <img src="/file/2a2492e4-d145-41b6-9a55-25cb1e509006.jpg">
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <!--第二张图-->
+                <div class="layui-col-md12">
+                    <img src="/file/48515c85-dc50-4012-9401-a048c606c7b7.jpg">
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6 grid">
+                    粤A12345
+                </div>
+                <div class="layui-col-md6 grid">
+                    2018/10/15 10:11:18
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6 layui-col-md-offset3 center">
+                    <button class="layui-btn layui-btn-radius">去缴费</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-md3 layui-col-md-offset3 center">
+            <button class="layui-btn layui-btn-radius">上一页</button>
+        </div>
+        <div class="layui-col-md3 center">
+            <button class="layui-btn layui-btn-radius">下一页</button>
+        </div>
+    </div>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    }
+    layui.use(['table', 'form', 'jquery', 'laydate'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#startTime',
+            type: "datetime"
+        });
+
+        laydate.render({
+            elem: '#endTime',
+            type: "datetime"
+        });
+
+        form.on('submit(search)', function () {
+            layer.msg('正在查询，请稍后...');
+            var query = $("input[name='query']").val();
+            table.reload('tableId', {
+                url: '/monthcarinfo/list',
+                where: {
+                    query: query
+                },
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+    })
+
+</script>
+</body>
+</html>
