@@ -47,4 +47,12 @@ public class YstCommon {
 	public static final String FIXEDCARMANAGER_KEY = "FIXEDCARMANAGER_KEY";
 	/** 车场名称设置 */
 	public static final String CAR_YARD_NAME = "CAR_YARD_NAME";
+	public static final String EQUIPMENT_STATUS = "EQUIPMENT_STATUS";
+
+	/** 深圳收费 */
+	public static final String SZ_CHARGES = "SC_CHARGES";
+	/** 标准收费 */
+	public static final String STANDARD_CHARGES = "STANDARD_CHARGES";
+	/** 按次收费 */
+	public static final String BY_CHARGES = "BY_CHARGES";
 }

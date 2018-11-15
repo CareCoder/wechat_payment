@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.Map;
 
 @Repository
 public class RedisDao {
@@ -57,6 +58,11 @@ public class RedisDao {
     public String hget(String filed, String key) {
         HashOperations<String, String, String> ops = template.opsForHash();
         return ops.get(filed, key);
+    }
+
+    public Map<Object, Object> hgetAll(String key) {
+        HashOperations<String, Object, Object> operations = this.template.opsForHash();
+        return operations.entries(key);
     }
 
     public void hdelete(String filed, String key) {

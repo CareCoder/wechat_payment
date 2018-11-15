@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>收费设置</cite></a>
+                <a><cite>深圳收费</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <blockquote class="layui-elem-quote layui-text">
+        <label style="color: #eb141b">注意：如果以下数据为空，代表该车辆类型未增加收费设置</label>
+    </blockquote>
+    <form name="pass_form" class="layui-form layui-col-md12 ok-form">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>收费设置</legend>
+        </fieldset>
+        <div class="layui-form-item">
+            <label class="layui-form-label">车辆类型</label>
+            <div class="layui-input-inline">
+                <select name="carType" lay-filter="selectChange">
+                    <option value="TEMP_CAR_A">临时车A</option>
+                    <option value="TEMP_CAR_B">临时车B</option>
+                    <option value="TEMP_CAR_C">临时车C</option>
+                    <option value="MONTH_CAR_A">月租车A</option>
+                    <option value="MONTH_CAR_B">月租车B</option>
+                    <option value="MONTH_CAR_C">月租车C</option>
+                    <option value="VIR_CAR">贵宾车</option>
+                </select>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">免费时间</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="freeTime" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">分钟</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">最高收费</label>
+            <div class="layui-input-inline" style="width: 60px;">
+                <input type="number" name="cappingAmount" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+            <div class="layui-form-mid">元 24小时为一个周期</div>
+            <div  class="layui-inline">
+                <label class="layui-form-label" style="width: 85px;">中央收费时间</label>
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="centralChargesTime" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">分钟</div>
+            </div>
+        </div>
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>工作日</legend>
+        </fieldset>
+        高峰期：
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">高峰期时间</label>
+                <div class="layui-input-inline" style="width: 120px">
+                    <input type="text" name="peakModelPeakTimeStart" class="layui-input" id="timeSelectStart" placeholder="HH:mm:ss" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">~</div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 120px">
+                    <input type="text" name="peakModelPeakTimeEnd" class="layui-input" id="timeSelectEnd" placeholder="HH:mm:ss" lay-verify="required">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">首段时间</label>
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="peakFirstTime" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">分钟，首段金额</div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="peakFirstAmount" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">元，递增时间</div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="peakIncreasingTime" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">分钟，递增金额</div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="peakIncreasingAmount" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">元</div>
+            </div>
+        </div>
+        非高峰期：
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">首段时间</label>
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="nonPeakFirstTime" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">分钟，首段金额</div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="nonPeakFirstAmount" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">元，递增时间</div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="nonPeakIncreasingTime" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">分钟，递增金额</div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="nonPeakIncreasingAmount" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">元</div>
+            </div>
+        </div>
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>非工作日</legend>
+        </fieldset>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">首段时间</label>
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="nonWorkingDayFirstTime" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">分钟，首段金额</div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="nonWorkingDayFirstAmount" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">元，递增时间</div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="nonWorkingDayIncreasingTime" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">分钟，递增金额</div>
+            </div>
+            <div class="layui-inline">
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="nonWorkingDayIncreasingAmount" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">元</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    var type = '[[${type}]]';
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    }
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#timeSelectStart',
+            type: 'time'
+        });
+
+        laydate.render({
+            elem: '#timeSelectEnd',
+            type: 'time'
+        });
+
+        form.on('submit(search)', function () {
+            layer.msg('正在查询，请稍后...');
+            return false;
+        });
+        var sz_charges = '[[${sz_charges}]]';
+        if (sz_charges) {
+            $("select[name='carType']").val('[[${sz_charges?.carType}]]');
+            $("input[name='freeTime']").val('[[${sz_charges?.freeTime}]]');
+            $("input[name='cappingAmount']").val('[[${sz_charges?.cappingAmount}]]');
+            $("input[name='centralChargesTime']").val('[[${sz_charges?.centralChargesTime}]]');
+            $("input[name='peakModelPeakTimeStart']").val('[[${sz_charges?.peakModelPeakTimeStart}]]' + ":00:00");
+            $("input[name='peakModelPeakTimeEnd']").val('[[${sz_charges?.peakModelPeakTimeEnd}]]' + ":00:00");
+            $("input[name='peakFirstTime']").val('[[${sz_charges?.peakFirstTime}]]');
+            $("input[name='peakFirstAmount']").val('[[${sz_charges?.peakFirstAmount}]]');
+            $("input[name='peakIncreasingTime']").val('[[${sz_charges?.peakIncreasingTime}]]');
+            $("input[name='peakIncreasingAmount']").val('[[${sz_charges?.peakIncreasingAmount}]]');
+            $("input[name='nonPeakFirstTime']").val('[[${sz_charges?.nonPeakFirstTime}]]');
+            $("input[name='nonPeakFirstAmount']").val('[[${sz_charges?.nonPeakFirstAmount}]]');
+            $("input[name='nonPeakIncreasingTime']").val('[[${sz_charges?.nonPeakIncreasingTime}]]');
+            $("input[name='nonPeakIncreasingAmount']").val('[[${sz_charges?.nonPeakIncreasingAmount}]]');
+            $("input[name='nonWorkingDayFirstTime']").val('[[${sz_charges?.nonWorkingDayFirstTime}]]');
+            $("input[name='nonWorkingDayFirstAmount']").val('[[${sz_charges?.nonWorkingDayFirstAmount}]]');
+            $("input[name='nonWorkingDayIncreasingTime']").val('[[${sz_charges?.nonWorkingDayIncreasingTime}]]');
+            $("input[name='nonWorkingDayIncreasingAmount']").val('[[${sz_charges?.nonWorkingDayIncreasingAmount}]]');
+        }
+
+        form.on('select(selectChange)', function (data) {
+           $.ajax({
+               url:'/fee/sz/get/' + data.value,
+               type:'GET',
+               success:function(resp) {
+                   if (resp.status == 200) {
+                       if (resp.data != null) {
+                           $("input[name='freeTime']").val(resp.data.freeTime);
+                           $("input[name='cappingAmount']").val(resp.data.cappingAmount);
+                           $("input[name='centralChargesTime']").val(resp.data.centralChargesTime);
+                           $("input[name='peakModelPeakTimeStart']").val(resp.data.peakModelPeakTimeStart + ":00:00");
+                           $("input[name='peakModelPeakTimeEnd']").val(resp.data.peakModelPeakTimeEnd + ":00:00");
+                           $("input[name='peakFirstTime']").val(resp.data.peakFirstTime);
+                           $("input[name='peakFirstAmount']").val(resp.data.peakFirstAmount);
+                           $("input[name='peakIncreasingTime']").val(resp.data.peakIncreasingTime);
+                           $("input[name='peakIncreasingAmount']").val(resp.data.peakIncreasingAmount);
+                           $("input[name='nonPeakFirstTime']").val(resp.data.nonPeakFirstTime);
+                           $("input[name='nonPeakFirstAmount']").val(resp.data.nonPeakFirstAmount);
+                           $("input[name='nonPeakIncreasingTime']").val(resp.data.nonPeakIncreasingTime);
+                           $("input[name='nonPeakIncreasingAmount']").val(resp.data.nonPeakIncreasingAmount);
+                           $("input[name='nonWorkingDayFirstTime']").val(resp.data.nonWorkingDayFirstTime);
+                           $("input[name='nonWorkingDayFirstAmount']").val(resp.data.nonWorkingDayFirstAmount);
+                           $("input[name='nonWorkingDayIncreasingTime']").val(resp.data.nonWorkingDayIncreasingTime);
+                           $("input[name='nonWorkingDayIncreasingAmount']").val(resp.data.nonWorkingDayIncreasingAmount);
+                       } else {
+                           $("input[name='freeTime']").val('');
+                           $("input[name='cappingAmount']").val('');
+                           $("input[name='centralChargesTime']").val('');
+                           $("input[name='peakModelPeakTimeStart']").val('');
+                           $("input[name='peakModelPeakTimeEnd']").val('');
+                           $("input[name='peakFirstTime']").val('');
+                           $("input[name='peakFirstAmount']").val('');
+                           $("input[name='peakIncreasingTime']").val('');
+                           $("input[name='peakIncreasingAmount']").val('');
+                           $("input[name='nonPeakFirstTime']").val('');
+                           $("input[name='nonPeakFirstAmount']").val('');
+                           $("input[name='nonPeakIncreasingTime']").val('');
+                           $("input[name='nonPeakIncreasingAmount']").val('');
+                           $("input[name='nonWorkingDayFirstTime']").val('');
+                           $("input[name='nonWorkingDayFirstAmount']").val('');
+                           $("input[name='nonWorkingDayIncreasingTime']").val('');
+                           $("input[name='nonWorkingDayIncreasingAmount']").val('');
+                       }
+                   }
+                   if (resp.status == 500) {
+                       layer.msg(resp.msg, {icon: 2, time: 2000});
+                   }
+               },
+               error:function () {
+                   layer.msg("获取信息！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
+                       window.location.href = "javascript:location.replace(location.href);";
+                   });
+               }
+           });
+        });
+
+        form.on('submit(add)', function (data) {
+            var json = data.field;
+            json.peakModelPeakTimeStart = splitTime(json.peakModelPeakTimeStart);
+            json.peakModelPeakTimeEnd = splitTime(json.peakModelPeakTimeEnd);
+            $.ajax({
+                url:"/fee/sz/save",
+                type:"POST",
+                data:json,
+                success:function(resp){
+                    if (resp.status == 200) {
+                        layer.msg("保存成功！", {icon: 6, time: 1000, anim: 4}, function () {
+//                            window.location.href = "javascript:location.replace(location.href);";
+                        });
+                    }
+                    if (resp.status == 500) {
+                        layer.msg(resp.msg, {icon: 2, time: 2000});
+                    }
+
+                },
+                error:function(){
+                    layer.msg("保存失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
+                        window.location.href = "javascript:location.replace(location.href);";
+                    });
+                }
+            });
+            return false;
+        });
+
+    })
+
+    function splitTime(time) {
+        var str = time.split(":")[0];
+        return str.replace(/\b(0+)/gi,"");
+    }
+    
+</script>
+</body>
+</html>

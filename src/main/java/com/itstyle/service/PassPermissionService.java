@@ -1,7 +1,6 @@
 package com.itstyle.service;
 
 import com.itstyle.common.PageResponse;
-import com.itstyle.domain.caryard.EquipmentStatus;
 import com.itstyle.domain.caryard.PassCarStatus;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
 
@@ -17,5 +16,4 @@ public interface PassPermissionService {
 
     PassCarStatus getById(Long id);
 
-    PageResponse<EquipmentStatus> equipmentList(int page, int limit);
 }

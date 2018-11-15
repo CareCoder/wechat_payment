@@ -2,12 +2,10 @@ package com.itstyle.service.impl;
 
 import com.itstyle.common.PageResponse;
 import com.itstyle.domain.caryard.ChannelType;
-import com.itstyle.domain.caryard.EquipmentStatus;
 import com.itstyle.domain.caryard.PassCarStatus;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
 import com.itstyle.exception.BusinessException;
 import com.itstyle.mapper.ChannelTypeMapper;
-import com.itstyle.mapper.EquipmentStatusMapper;
 import com.itstyle.mapper.PassPermissionMapper;
 import com.itstyle.service.PassPermissionService;
 import com.itstyle.utils.BeanUtilIgnore;
@@ -25,15 +23,12 @@ import java.util.stream.Collectors;
 public class PassPermissionServiceImpl implements PassPermissionService {
 
     private PassPermissionMapper passPermissionMapper;
-    private EquipmentStatusMapper equipmentStatusMapper;
     private ChannelTypeMapper channelTypeMapper;
 
     @Autowired
     public PassPermissionServiceImpl(PassPermissionMapper passPermissionMapper,
-                                     EquipmentStatusMapper equipmentStatusMapper,
                                      ChannelTypeMapper channelTypeMapper) {
         this.passPermissionMapper = passPermissionMapper;
-        this.equipmentStatusMapper = equipmentStatusMapper;
         this.channelTypeMapper = channelTypeMapper;
     }
 
@@ -78,8 +73,4 @@ public class PassPermissionServiceImpl implements PassPermissionService {
         return passPermissionMapper.findOne(id);
     }
 
-    @Override
-    public PageResponse<EquipmentStatus> equipmentList(int page, int limit) {
-        return PageResponse.build(equipmentStatusMapper.findAll(PageResponse.getPageRequest(page, limit)));
-    }
 }
