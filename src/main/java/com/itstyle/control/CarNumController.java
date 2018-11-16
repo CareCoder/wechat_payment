@@ -2,6 +2,7 @@ package com.itstyle.control;
 
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
+import com.itstyle.domain.car.manager.enums.CarNumExtVo;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.CarNumService;
@@ -31,10 +32,10 @@ public class CarNumController {
 
     @RequestMapping("/upload")
     @ResponseBody
-    public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo) {
+    public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
         int status = Status.NORMAL;
         try {
-            status = carNumService.upload(file, carNumVo);
+            status = carNumService.upload(file, carNumVo, carNumExtVo);
         } catch (Exception e) {
             return Response.build(status, "系统错误", null);
         }
@@ -49,8 +50,8 @@ public class CarNumController {
 
     @RequestMapping("/download2")
     @ResponseBody
-    public ResponseEntity<byte[]> download2(CarNumVo carNumVo) {
-        return carNumService.download(carNumVo);
+    public ResponseEntity<byte[]> download2(CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
+        return carNumService.download(carNumVo, carNumExtVo);
     }
 
     @RequestMapping("/delete/{path}")

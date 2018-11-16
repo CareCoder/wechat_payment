@@ -3,8 +3,8 @@ package com.itstyle.service;
 import com.itstyle.common.PageResponse;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
-import com.itstyle.domain.car.manager.enums.CarNumType;
-import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.CarNumExtVo;
+import com.itstyle.mapper.CarNumExtMapper;
 import com.itstyle.mapper.CarNumMapper;
 import com.itstyle.utils.enums.Status;
 import com.itstyle.utils.hibernate.BaseDaoService;
@@ -28,19 +28,19 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     @Resource
     private CarNumMapper carNumMapper;
     @Resource
+    private CarNumExtMapper carNumExtMapper;
+    @Resource
     private FileResourceService fileResourceService;
 
     public CarNumService() {
         jpaRepository = carNumMapper;
     }
 
-    public int upload(MultipartFile file, CarNumVo carNumVo) {
+    public int upload(MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
         int status = Status.NORMAL;
         String uuid = UUID.randomUUID().toString();
-        if (carNumVo.getCarNumType() == null) {
-            return Status.PARAMS_ERROR;
-        }
-        carNumVo.setUuid(carNumVo.getCarNumType(), uuid);
+        carNumExtVo.setUuid(uuid);
+        carNumVo.getCarNumExtVos().add(carNumExtVo);
         List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo));
 
         if (find != null && !find.isEmpty()) {
@@ -55,26 +55,24 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         return status;
     }
 
-    public ResponseEntity<byte[]> download(CarNumVo carNumVo) {
+    public ResponseEntity<byte[]> download(CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
         List<CarNumVo> all = carNumMapper.findAll(Example.of(carNumVo));
         if (all != null && !all.isEmpty()) {
             CarNumVo vo = all.get(0);
-            String uuid = vo.getUuid(carNumVo.getCarNumType());
+            String uuid = vo.getUuid(carNumExtVo.getCarNumType());
             return fileResourceService.downloadByUuid(uuid);
         }
         return null;
     }
 
     public ResponseEntity<byte[]> download(String path) {
-        CarNumVo vo = carNumMapper.findByPath(path);
-        String uuid = vo.getUuid(vo.getCarNumType());
-        return fileResourceService.downloadByUuid(uuid);
+        CarNumExtVo carNumExtVo = carNumExtMapper.findByPath(path);
+        return fileResourceService.downloadByUuid(carNumExtVo.getUuid());
     }
 
     public void delete(String path) {
-        CarNumVo one = carNumMapper.findByPath(path);
-        carNumMapper.delete(one.getId());
-        fileResourceService.deleteByUuid(one.getUuid(one.getCarNumType()));
+        CarNumExtVo carNumExtVo = carNumExtMapper.findByPath(path);
+        fileResourceService.deleteByUuid(carNumExtVo.getUuid());
     }
 
     public List<CarNumVo> query(CarNumVo carNumVo) {
