@@ -4,3 +4,4 @@ spring-boot-pay.iml
 target
 .settings
 *.log
+*.tar.gz
