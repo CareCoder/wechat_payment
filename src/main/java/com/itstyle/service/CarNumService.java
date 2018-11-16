@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,12 +41,19 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         int status = Status.NORMAL;
         String uuid = UUID.randomUUID().toString();
         carNumExtVo.setUuid(uuid);
-        carNumVo.getCarNumExtVos().add(carNumExtVo);
         List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo));
-
         if (find != null && !find.isEmpty()) {
-            return Status.WARN_ALREAD_EXIST;
+            Optional<CarNumExtVo> any = find.stream().flatMap(e -> e.getCarNumExtVos().stream())
+                    .filter(e -> e.getCarNumType() == carNumExtVo.getCarNumType()).findAny();
+            if (any.isPresent()) {
+                return Status.WARN_ALREAD_EXIST;
+            }
+            if (find.size() == 1) {
+                carNumVo = find.get(0);
+            }
         }
+
+        carNumVo.getCarNumExtVos().add(carNumExtVo);
         try {
             carNumMapper.save(carNumVo);
             fileResourceService.upload(file, uuid);
@@ -72,6 +80,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
 
     public void delete(String path) {
         CarNumExtVo carNumExtVo = carNumExtMapper.findByPath(path);
+        carNumExtMapper.delete(carNumExtVo.getId());
         fileResourceService.deleteByUuid(carNumExtVo.getUuid());
     }
 

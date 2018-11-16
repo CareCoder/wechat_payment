@@ -72,14 +72,14 @@
             <div class="layui-row">
                 <!--第一张图-->
                 <div class="layui-col-md12">
-                    <img src="/file/2a2492e4-d145-41b6-9a55-25cb1e509006.jpg">
+                    <img th:src="'/file/'+${vo?.carNumExtVos?.get(0)?.uuid}+'.jpg'">
                 </div>
             </div>
             <br>
             <div class="layui-row">
                 <!--第二张图-->
                 <div class="layui-col-md12">
-                    <img src="/file/48515c85-dc50-4012-9401-a048c606c7b7.jpg">
+                    <img th:src="'/file/'+${vo?.carNumExtVos?.get(1)?.uuid}+'.jpg'">
                 </div>
             </div>
             <br>

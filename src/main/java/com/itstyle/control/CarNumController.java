@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -25,6 +26,10 @@ public class CarNumController {
     @GetMapping("/tempcarinfo.html")
     public String tempcarinfo(CarNumQueryVo queryVo, Model model) {
         List<CarNumVo> carNumVos = carNumService.query(queryVo);
+        carNumVos.forEach(e -> {
+            List<CarNumExtVo> carNumExtVos = e.getCarNumExtVos();
+            carNumExtVos.sort(Comparator.comparingInt(e1 -> -e1.getCarNumType().ordinal()));
+        });
         model.addAttribute("carNumVos", carNumVos);
         model.addAttribute("queryVo", queryVo);
         return "/backend/tempcarinfo";
