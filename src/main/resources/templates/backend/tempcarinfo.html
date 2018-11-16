@@ -102,10 +102,10 @@
 
     <div class="layui-row">
         <div class="layui-col-md3 layui-col-md-offset3 center">
-            <button class="layui-btn layui-btn-radius layui-btn-normal">上一页</button>
+            <button id="prev_btn" class="layui-btn layui-btn-radius layui-btn-normal">上一页</button>
         </div>
         <div class="layui-col-md3 center">
-            <button class="layui-btn layui-btn-radius layui-btn-normal">下一页</button>
+            <button id="next_btn" class="layui-btn layui-btn-radius layui-btn-normal">下一页</button>
         </div>
     </div>
 </div>
@@ -123,39 +123,84 @@
         var $ = layui.jquery;
         var laydate = layui.laydate;
 
-        var limit = 4;
         var page = '[[${queryVo?.page}]]';
         var carNum = '[[${queryVo?.carNum}]]';
         var carType = '[[${queryVo?.carType}]]';
         var startTime = '[[${queryVo?.startTime}]]';
         var endTime = '[[${queryVo?.endTime}]]';
+        var form_data = new Map();
+        if (page != '') {
+            form_data.set("page", page);
+        }
+        if (carNum != '') {
+            form_data.set("carNum", carNum);
+        }
+        if (carType != '') {
+            form_data.set("carType", carType);
+        }
+        if (startTime != '') {
+            form_data.set("startTime", startTime);
+        }
+        if (endTime != '') {
+            form_data.set("endTime", endTime);
+        }
         if (page == "") {
             page = 1;
         }
+        if (startTime === '') {
+            startTime = new Date().getTime();
+        }
+        if (endTime === '') {
+            endTime = new Date().getTime();
+        }
+        if (carType != "") {
+            $("select option[value=" + carType + "]").attr("selected", 'selected');
+        }
+        $("input[name='carNum']").val(carNum);
+        if (page <= 1) {
+            $("#prev_btn").addClass("layui-btn-disabled");
+        }
 
+        $("#prev_btn").click(function(){
+            form_data.set("page", parseInt(form_data.get("page")) - 1);
+            var param = "?";
+            form_data.forEach(function(value, key){
+                param = param + key + "=" + value + "&";
+            })
+            window.location.href = "/carnum/tempcarinfo.html" + param;
+        });
+        $("#next_btn").click(function(){
+            form_data.set("page", parseInt(form_data.get("page")) + 1);
+            var param = "?";
+            form_data.forEach(function(value, key){
+                param = param + key + "=" + value + "&";
+            })
+            window.location.href = "/carnum/tempcarinfo.html" + param;
+        });
 
         laydate.render({
             elem: '#startTime',
-            type: "datetime"
+            type: "datetime",
+            value: new Date(parseInt(startTime))
         });
 
         laydate.render({
             elem: '#endTime',
-            type: "datetime"
+            type: "datetime",
+            value: new Date(parseInt(endTime))
         });
 
         form.on('submit(search)', function () {
-            layer.msg('正在查询，请稍后...');
-            var query = $("input[name='query']").val();
-            table.reload('tableId', {
-                url: '/monthcarinfo/list',
-                where: {
-                    query: query
-                },
-                page: {
-                    curr: 1
-                }
-            });
+            var map = new Map();
+            map.set("carNum",carNum);
+            map.set("carType",carType);
+            map.set("startTime",startTime);
+            map.set("endTime",endTime);
+            var param = "?";
+            map.forEach(function(value, key){
+                param = param + key + "=" + value + "&";
+            })
+            window.location.href = "/carnum/tempcarinfo.html" + param;
             return false;
         });
     })
