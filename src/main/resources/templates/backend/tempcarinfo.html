@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>人工搜索车牌</title>
@@ -68,7 +68,7 @@
     </div>
 
     <div class="layui-row main-body layui-col-space30">
-        <div class="layui-col-md3">
+        <div class="layui-col-md3" th:each="vo,it : ${carNumVos}" >
             <div class="layui-row">
                 <!--第一张图-->
                 <div class="layui-col-md12">
@@ -84,11 +84,11 @@
             </div>
             <br>
             <div class="layui-row">
-                <div class="layui-col-md6 grid">
-                    粤A12345
+                <div class="layui-col-md6 grid" th:text="${vo.carNum}">
+
                 </div>
-                <div class="layui-col-md6 grid">
-                    2018/10/15 10:11:18
+                <div class="layui-col-md6 grid" th:text="${vo.time}">
+
                 </div>
             </div>
             <br>
@@ -122,6 +122,17 @@
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
+
+        var limit = 4;
+        var page = '[[${queryVo?.page}]]';
+        var carNum = '[[${queryVo?.carNum}]]';
+        var carType = '[[${queryVo?.carType}]]';
+        var startTime = '[[${queryVo?.startTime}]]';
+        var endTime = '[[${queryVo?.endTime}]]';
+        if (page == "") {
+            page = 1;
+        }
+
 
         laydate.render({
             elem: '#startTime',

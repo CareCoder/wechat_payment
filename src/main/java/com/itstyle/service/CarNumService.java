@@ -3,6 +3,7 @@ package com.itstyle.service;
 import com.itstyle.common.PageResponse;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
+import com.itstyle.domain.car.manager.enums.CarNumType;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.mapper.CarNumMapper;
 import com.itstyle.utils.enums.Status;
@@ -36,7 +37,10 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     public int upload(MultipartFile file, CarNumVo carNumVo) {
         int status = Status.NORMAL;
         String uuid = UUID.randomUUID().toString();
-        carNumVo.setUuid(uuid);
+        if (carNumVo.getCarNumType() == null) {
+            return Status.PARAMS_ERROR;
+        }
+        carNumVo.setUuid(carNumVo.getCarNumType(), uuid);
         List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo));
 
         if (find != null && !find.isEmpty()) {
@@ -55,7 +59,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         List<CarNumVo> all = carNumMapper.findAll(Example.of(carNumVo));
         if (all != null && !all.isEmpty()) {
             CarNumVo vo = all.get(0);
-            String uuid = vo.getUuid();
+            String uuid = vo.getUuid(carNumVo.getCarNumType());
             return fileResourceService.downloadByUuid(uuid);
         }
         return null;
@@ -63,14 +67,14 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
 
     public ResponseEntity<byte[]> download(String path) {
         CarNumVo vo = carNumMapper.findByPath(path);
-        String uuid = vo.getUuid();
+        String uuid = vo.getUuid(vo.getCarNumType());
         return fileResourceService.downloadByUuid(uuid);
     }
 
     public void delete(String path) {
         CarNumVo one = carNumMapper.findByPath(path);
         carNumMapper.delete(one.getId());
-        fileResourceService.deleteByUuid(one.getUuid());
+        fileResourceService.deleteByUuid(one.getUuid(one.getCarNumType()));
     }
 
     public List<CarNumVo> query(CarNumVo carNumVo) {

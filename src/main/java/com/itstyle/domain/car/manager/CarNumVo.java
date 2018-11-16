@@ -20,5 +20,33 @@ public class CarNumVo extends BaseEntity {
     private CarType carType;
     private Long time;
     private String path;
-    private String uuid;
+    private String enterBigUuid;
+    private String enterSmallUuid;
+    private String leaveBigUuid;
+    private String leaveSmallUuid;
+
+    public void setUuid(CarNumType carNumType, String uuid) {
+        if (carNumType == CarNumType.ENTER_BIG) {
+            enterBigUuid = uuid;
+        } else if (carNumType == CarNumType.ENTER_SMALL) {
+            enterSmallUuid = uuid;
+        } else if (carNumType == CarNumType.LEAVE_BIG) {
+            leaveBigUuid = uuid;
+        } else if (carNumType == CarNumType.LEAVE_SMALL) {
+            leaveSmallUuid = uuid;
+        }
+    }
+
+    public String getUuid(CarNumType carNumType) {
+        if (carNumType == CarNumType.ENTER_BIG) {
+            return enterBigUuid;
+        } else if (carNumType == CarNumType.ENTER_SMALL) {
+            return enterSmallUuid;
+        } else if (carNumType == CarNumType.LEAVE_BIG) {
+            return leaveBigUuid;
+        } else if (carNumType == CarNumType.LEAVE_SMALL) {
+            return leaveSmallUuid;
+        }
+        return "";
+    }
 }

@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class CarNumQueryVo {
-    private int page;
-    private int limit;
+    private int page = 1;
+    private int limit = 4;
     private String carNum;
     private CarType carType;
     private Long startTime;
