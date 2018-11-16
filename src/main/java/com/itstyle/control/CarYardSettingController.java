@@ -3,7 +3,6 @@ package com.itstyle.control;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.caryard.CarYardName;
-import com.itstyle.domain.caryard.EquipmentStatus;
 import com.itstyle.domain.caryard.PassCarStatus;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
 import com.itstyle.domain.park.resp.Response;
@@ -101,15 +100,4 @@ public class CarYardSettingController {
         return Response.build(Status.NORMAL, null, null);
     }
 
-    @GetMapping("/equipment/page")
-    public String equipmentPage() {
-        return "/backend/equipment-info";
-    }
-
-    @GetMapping("/equipment/query")
-    @ResponseBody
-    public PageResponse<EquipmentStatus> equipmentList(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                       @RequestParam(value = "limit", required = false, defaultValue = "20") int limit) {
-        return passPermissionService.equipmentList(page, limit);
-    }
 }

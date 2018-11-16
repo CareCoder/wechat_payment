@@ -53,12 +53,11 @@
 
         table.render({
             elem: '#tableId',
-            url: '/set/equipment/query',
-            limit: 5,
-            page: true,
+            url: '/equipment/query',
+            page: false,
             cols: [
                 [
-                    {field: 'id', title: 'ID', width: 80, align: 'center'},
+                    {field: 'key', title: 'KEY', width: 80, align: 'center'},
                     {field: 'equipmentName', title: '设备名称', width: 100, align: 'center'},
                     {field: 'entranceOneStatus', title: '入口1设备连接状态', templet: '#entranceOneIcon', width: 200, align: 'center'},
                     {field: 'entranceTwoStatus', title: '入口2设备连接状态', templet: '#entranceTwoIcon', width: 200, align: 'center'},

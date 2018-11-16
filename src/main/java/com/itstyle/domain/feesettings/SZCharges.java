@@ -1,5 +1,6 @@
 package com.itstyle.domain.feesettings;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 /**
@@ -9,57 +10,65 @@ import lombok.Data;
 public class SZCharges {
     private String carType;
     /** 最高收费，以分为单位(24小时为一个周期) */
-    private Long maximumCharges;
+    private Long cappingAmount;
     /** 免费时间（分钟） */
     private Integer freeTime;
+    /** 中央收费时间 */
+    private Integer centralChargesTime;
+    /** 工作日高峰期开始时间 */
+    @SerializedName("peakModel_peakTimeStart")
+    private Integer peakModelPeakTimeStart;
+    /** 工作日高峰期结束时间 */
+    @SerializedName("peakModel_peakTimeEnd")
+    private Integer peakModelPeakTimeEnd;
 
-    /**
-     * 工作日
-     */
-    @Data
-    public static class WorkingDay {
+    /** 高峰期首段停车时间 */
+    @SerializedName("peak_firstTime")
+    private Integer peakFirstTime;
 
-        /**
-         * 高峰期
-         */
-        @Data
-        public static class Peak {
-            /** 高峰期开始时间 */
-            private Long statTime;
-            /** 高峰期结束时间 */
-            private Long endTime;
-            private FeeSettings feeSettings;
-        }
+    /** 高峰期首段时间的金额 */
+    @SerializedName("peak_firstAmount")
+    private Double peakFirstAmount;
 
-        /**
-         * 非高峰期
-         */
-        @Data
-        public static class OffPeak {
-            private FeeSettings feeSettings;
-        }
-    }
+    /** 高峰期内首段过后的递增时间 */
+    @SerializedName("peak_increasingTime")
+    private Integer peakIncreasingTime;
 
-    /**
-     * 非工作日
-     */
-    @Data
-    public static class NonWorkingDay {
-        private FeeSettings feeSettings;
-    }
+    /** 高峰期内首段过后的递增金额 */
+    @SerializedName("peak_increasingAmount")
+    private Double peakIncreasingAmount;
 
-    /**
-     * 收费设置
-     */
-    @Data
-    public static class FeeSettings {
-        /** 首段时长 */
-        private Integer firstDuration;
-        /** 首段金额（分） */
-        private Long firstAmount;
-        /** 递增时长（分钟） */
-        private Long increasingTime;
-        /** 递增金额 */
-        private Long increasingAmount;
-    }
+    /** 非高峰期首段停车时间 */
+    @SerializedName("nonPeak_firstTime")
+    private Integer nonPeakFirstTime;
+
+    /** 非高峰期首段时间的金额 */
+    @SerializedName("nonPeak_firstAmount")
+    private Double nonPeakFirstAmount;
+
+    /** 非高峰期内首段过后的递增时间 */
+    @SerializedName("nonPeak_increasingTime")
+    private Integer nonPeakIncreasingTime;
+
+    /** 非高峰期内首段过后的递增金额 */
+    @SerializedName("nonPeak_increasingAmount")
+    private Double nonPeakIncreasingAmount;
+
+    /** 非工作日首段停车时间 */
+    @SerializedName("nonWorkingDay_firstTime")
+    private Integer nonWorkingDayFirstTime;
+
+    /** 非工作日首段时间的金额 */
+    @SerializedName("nonWorkingDay_firstAmount")
+    private Double nonWorkingDayFirstAmount;
+
+    /** 非工作日首段过后的递增时间 */
+    @SerializedName("nonWorkingDay_increasingTime")
+    private Integer nonWorkingDayIncreasingTime;
+
+    /** 非工作日首段过后的递增金额 */
+    @SerializedName("nonWorkingDay_increasingAmount")
+    private Double nonWorkingDayIncreasingAmount;
+
+
 }

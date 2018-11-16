@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>收费设置</cite></a>
+                <a><cite>标准收费</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <blockquote class="layui-elem-quote layui-text">
+        <label style="color: #eb141b">注意：如果以下数据为空，代表该车辆类型未增加收费设置</label>
+    </blockquote>
+    <form name="pass_form" class="layui-form layui-col-md12 ok-form">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>收费设置</legend>
+        </fieldset>
+        <div class="layui-form-item">
+            <label class="layui-form-label">车辆类型</label>
+            <div class="layui-input-inline">
+                <select name="carType" lay-filter="selectChange">
+                    <option value="TEMP_CAR_A">临时车A</option>
+                    <option value="TEMP_CAR_B">临时车B</option>
+                    <option value="TEMP_CAR_C">临时车C</option>
+                    <option value="MONTH_CAR_A">月租车A</option>
+                    <option value="MONTH_CAR_B">月租车B</option>
+                    <option value="MONTH_CAR_C">月租车C</option>
+                    <option value="VIR_CAR">贵宾车</option>
+                </select>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">免费时间</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="freeTime" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">分钟</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">最高收费</label>
+            <div class="layui-input-inline" style="width: 60px;">
+                <input type="number" name="cappingAmount" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+            <div class="layui-form-mid">元 24小时为一个周期</div>
+            <div  class="layui-inline">
+                <label class="layui-form-label" style="width: 85px;">中央收费时间</label>
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="centralChargesTime" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">分钟</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">一次收费</label>
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="oneTimeCharge" autocomplete="off" class="layui-input" lay-verify="required">
+                </div>
+                <div class="layui-form-mid">元</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    var type = '[[${type}]]';
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    }
+    layui.use(['element', 'table', 'form', 'jquery', 'laydate'], function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+
+        form.on('submit(search)', function () {
+            layer.msg('正在查询，请稍后...');
+            return false;
+        });
+        var by_charges = '[[${by_charges}]]';
+        if (by_charges) {
+            $("select[name='carType']").val('[[${by_charges?.carType}]]');
+            $("input[name='freeTime']").val('[[${by_charges?.freeTime}]]');
+            $("input[name='cappingAmount']").val('[[${by_charges?.cappingAmount}]]');
+            $("input[name='centralChargesTime']").val('[[${by_charges?.centralChargesTime}]]');
+            $("input[name='oneTimeCharge']").val('[[${by_charges?.oneTimeCharge}]]');
+        }
+
+        form.on('select(selectChange)', function (data) {
+            $.ajax({
+                url:'/fee/by/get/' + data.value,
+                type:'GET',
+                success:function(resp) {
+                    if (resp.status == 200) {
+                        if (resp.data != null) {
+                            $("input[name='freeTime']").val(resp.data.freeTime);
+                            $("input[name='cappingAmount']").val(resp.data.cappingAmount);
+                            $("input[name='centralChargesTime']").val(resp.data.centralChargesTime);
+                            $("input[name='oneTimeCharge']").val(resp.data.oneTimeCharge);
+                        } else {
+                            $("input[name='freeTime']").val('');
+                            $("input[name='cappingAmount']").val('');
+                            $("input[name='centralChargesTime']").val('');
+                            $("input[name='oneTimeCharge']").val('');
+                        }
+                    }
+                    if (resp.status == 500) {
+                        layer.msg(resp.msg, {icon: 2, time: 2000});
+                    }
+                },
+                error:function () {
+                    layer.msg("获取信息！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
+                        window.location.href = "javascript:location.replace(location.href);";
+                    });
+                }
+            });
+        });
+
+        form.on('submit(add)', function (data) {
+            $.ajax({
+                url:"/fee/by/save",
+                type:"POST",
+                data:data.field,
+                success:function(resp){
+                    if (resp.status == 200) {
+                        layer.msg("保存成功！", {icon: 6, time: 1000, anim: 4}, function () {
+//                            window.location.href = "javascript:location.replace(location.href);";
+                        });
+                    }
+                    if (resp.status == 500) {
+                        layer.msg(resp.msg, {icon: 2, time: 2000});
+                    }
+
+                },
+                error:function(){
+                    layer.msg("保存失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
+                        window.location.href = "javascript:location.replace(location.href);";
+                    });
+                }
+            });
+            return false;
+        });
+
+    })
+</script>
+</body>
+</html>
