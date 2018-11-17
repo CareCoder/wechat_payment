@@ -17,4 +17,7 @@ public class CarNumExtVo {
     private String path;
 
     private String uuid;
+
+    private Long time;
+
 }

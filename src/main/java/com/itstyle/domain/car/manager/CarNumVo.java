@@ -1,9 +1,9 @@
 package com.itstyle.domain.car.manager;
 
+import com.itstyle.domain.car.manager.enums.CarColor;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
 import com.itstyle.domain.car.manager.enums.CarNumType;
 import com.itstyle.domain.car.manager.enums.CarType;
-import com.itstyle.utils.hibernate.BaseEntity;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -22,7 +22,8 @@ public class CarNumVo{
 
     private String carNum;
     private CarType carType;
-    private Long time;
+    private CarColor carColor;
+    private int fee;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_num_id")

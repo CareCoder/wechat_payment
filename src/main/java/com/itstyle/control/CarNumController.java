@@ -3,9 +3,11 @@ package com.itstyle.control;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
+import com.itstyle.domain.car.manager.enums.CarNumType;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.CarNumService;
+import com.itstyle.utils.FeeUtil;
 import com.itstyle.utils.enums.Status;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,7 +30,7 @@ public class CarNumController {
         List<CarNumVo> carNumVos = carNumService.query(queryVo);
         carNumVos.forEach(e -> {
             List<CarNumExtVo> carNumExtVos = e.getCarNumExtVos();
-            carNumExtVos.sort(Comparator.comparingInt(e1 -> -e1.getCarNumType().ordinal()));
+            carNumExtVos.sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
         });
         model.addAttribute("carNumVos", carNumVos);
         model.addAttribute("queryVo", queryVo);
@@ -37,6 +39,23 @@ public class CarNumController {
 
     @GetMapping("/tempcarinfo-payment.html")
     public String tempcarinfo(Long id, Model model) {
+        CarNumVo carNumVo = carNumService.findById(id);
+        carNumVo.getCarNumExtVos().sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
+        long enterTime = 0;
+        long leaveTime = 0;
+        for (CarNumExtVo e : carNumVo.getCarNumExtVos()) {
+            if (e.getCarNumType() == CarNumType.ENTER_BIG) {
+                enterTime = e.getTime();
+            } else if (e.getCarNumType() == CarNumType.LEAVE_BIG) {
+                leaveTime = e.getTime();
+            }
+        }
+        model.addAttribute("enterTime", enterTime);
+        model.addAttribute("leaveTime", leaveTime);
+        model.addAttribute("stopTime", FeeUtil.secondToTime(leaveTime - enterTime));
+        model.addAttribute("userName", "");
+        model.addAttribute("fee", FeeUtil.convert(carNumVo.getFee()));
+        model.addAttribute("vo", carNumVo);
         return "/backend/tempcarinfo-payment";
     }
 

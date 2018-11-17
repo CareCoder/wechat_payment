@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     @Resource
     private FileResourceService fileResourceService;
 
-    public CarNumService() {
+    @PostConstruct
+    private void init() {
         jpaRepository = carNumMapper;
     }
 
