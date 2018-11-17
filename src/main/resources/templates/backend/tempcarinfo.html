@@ -94,7 +94,7 @@
             <br>
             <div class="layui-row">
                 <div class="layui-col-md6 layui-col-md-offset3 center">
-                    <button class="layui-btn layui-btn-radius">去缴费</button>
+                    <button class="layui-btn layui-btn-radius" id="payment_btn" th:attr="data-id=${vo?.id}">去缴费</button>
                 </div>
             </div>
         </div>
@@ -202,6 +202,23 @@
             })
             window.location.href = "/carnum/tempcarinfo.html" + param;
             return false;
+        });
+
+        $("#payment_btn").click(function () {
+            var t_id = $(this).attr("data-id");
+            layer.open({
+                title: '临时收费界面',
+                type: 2,
+                shade: false,
+                maxmin: true,
+                shade: 0.5,
+                area: ['90%', '90%'],
+                content: '/carnum/tempcarinfo-payment.html?id=' + t_id,
+                zIndex: layer.zIndex,
+                end: function () {
+                    $(".layui-laypage-btn")[0].click();
+                }
+            });
         });
     })
 

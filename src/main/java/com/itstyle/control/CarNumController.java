@@ -35,6 +35,11 @@ public class CarNumController {
         return "/backend/tempcarinfo";
     }
 
+    @GetMapping("/tempcarinfo-payment.html")
+    public String tempcarinfo(Long id, Model model) {
+        return "/backend/tempcarinfo-payment";
+    }
+
     @RequestMapping("/upload")
     @ResponseBody
     public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
