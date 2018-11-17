@@ -20,7 +20,7 @@ spring:
     timeout: 0 # 以毫秒为单位的连接超时。
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:111.230.157.97}:${MYSQL_PORT:3306}/hrzx?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://${MYSQL_HOST:111.230.157.97}:${MYSQL_PORT:3306}/hrzx2?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_PASSWORD:SATYmmMvf8tH}
   jpa:

@@ -1,19 +1,22 @@
 package com.itstyle.control;
 
+import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
+import com.itstyle.domain.car.manager.enums.CarNumExtVo;
 import com.itstyle.domain.car.manager.enums.CarNumType;
+import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.CarNumService;
+import com.itstyle.utils.FeeUtil;
 import com.itstyle.utils.enums.Status;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -22,19 +25,53 @@ public class CarNumController {
     @Resource
     private CarNumService carNumService;
 
+    @GetMapping("/tempcarinfo.html")
+    public String tempcarinfo(CarNumQueryVo queryVo, Model model) {
+        List<CarNumVo> carNumVos = carNumService.query(queryVo);
+        carNumVos.forEach(e -> {
+            List<CarNumExtVo> carNumExtVos = e.getCarNumExtVos();
+            carNumExtVos.sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
+        });
+        model.addAttribute("carNumVos", carNumVos);
+        model.addAttribute("queryVo", queryVo);
+        return "/backend/tempcarinfo";
+    }
+
+    @GetMapping("/tempcarinfo-payment.html")
+    public String tempcarinfo(Long id, Model model) {
+        CarNumVo carNumVo = carNumService.findById(id);
+        carNumVo.getCarNumExtVos().sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
+        long enterTime = 0;
+        long leaveTime = 0;
+        for (CarNumExtVo e : carNumVo.getCarNumExtVos()) {
+            if (e.getCarNumType() == CarNumType.ENTER_BIG) {
+                enterTime = e.getTime();
+            } else if (e.getCarNumType() == CarNumType.LEAVE_BIG) {
+                leaveTime = e.getTime();
+            }
+        }
+        model.addAttribute("enterTime", enterTime);
+        model.addAttribute("leaveTime", leaveTime);
+        model.addAttribute("stopTime", FeeUtil.secondToTime(leaveTime - enterTime));
+        model.addAttribute("userName", "");
+        model.addAttribute("fee", FeeUtil.convert(carNumVo.getFee()));
+        model.addAttribute("vo", carNumVo);
+        return "/backend/tempcarinfo-payment";
+    }
+
     @RequestMapping("/upload")
     @ResponseBody
-    public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo) {
+    public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
         int status = Status.NORMAL;
         try {
-            status = carNumService.upload(file, carNumVo);
+            status = carNumService.upload(file, carNumVo, carNumExtVo);
         } catch (Exception e) {
             return Response.build(status, "系统错误", null);
         }
         return Response.build(status, "", null);
     }
 
-    @RequestMapping("/download")
+    @GetMapping("/download")
     @ResponseBody
     public ResponseEntity<byte[]> download(@RequestParam String path) {
         return carNumService.download(path);
@@ -42,10 +79,8 @@ public class CarNumController {
 
     @RequestMapping("/download2")
     @ResponseBody
-    public ResponseEntity<byte[]> download2(@RequestParam String carNum,
-                                            @RequestParam CarNumType carNumType,
-                                            @RequestParam Long time) {
-        return carNumService.download(carNum, carNumType, time);
+    public ResponseEntity<byte[]> download2(CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
+        return carNumService.download(carNumVo, carNumExtVo);
     }
 
     @RequestMapping("/delete/{path}")
