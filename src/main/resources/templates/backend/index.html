@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>后台管理系统</title>
@@ -16,9 +16,7 @@
         <div class="layui-logo">HX03-A-界面</div>
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
-                <a href="javascript:;" >
-                    <img src="/images/head.jpg" class="layui-nav-img">
-                    bobi
+                <a href="javascript:;" th:text="${session.login_account.username}">
                 </a>
             </li>
             <li class="layui-nav-item"><a href="javascript:logout()">退出</a></li>
@@ -28,7 +26,7 @@
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-nav-tree" lay-shrink="all" lay-filter="">
-                <li class="layui-nav-item layui-nav-itemed">
+                <li class="layui-nav-item" th:style="'display:'+@{(${session.login_account.roleId}==1?'display':'none')}">
                     <a class="" href="javascript:;">
                         <i class="layui-icon">&#xe62a;</i> 车场设置
                     </a>
@@ -83,7 +81,7 @@
                         <dd><a href="javascript:;" path="article.html" tab-id="6-2"><i class="iconfont icon-wenzhang2"></i> 出入报表</a></dd>
                         <dd><a href="javascript:;" path="permission.html" tab-id="7-3"><i class="iconfont icon-jiaoseshouquan"></i> 报表查询</a></dd>
                         <dd><a href="javascript:;" path="process.html" tab-id="7-4"><i class="iconfont icon-liucheng"></i> 异常开闸</a></dd>
-                        <dd><a href="javascript:;" path="image.html" tab-id="7-5"><i class="iconfont icon-tupian"></i> 操作日志</a></dd>
+                        <dd><a href="javascript:;" path="/log/page" tab-id="7-5"><i class="iconfont icon-tupian"></i> 操作日志</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item ">
@@ -122,7 +120,25 @@
 
 <script>
     function logout() {
-        alert("退出登录")
+        layer.confirm("确定要退出登陆吗？", {skin: 'layui-layer-lan', icon: 2, title: '提示', anim: 6}, function () {
+            layui.jquery.ajax({
+                url:"/account/logout",
+                type:"GET",
+                success:function(resp){
+                    if (resp.status == 200) {
+                        layer.msg("操作成功！", {icon: 1, time: 1000}, function () {
+                            window.location.href = "javascript:location.replace(location.href);";
+                        });
+                    }
+                    if (resp.status == 500) {
+                        layer.msg(resp.msg, {icon: 2, time: 2000});
+                    }
+                },
+                error:function(){
+                    layer.msg("退出登陆失败！", {icon: 2, time: 1000});
+                }
+            });
+        });
     }
 </script>
 </body>

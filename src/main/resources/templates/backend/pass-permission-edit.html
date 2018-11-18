@@ -101,11 +101,6 @@
         var $ = layui.jquery;
         var laydate = layui.laydate;
 
-        laydate.render({
-            elem: '#birthday',
-            type: "datetime"
-        });
-
         $("input[name='id']").val('[[${pass_car_status.id}]]');
         $("input[name='channelName']").val('[[${pass_car_status.channelName}]]');
         if ('[[${pass_car_status.tempCarA}]]' == '1') {

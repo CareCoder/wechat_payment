@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>操作日志</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>报表查询</cite></a>
+                <a><cite>操作日志</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 ok-search">
+            <div class="layui-form-item">
+                <label class="layui-form-label">操作时间</label>
+                <input placeholder="开始日期" autocomplete="off" name="start" id="startTime" class="layui-input" lay-verify="required">
+                <input placeholder="截止日期" autocomplete="off" name="end" id="endTime" class="layui-input" lay-verify="required">
+                <label class="layui-form-label">操作员</label>
+                <select name="roleId">
+                    <!--<option value="0">公告</option>-->
+                    <!--<option value="1">言情</option>-->
+                    <!--<option value="2">都市</option>-->
+                    <!--<option value="3">修仙</option>-->
+                </select>
+                <div class="layui-input-inline">
+                    <button class="layui-btn" lay-submit="" lay-filter="search">
+                        <i class="layui-icon layui-icon-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--数据表格-->
+    <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    }
+    layui.use(['element', 'form', 'table', 'jquery', 'laydate'],  function () {
+        var element = layui.element;
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+
+        var today = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+        var secondDay = today + 86400000;
+
+        laydate.render({
+            elem: '#startTime',
+            type: "datetime",
+            value: new Date(today)
+        });
+
+        laydate.render({
+            elem: '#endTime',
+            type: "datetime",
+            value: new Date(secondDay)
+        });
+
+        var roleId = '[[${role?.id}]]';
+        if (!roleId) {
+            roleId = 1;
+        }
+        $.ajax({
+            url : "/role/list",
+            type : "GET",
+            success : function (resp) {
+                var data = resp.data;
+                if (data != null) {
+                    var str = '';
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option value="' + data[i].id + '">' + data[i].name + '</option>>';
+                    }
+                    $("select[name='roleId']").append(str);
+                }
+                form.render('select');
+            }
+        });
+        table.render({
+            elem: '#tableId',
+            url: '/log/list?start=' + today + "&end=" + secondDay + "&roleId=" + roleId,
+            limit: 5,
+            page: true,
+            cols: [
+                [
+                    {field: 'id', title: 'ID', width: 80, align: 'center'},
+                    {field: 'username', title: '用户名', width: 150, align: 'center'},
+                    {field: 'roleName', title: '操作员', width: 130, align: 'center'},
+                    {field: 'action', title: '操作', width: 150, align: 'center'},
+                    {field: 'tdescribe', title: '描述', width: 500, align: 'center'},
+                    {field: 'logDate', title: '操作时间', width: 200, align: 'center'}
+                ]
+            ],
+            done: function (res, curr, count) {
+                $("#countNum").text(count);
+            }
+        });
+
+        form.on('submit(search)', function () {
+            layer.msg('正在查询，请稍后...');
+            var start = new Date($("input[name='start']").val()).getTime();
+            var end = new Date($("input[name='end']").val()).getTime();
+            var roleId = $("select[name='roleId']").val();
+            table.reload('tableId', {
+                url: '/log/list?start=' + start + "&end=" + end + "&roleId=" + roleId,
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+
+
+    })
+</script>
+</body>
+</html>

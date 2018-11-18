@@ -20,14 +20,16 @@ public class SysLogger implements Serializable {
     private String username;
     private String action;
     private String tDescribe;
+    private Long roleId;
     @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     @CreatedDate
     private Date logDate;
 
     public SysLogger() {}
 
-    public SysLogger(String username, String action, String tDescribe, Date logDate) {
+    public SysLogger(String username, Long roleId, String action, String tDescribe, Date logDate) {
         this.username = username;
+        this.roleId = roleId;
         this.action = action;
         this.tDescribe = tDescribe;
         this.logDate = logDate;
