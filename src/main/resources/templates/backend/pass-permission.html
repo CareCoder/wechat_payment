@@ -60,11 +60,6 @@
         var $ = layui.jquery;
         var laydate = layui.laydate;
 
-        laydate.render({
-            elem: '#birthday',
-            type: "datetime"
-        });
-
         form.on('submit(search)', function () {
             layer.msg('正在查询，请稍后...');
             return false;

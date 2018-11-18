@@ -86,7 +86,7 @@ public class AccountController {
         AssertUtil.assertNotNull(password, () -> new BusinessException("密码不能为空"));
         Account loginAccount = accountService.login(account, password);
         session.setAttribute(YstCommon.LOGIN_ACCOUNT, loginAccount);
-        SystemLoggerHelper.log(loginAccount.getUsername(), "登陆", "登陆系统");
+        SystemLoggerHelper.log(loginAccount.getUsername(), loginAccount.getRoleId(), "登陆", "登陆系统");
         return Response.build(Status.NORMAL, null, null);
     }
 
@@ -96,7 +96,7 @@ public class AccountController {
         Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
         if (account != null) {
             session.removeAttribute(YstCommon.LOGIN_ACCOUNT);
-            SystemLoggerHelper.log(account.getUsername(), "登出", "登出系统");
+            SystemLoggerHelper.log(account.getUsername(), account.getRoleId(), "登出", "登出系统");
         }
         return Response.build(Status.NORMAL, null, null);
     }

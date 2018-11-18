@@ -77,11 +77,6 @@
         $("input[name='ip']").val('[[${access_type_info.ip}]]');
         $("input[name='camera']").val('[[${access_type_info.camera}]]');
 
-        laydate.render({
-            elem: '#birthday',
-            type: "datetime"
-        });
-
         form.verify({
             ip: [
                 /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/

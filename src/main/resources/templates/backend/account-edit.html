@@ -85,11 +85,6 @@
         $("input[name='tAccount']").val('[[${account_info.tAccount}]]');
         $("input[name='remark']").val('[[${account_info.remark}]]');
 
-        laydate.render({
-            elem: '#birthday',
-            type: "datetime"
-        });
-
         $.ajax({
             url : "/role/list",
             type : "GET",

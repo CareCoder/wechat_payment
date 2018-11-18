@@ -100,11 +100,6 @@
         var $ = layui.jquery;
         var laydate = layui.laydate;
 
-        laydate.render({
-            elem: '#birthday',
-            type: "datetime"
-        });
-
         $.ajax({
             url : "/type/all/channel",
             type : "GET",
