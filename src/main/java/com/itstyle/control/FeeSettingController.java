@@ -7,9 +7,13 @@ import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.feesettings.ByCharges;
 import com.itstyle.domain.feesettings.SZCharges;
 import com.itstyle.domain.feesettings.StandardCharges;
+import com.itstyle.domain.feesettings.response.ByChargesResponse;
+import com.itstyle.domain.feesettings.response.SZChargesResponse;
+import com.itstyle.domain.feesettings.response.StandardChargesResponse;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.exception.AssertUtil;
 import com.itstyle.exception.BusinessException;
+import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.utils.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,7 +48,10 @@ public class FeeSettingController {
         AssertUtil.assertNotEmpty(carType, () -> new BusinessException("车辆类型不能为空"));
         String result = redisDao.hget(YstCommon.SZ_CHARGES, carType);
         SZCharges szCharges = gson.fromJson(result, SZCharges.class);
-        return Response.build(Status.NORMAL, null, szCharges);
+        SZChargesResponse szChargesResponse = new SZChargesResponse();
+        szChargesResponse.setChargeModel(3);
+        BeanUtilIgnore.copyPropertiesIgnoreNull(szCharges, szChargesResponse.getChargeRule());
+        return Response.build(Status.NORMAL, null, szChargesResponse);
     }
 
     @GetMapping("/sz/page")
@@ -68,7 +75,11 @@ public class FeeSettingController {
     public Response getStandardCharges(@PathVariable("carType") String carType) {
         AssertUtil.assertNotEmpty(carType, () -> new BusinessException("车辆类型不能为空"));
         String result = redisDao.hget(YstCommon.STANDARD_CHARGES, carType);
-        return Response.build(Status.NORMAL, null, gson.fromJson(result, StandardCharges.class));
+        StandardCharges standardCharges = gson.fromJson(result, StandardCharges.class);
+        StandardChargesResponse standardChargesResponse = new StandardChargesResponse();
+        standardChargesResponse.setChargeModel(2);
+        BeanUtilIgnore.copyPropertiesIgnoreNull(standardCharges, standardChargesResponse.getChargeRule());
+        return Response.build(Status.NORMAL, null, standardChargesResponse);
     }
 
     @GetMapping("/standard/page")
@@ -92,7 +103,11 @@ public class FeeSettingController {
     public Response getByCharges(@PathVariable("carType") String carType) {
         AssertUtil.assertNotEmpty(carType, () -> new BusinessException("车辆类型不能为空"));
         String result = redisDao.hget(YstCommon.BY_CHARGES, carType);
-        return Response.build(Status.NORMAL, null, gson.fromJson(result, ByCharges.class));
+        ByCharges byCharges = gson.fromJson(result, ByCharges.class);
+        ByChargesResponse byChargesResponse = new ByChargesResponse();
+        byChargesResponse.setChargeModel(1);
+        BeanUtilIgnore.copyPropertiesIgnoreNull(byCharges, byChargesResponse.getChargeRule());
+        return Response.build(Status.NORMAL, null, byChargesResponse);
     }
 
     @GetMapping("/by/page")
