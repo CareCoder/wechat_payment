@@ -1,5 +1,6 @@
 package com.itstyle.domain.car.manager;
 
+import com.itstyle.domain.car.manager.enums.CarColor;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.utils.hibernate.BaseEntity;
 import lombok.Data;
@@ -36,4 +37,6 @@ public class MonthCarInfo extends BaseEntity {
      * 身份证号码
      */
     private String idCardNum;
+
+    private CarColor carColor;
 }
