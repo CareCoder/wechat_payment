@@ -15,7 +15,7 @@ public class MvcConfig {
             @Override
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**")
-                        .excludePathPatterns("/", "/backend/login.html", "/account/login");
+                        .excludePathPatterns("/", "/backend/login.html", "/account/login", "/carnum/**", "/external/**");
             }
         };
     }
