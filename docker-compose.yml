@@ -4,7 +4,7 @@ services:
     image: hrxz/spring-boot-pay:0.0.1
     container_name: spring-boot-pay
     ports:
-      - "8080:8080"
+      - "80:8080"
     environment:
       - SERVER_PORT=8080
       - REDIS_HOST=111.230.157.97

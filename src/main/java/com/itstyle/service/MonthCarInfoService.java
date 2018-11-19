@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
+import java.util.List;
 
 @Service
 public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
@@ -57,5 +58,9 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
             monthCarInfo.setEndTime(null);
             update(monthCarInfo.getId(), monthCarInfo);
         }
+    }
+
+    public List<MonthCarInfo> list() {
+        return monthCarInfoMapper.findAll();
     }
 }
