@@ -1,11 +1,12 @@
 package com.itstyle.control;
 
-import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.domain.vo.LoginRequestVo;
 import com.itstyle.domain.vo.LoginResponseVo;
 import com.itstyle.exception.BusinessException;
 import com.itstyle.service.AccountService;
+import com.itstyle.service.ExternalInterfaceService;
 import com.itstyle.utils.enums.Status;
+import com.itstyle.vo.syncarinfo.response.SynCarInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ExternalInterfaceController {
 
     private AccountService accountService;
+
+    private ExternalInterfaceService externalInterfaceService;
 
     @Autowired
     public ExternalInterfaceController(AccountService accountService) {
@@ -51,8 +54,7 @@ public class ExternalInterfaceController {
      */
     @GetMapping("/synCarInfo")
     @ResponseBody
-    public void synCarInfo() {
-
+    public SynCarInfo synCarInfo() {
+        return externalInterfaceService.synCarInfo();
     }
-
 }

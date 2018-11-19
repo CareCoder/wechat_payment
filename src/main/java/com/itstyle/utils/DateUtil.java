@@ -1,5 +1,6 @@
 package com.itstyle.utils;
 
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.Date;
  * 日期工具类
  */
 public class DateUtil {
+    private static final String format = "yyyy/MM/dd HH:mm:ss";
     /***
      * 获取某年某月的开始时间
      * @param year 年
@@ -90,5 +92,10 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar;
+    }
+
+    public static String format(Long time) {
+        SimpleDateFormat sd = new SimpleDateFormat(format);
+        return sd.format(new Date(time));
     }
 }
