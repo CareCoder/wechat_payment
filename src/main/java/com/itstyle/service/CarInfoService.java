@@ -69,4 +69,12 @@ public class CarInfoService {
         one.setModifyTime(new Timestamp(System.currentTimeMillis()));
         carInfoMapper.save(one);
     }
+
+    public List<CarInfo> getBlackList() {
+        return carInfoMapper.findByIsBlackListIs(true);
+    }
+
+    public List<CarInfo> getFree() {
+        return carInfoMapper.findByIsFreeIs(true);
+    }
 }

@@ -1,5 +1,6 @@
 package com.itstyle.domain.car.manager;
 
+import com.itstyle.domain.car.manager.enums.CarColor;
 import com.itstyle.utils.hibernate.BaseEntity;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
@@ -23,4 +24,6 @@ public class CarInfo extends BaseEntity {
     private Boolean isFree;
 
     private Boolean isBlackList;
+
+    private CarColor carColor;
 }
