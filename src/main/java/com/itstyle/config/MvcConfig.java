@@ -21,7 +21,7 @@ public class MvcConfig {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addResourceHandlers(ResourceHandlerRegistry registry) {
-                registry.addResourceHandler(fileUrlPrefix + "**").addResourceLocations("file:/" + filePath);
+                registry.addResourceHandler(fileUrlPrefix + "**").addResourceLocations("file:" + filePath);
                 super.addResourceHandlers(registry);
             }
             @Override
