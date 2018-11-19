@@ -61,9 +61,10 @@ public class CarNumController {
 
     @RequestMapping("/upload")
     @ResponseBody
-    public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
+    public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo, Long leaveTime) {
         int status = Status.NORMAL;
         try {
+            carNumExtVo.setTime(leaveTime);//这里不要mvc自动注入 是因为两个注入对象的param相同了
             status = carNumService.upload(file, carNumVo, carNumExtVo);
         } catch (Exception e) {
             return Response.build(status, "系统错误", null);

@@ -24,6 +24,7 @@ public class CarNumVo{
     private CarType carType;
     private CarColor carColor;
     private int fee;
+    private Long time;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_num_id")
