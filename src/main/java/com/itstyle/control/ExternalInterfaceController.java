@@ -8,6 +8,7 @@ import com.itstyle.service.AccountService;
 import com.itstyle.utils.enums.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -44,4 +45,14 @@ public class ExternalInterfaceController {
 
         return responseVo;
     }
+
+    /**
+     * 同步车辆信息配置
+     */
+    @GetMapping("/synCarInfo")
+    @ResponseBody
+    public void synCarInfo() {
+
+    }
+
 }
