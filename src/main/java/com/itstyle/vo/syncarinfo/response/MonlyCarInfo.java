@@ -2,7 +2,9 @@ package com.itstyle.vo.syncarinfo.response;
 
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.utils.DateUtil;
+import lombok.Data;
 
+@Data
 public class MonlyCarInfo {
     private String plateID;//车牌号码
 
@@ -20,7 +22,7 @@ public class MonlyCarInfo {
         MonlyCarInfo ml = new MonlyCarInfo();
         ml.monlyCardTimeEnd = DateUtil.format(mc.getEndTime());
         ml.monlyCardTimeStart = DateUtil.format(mc.getStartTime());
-        ml.monlyCarPlateColor = mc.getCarColor().toString();
+        ml.monlyCarPlateColor = mc.getCarColor() != null ? mc.getCarColor().toString() : "";
         ml.name = mc.getName();
         ml.phoneNumber = mc.getPhone();
         ml.plateID = mc.getIdCardNum();

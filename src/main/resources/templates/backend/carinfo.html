@@ -116,7 +116,7 @@
                     content: '/carinfo/carinfo-edit.html?id=' + data.id,
                     zIndex: layer.zIndex,
                     end: function () {
-                        $(".layui-laypage-btn")[0].click();
+                        $(".layui-icon-refresh")[0].click();
                     }
                 });
             } else if (layEvent === 'del') {
@@ -150,7 +150,7 @@
                 content: '/carinfo/carinfo-add.html?type=' + type,
                 zIndex: layer.zIndex,
                 end: function () {
-                    $(".layui-laypage-btn")[0].click();
+                    $(".layui-icon-refresh")[0].click();
                 }
             });
         })
