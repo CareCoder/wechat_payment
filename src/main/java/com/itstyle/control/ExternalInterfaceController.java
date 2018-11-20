@@ -6,6 +6,7 @@ import com.itstyle.exception.BusinessException;
 import com.itstyle.service.AccountService;
 import com.itstyle.service.ExternalInterfaceService;
 import com.itstyle.utils.enums.Status;
+import com.itstyle.vo.inition.response.Inition;
 import com.itstyle.vo.syncarinfo.response.SynCarInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,5 +59,14 @@ public class ExternalInterfaceController {
     @ResponseBody
     public SynCarInfo synCarInfo() {
         return externalInterfaceService.synCarInfo();
+    }
+
+    /**
+     * 获取全部配置
+     */
+    @GetMapping("/inition")
+    @ResponseBody
+    public Inition inition() {
+        return externalInterfaceService.inition();
     }
 }

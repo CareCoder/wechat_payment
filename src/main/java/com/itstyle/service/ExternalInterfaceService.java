@@ -2,6 +2,7 @@ package com.itstyle.service;
 
 import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.MonthCarInfo;
+import com.itstyle.vo.inition.response.Inition;
 import com.itstyle.vo.syncarinfo.response.BlackListVehicle;
 import com.itstyle.vo.syncarinfo.response.FreeVehicle;
 import com.itstyle.vo.syncarinfo.response.MonlyCarInfo;
@@ -29,5 +30,12 @@ public class ExternalInterfaceService {
         List<CarInfo> freeList = carInfoService.getFree();
         synCarInfo.freeVehicle = freeList.stream().map(FreeVehicle::convert).collect(Collectors.toList());
         return synCarInfo;
+    }
+
+    public Inition inition() {
+        Inition inition = new Inition();
+
+        inition.synCarInfo = synCarInfo();
+        return inition;
     }
 }
