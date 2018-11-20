@@ -23,8 +23,10 @@ public class ExternalInterfaceController {
     private ExternalInterfaceService externalInterfaceService;
 
     @Autowired
-    public ExternalInterfaceController(AccountService accountService) {
+    public ExternalInterfaceController(AccountService accountService
+            , ExternalInterfaceService externalInterfaceService) {
         this.accountService = accountService;
+        this.externalInterfaceService = externalInterfaceService;
     }
 
 
