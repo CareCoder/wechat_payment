@@ -55,7 +55,10 @@
             <div class="layui-input-inline" style="width: 60px;">
                 <input type="number" name="cappingAmount" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
-            <div class="layui-form-mid">元 24小时为一个周期</div>
+            <div class="layui-form-mid">元</div>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="optionalCycle" title="24小时为一个周期" checked>
+            </div>
             <div  class="layui-inline">
                 <label class="layui-form-label" style="width: 85px;">中央收费时间</label>
                 <div class="layui-input-inline" style="width: 60px;">
@@ -125,6 +128,10 @@
             $("select[name='carType']").val('[[${standard_charges?.carType}]]');
             $("input[name='freeTime']").val('[[${standard_charges?.freeTime}]]');
             $("input[name='cappingAmount']").val('[[${standard_charges?.cappingAmount}]]');
+            if ('[[${standard_charges?.optionalCycle}]]' != 24) {
+                $("input[name='optionalCycle']").attr("checked", false);
+                layui.form.render();
+            }
             $("input[name='centralChargesTime']").val('[[${standard_charges?.centralChargesTime}]]');
             $("input[name='firstTime']").val('[[${standard_charges?.firstTime}]]');
             $("input[name='firstAmount']").val('[[${standard_charges?.firstAmount}]]');
@@ -141,6 +148,10 @@
                         if (resp.data != null) {
                             $("input[name='freeTime']").val(resp.data.freeTime);
                             $("input[name='cappingAmount']").val(resp.data.cappingAmount);
+                            if ('[[${standard_charges?.optionalCycle}]]' != 24) {
+                                $("input[name='optionalCycle']").attr("checked", false);
+                                layui.form.render();
+                            }
                             $("input[name='centralChargesTime']").val(resp.data.centralChargesTime);
                             $("input[name='firstTime']").val(resp.data.firstTime);
                             $("input[name='firstAmount']").val(resp.data.firstAmount);
@@ -169,10 +180,16 @@
         });
 
         form.on('submit(add)', function (data) {
+            var json = data.field;
+            if (json.optionalCycle == "on") {
+                json.optionalCycle = 24;
+            } else {
+                json.optionalCycle = 0;
+            }
             $.ajax({
                 url:"/fee/standard/save",
                 type:"POST",
-                data:data.field,
+                data:json,
                 success:function(resp){
                     if (resp.status == 200) {
                         layer.msg("保存成功！", {icon: 6, time: 1000, anim: 4}, function () {

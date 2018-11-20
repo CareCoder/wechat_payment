@@ -55,7 +55,10 @@
             <div class="layui-input-inline" style="width: 60px;">
                 <input type="number" name="cappingAmount" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
-            <div class="layui-form-mid">元 24小时为一个周期</div>
+            <div class="layui-form-mid">元</div>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="optionalCycle" title="24小时为一个周期" checked>
+            </div>
             <div  class="layui-inline">
                 <label class="layui-form-label" style="width: 85px;">中央收费时间</label>
                 <div class="layui-input-inline" style="width: 60px;">
@@ -106,6 +109,10 @@
         if (by_charges) {
             $("select[name='carType']").val('[[${by_charges?.carType}]]');
             $("input[name='freeTime']").val('[[${by_charges?.freeTime}]]');
+            if ('[[${by_charges?.optionalCycle}]]' != 24) {
+                $("input[name='optionalCycle']").attr("checked", false);
+                layui.form.render();
+            }
             $("input[name='cappingAmount']").val('[[${by_charges?.cappingAmount}]]');
             $("input[name='centralChargesTime']").val('[[${by_charges?.centralChargesTime}]]');
             $("input[name='oneTimeCharge']").val('[[${by_charges?.oneTimeCharge}]]');
@@ -119,6 +126,10 @@
                     if (resp.status == 200) {
                         if (resp.data != null) {
                             $("input[name='freeTime']").val(resp.data.freeTime);
+                            if ('[[${by_charges?.optionalCycle}]]' != 24) {
+                                $("input[name='optionalCycle']").attr("checked", false);
+                                layui.form.render();
+                            }
                             $("input[name='cappingAmount']").val(resp.data.cappingAmount);
                             $("input[name='centralChargesTime']").val(resp.data.centralChargesTime);
                             $("input[name='oneTimeCharge']").val(resp.data.oneTimeCharge);
@@ -142,10 +153,16 @@
         });
 
         form.on('submit(add)', function (data) {
+            var json = data.field;
+            if (json.optionalCycle == "on") {
+                json.optionalCycle = 24;
+            } else {
+                json.optionalCycle = 0;
+            }
             $.ajax({
                 url:"/fee/by/save",
                 type:"POST",
-                data:data.field,
+                data:json,
                 success:function(resp){
                     if (resp.status == 200) {
                         layer.msg("保存成功！", {icon: 6, time: 1000, anim: 4}, function () {

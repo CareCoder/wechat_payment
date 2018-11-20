@@ -26,7 +26,7 @@
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-nav-tree" lay-shrink="all" lay-filter="">
-                <li class="layui-nav-item" th:style="'display:'+@{(${session.login_account.roleId}==1?'display':'none')}">
+                <li class="layui-nav-item" th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}">
                     <a class="" href="javascript:;">
                         <i class="layui-icon">&#xe62a;</i> 车场设置
                     </a>

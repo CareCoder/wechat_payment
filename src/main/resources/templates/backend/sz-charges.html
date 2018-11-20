@@ -55,7 +55,10 @@
             <div class="layui-input-inline" style="width: 60px;">
                 <input type="number" name="cappingAmount" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
-            <div class="layui-form-mid">元 24小时为一个周期</div>
+            <div class="layui-form-mid">元</div>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="optionalCycle" title="24小时为一个周期" checked>
+            </div>
             <div  class="layui-inline">
                 <label class="layui-form-label" style="width: 85px;">中央收费时间</label>
                 <div class="layui-input-inline" style="width: 60px;">
@@ -211,6 +214,10 @@
             $("input[name='freeTime']").val('[[${sz_charges?.freeTime}]]');
             $("input[name='cappingAmount']").val('[[${sz_charges?.cappingAmount}]]');
             $("input[name='centralChargesTime']").val('[[${sz_charges?.centralChargesTime}]]');
+            if ('[[${sz_charges?.optionalCycle}]]' != 24) {
+                $("input[name='optionalCycle']").attr("checked", false);
+                layui.form.render();
+            }
             $("input[name='peakModelPeakTimeStart']").val('[[${sz_charges?.peakModelPeakTimeStart}]]' + ":00:00");
             $("input[name='peakModelPeakTimeEnd']").val('[[${sz_charges?.peakModelPeakTimeEnd}]]' + ":00:00");
             $("input[name='peakFirstTime']").val('[[${sz_charges?.peakFirstTime}]]');
@@ -237,6 +244,10 @@
                            $("input[name='freeTime']").val(resp.data.freeTime);
                            $("input[name='cappingAmount']").val(resp.data.cappingAmount);
                            $("input[name='centralChargesTime']").val(resp.data.centralChargesTime);
+                           if ('[[${sz_charges?.optionalCycle}]]' != 24) {
+                               $("input[name='optionalCycle']").attr("checked", false);
+                               layui.form.render();
+                           }
                            $("input[name='peakModelPeakTimeStart']").val(resp.data.peakModelPeakTimeStart + ":00:00");
                            $("input[name='peakModelPeakTimeEnd']").val(resp.data.peakModelPeakTimeEnd + ":00:00");
                            $("input[name='peakFirstTime']").val(resp.data.peakFirstTime);
@@ -287,6 +298,11 @@
             var json = data.field;
             json.peakModelPeakTimeStart = splitTime(json.peakModelPeakTimeStart);
             json.peakModelPeakTimeEnd = splitTime(json.peakModelPeakTimeEnd);
+            if (json.optionalCycle == "on") {
+                json.optionalCycle = 24;
+            } else {
+                json.optionalCycle = 0;
+            }
             $.ajax({
                 url:"/fee/sz/save",
                 type:"POST",
