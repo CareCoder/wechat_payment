@@ -12,7 +12,7 @@ services:
       - REDIS_HOST=localhost
       - REDIS_PORT=6380
       - MYSQL_HOST=localhost
-      - MYSQL_PORT=3306
+      - MYSQL_PORT=3307
       - MYSQL_USERNAME=root
       - MYSQL_PASSWORD=SATYmmMvf8tH
       - ADMIN_USER_ID=1
