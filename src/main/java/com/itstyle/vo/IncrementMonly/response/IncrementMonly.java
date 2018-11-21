@@ -1,4 +1,4 @@
-package com.itstyle.vo.IncrementMonly.response;
+package com.itstyle.vo.Incrementmonly.response;
 
 import java.util.List;
 

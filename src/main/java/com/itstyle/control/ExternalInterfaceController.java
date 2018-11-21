@@ -5,6 +5,7 @@ import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.version.VersionInfo;
 import com.itstyle.service.FileResourceService;
+import com.itstyle.vo.Incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.login.request.LoginRequest;
 import com.itstyle.vo.login.reponse.LoginResponse;
 import com.itstyle.exception.BusinessException;
@@ -147,6 +148,15 @@ public class ExternalInterfaceController {
     @GetMapping("/version/download/{versionCode}")
     public ResponseEntity<byte[]> download(@PathVariable("versionCode") String versionCode) {
         return fileResourceService.downloadByUuid(versionCode);
+    }
+
+    /**
+     * 同步车辆信息配置
+     */
+    @GetMapping("/incrementMonly")
+    @ResponseBody
+    public IncrementMonly incrementMonly() {
+        return externalInterfaceService.incrementMonly();
     }
 
 }
