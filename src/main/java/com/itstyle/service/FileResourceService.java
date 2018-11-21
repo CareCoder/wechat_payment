@@ -49,10 +49,11 @@ public class FileResourceService {
                 fileStr = fileStr.substring(fileStr.lastIndexOf("\\") + 1, fileStr.length());
                 String suffix = fileStr.substring(fileStr.lastIndexOf(".") + 1);
                 String fileName = uuid + "." + suffix;
-                if (! new File(filePath).exists()) {
-                    new File(filePath).mkdir();
+                File filePath = new File(this.filePath);
+                if (! filePath.exists()) {
+                    filePath.mkdir();
                 }
-                File saveFile = new File(filePath + fileName);
+                File saveFile = new File(filePath.getAbsolutePath() + File.separator + fileName);
                 file.transferTo(saveFile);
                 //保存文件信息到数据库
                 FileResource fileResource = new FileResource();
