@@ -1,4 +1,4 @@
-package com.itstyle.vo.Incrementmonly.response;
+package com.itstyle.vo.incrementmonly.response;
 
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.utils.DateUtil;

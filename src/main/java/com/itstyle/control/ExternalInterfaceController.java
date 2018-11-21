@@ -5,7 +5,7 @@ import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.version.VersionInfo;
 import com.itstyle.service.FileResourceService;
-import com.itstyle.vo.Incrementmonly.response.IncrementMonly;
+import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.login.request.LoginRequest;
 import com.itstyle.vo.login.reponse.LoginResponse;
 import com.itstyle.exception.BusinessException;
