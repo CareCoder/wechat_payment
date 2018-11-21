@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>版本控制</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>车场设置</cite></a>
+                <a><cite>版本发布</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">文件上传</label>
+        <button type="button" class="layui-btn" id="file"><i class="layui-icon">&#xe681;</i>apk文件</button>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">更新信息</label>
+        <div class="layui-input-block" style="width: 400px;">
+            <input type="text" name="updateContent" placeholder="请输入版本更新信息" autocomplete="off" class="layui-input" lay-verify="ip">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="submit">立即提交</button>
+        </div>
+    </div>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script>
+    layui.use(['jquery', 'upload', 'layer'], function () {
+        var $ = layui.jquery
+            ,upload = layui.upload;
+
+        upload.render({
+            elem: '#file'
+            ,url: '/version/upload/'
+            ,accept: 'file'
+            ,auto: false
+            ,bindAction: '#submit'
+            ,before: function () {
+                this.data={"updateContent" : $("input[name='updateContent']").val()};
+            }
+            ,done: function(resp){
+                if (resp.status == 200) {
+                    layer.msg("上传成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                            window.location.href = "javascript:location.replace(location.href);";
+                    });
+                }
+                if (resp.status == 500) {
+                    layer.msg(resp.msg, {icon: 2, time: 2000});
+                }
+            }
+        });
+    })
+</script>
+</body>
+</html>

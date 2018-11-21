@@ -1,9 +1,9 @@
-package com.itstyle.domain.vo;
+package com.itstyle.vo.login.request;
 
 import lombok.Data;
 
 @Data
-public class LoginRequestVo {
+public class LoginRequest {
     private String serviceCode;
     private String dataSrc;
     private String userName;
