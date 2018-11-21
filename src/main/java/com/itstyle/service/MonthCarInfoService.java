@@ -45,6 +45,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         endTime = endTime + (day * 24 * 60 * 60 * 1000);
         one.setEndTime(endTime);
         update(one.getId(), one);
+        //TODO 月租车续费后,写入redis
     }
 
     public void edit(MonthCarInfo monthCarInfo) {
@@ -52,6 +53,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
             //add
             monthCarInfo.setStartTime(System.currentTimeMillis());
             add(monthCarInfo);
+            //TODO 新增月租车后,写入redis
         }else{
             //update 这个接口不得修改 startTime 和 endTime ，如果需要修改需要去续费接口
             monthCarInfo.setStartTime(null);
