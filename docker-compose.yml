@@ -5,6 +5,8 @@ services:
     container_name: spring-boot-pay
     ports:
       - "80:8080"
+    volumes:
+      - /data/img:/data/img
     environment:
       - SERVER_PORT=8080
       - REDIS_HOST=111.230.157.97
