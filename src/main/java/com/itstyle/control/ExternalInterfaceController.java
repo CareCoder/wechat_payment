@@ -35,7 +35,6 @@ public class ExternalInterfaceController {
 
     private ExternalInterfaceService externalInterfaceService;
 
-    private static final String SUCCESS_CODE = "0000";
 
     @Autowired
     public ExternalInterfaceController(AccountService accountService, RedisDao redisDao, Gson gson,
@@ -61,10 +60,10 @@ public class ExternalInterfaceController {
             accountService.login(loginRequestVo.getUserName(), loginRequestVo.getPassword());
         } catch (BusinessException e) {
             String message = e.getMessage();
-            responseVo.setErrorCode(String.valueOf(Status.ERROR));
+            responseVo.setErrorCode(Status.ERROR);
             responseVo.setErrorDesc(message);
         }
-        responseVo.setErrorCode(SUCCESS_CODE);
+        responseVo.setErrorCode(Status.NORMAL);
         return responseVo;
     }
 
@@ -94,7 +93,7 @@ public class ExternalInterfaceController {
         VersionResponse versionResponse = new VersionResponse();
         versionResponse.setServiceCode(versionRequest.getServiceCode());
         if (json == null) {
-            versionResponse.setErrorCode(String.valueOf(Status.ERROR));
+            versionResponse.setErrorCode(Status.ERROR);
             versionResponse.setErrorDesc("未上传apk到服务器，请上传之后下载");
             return versionResponse;
         }
@@ -102,7 +101,7 @@ public class ExternalInterfaceController {
         if (StringUtils.isEmpty(versionRequest.getVersionCode())) { // 请求版本号为空
             // 第一次请求该接口app版本号可以为空
             if (StringUtils.isEmpty(versionInfo.getOldVersionCode())) {
-                versionResponse.setErrorCode(SUCCESS_CODE);
+                versionResponse.setErrorCode(Status.NORMAL);
                 versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
                 versionResponse.setUpdateContent(versionInfo.getUpdateContent());
                 versionResponse.setVersionCode(versionInfo.getNewVersionCode());
@@ -112,7 +111,7 @@ public class ExternalInterfaceController {
             }
             // 如果不是第一次请求该接口，那么app版本号不能为空，否则报错
             if (!StringUtils.isEmpty(versionInfo.getOldVersionCode())) {
-                versionResponse.setErrorCode(String.valueOf(Status.ERROR));
+                versionResponse.setErrorCode(Status.ERROR);
                 versionResponse.setErrorDesc("版本号不能为空");
                 return versionResponse;
             }
@@ -121,25 +120,25 @@ public class ExternalInterfaceController {
         if (!StringUtils.isEmpty(versionRequest.getVersionCode()) &&
                 StringUtils.isEmpty(versionInfo.getOldVersionCode())) {
             // 如果版本号不为空，但是redis中的OldVersionCode为空，还是代表第一次请求该接口
-            versionResponse.setErrorCode(SUCCESS_CODE);
+            versionResponse.setErrorCode(Status.NORMAL);
             versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
             return versionResponse;
         }
 
         // 如果版本号不为空，需要验证该版本号是否正确，不能随便一个版本号都能下载，安全着想
         if (!versionRequest.getVersionCode().equals(versionInfo.getOldVersionCode())) {
-            versionResponse.setErrorCode(String.valueOf(Status.ERROR));
+            versionResponse.setErrorCode(Status.ERROR);
             versionResponse.setErrorDesc("版本号不正确");
             return versionResponse;
         }
         // 版本号不为空，并且版本号也正确，且新老版本号不一致，给予最新下载地址
         if (!versionRequest.getVersionCode().equals(versionInfo.getNewVersionCode())) {
-            versionResponse.setErrorCode(SUCCESS_CODE);
+            versionResponse.setErrorCode(Status.NORMAL);
             versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
             versionResponse.setUpdateContent(versionInfo.getUpdateContent());
             versionResponse.setVersionCode(versionInfo.getNewVersionCode());
         } else {
-            versionResponse.setErrorCode(String.valueOf(Status.ERROR));
+            versionResponse.setErrorCode(Status.ERROR);
             versionResponse.setErrorDesc("无新版本需要更新");
         }
         return versionResponse;

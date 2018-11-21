@@ -45,7 +45,7 @@ public class LogController {
     @GetMapping("/page")
     public String getLogPage(Model model) {
         List<Role> list = roleService.list();
-        if (list != null) {
+        if (list != null && list.size() > 0) {
             model.addAttribute("role", list.get(0));
         }
         return "/backend/log";
