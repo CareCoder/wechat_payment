@@ -30,6 +30,10 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  http:
+      multipart:
+        max-file-size: 100MB
+        max-request-size: 100MB
 
 super-admin:
   user-id: ${ADMIN_USER_ID:1}

@@ -1,54 +1,69 @@
 package com.itstyle.control;
 
-import com.itstyle.domain.vo.LoginRequestVo;
-import com.itstyle.domain.vo.LoginResponseVo;
+import com.google.gson.Gson;
+import com.itstyle.common.YstCommon;
+import com.itstyle.dao.RedisDao;
+import com.itstyle.domain.version.VersionInfo;
+import com.itstyle.service.FileResourceService;
+import com.itstyle.vo.login.request.LoginRequest;
+import com.itstyle.vo.login.reponse.LoginResponse;
 import com.itstyle.exception.BusinessException;
 import com.itstyle.service.AccountService;
 import com.itstyle.service.ExternalInterfaceService;
 import com.itstyle.utils.enums.Status;
 import com.itstyle.vo.inition.response.Inition;
 import com.itstyle.vo.syncarinfo.response.SynCarInfo;
+import com.itstyle.vo.version.request.VersionRequest;
+import com.itstyle.vo.version.response.VersionResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 @RequestMapping("/external")
 public class ExternalInterfaceController {
 
     private AccountService accountService;
+    private RedisDao redisDao;
+    private Gson gson;
+    private FileResourceService fileResourceService;
 
     private ExternalInterfaceService externalInterfaceService;
 
+    private static final String SUCCESS_CODE = "0000";
+
     @Autowired
-    public ExternalInterfaceController(AccountService accountService
-            , ExternalInterfaceService externalInterfaceService) {
+    public ExternalInterfaceController(AccountService accountService, RedisDao redisDao, Gson gson,
+                                       FileResourceService fileResourceServic, ExternalInterfaceService externalInterfaceService) {
         this.accountService = accountService;
+        this.redisDao = redisDao;
+        this.gson = gson;
+        this.fileResourceService = fileResourceServic;
         this.externalInterfaceService = externalInterfaceService;
     }
 
 
+    /**
+     * 外部登陆接口
+     * */
     @PostMapping("/login")
     @ResponseBody
-    public LoginResponseVo login(LoginRequestVo loginRequestVo) {
-        LoginResponseVo responseVo = new LoginResponseVo();
-        if (loginRequestVo == null) {
-            responseVo.setErrorCode(Status.ERROR);
-            responseVo.setErrorDesc("参数为空");
-            return responseVo;
-        }
+    public LoginResponse login(LoginRequest loginRequestVo) {
+        log.info("[ExternalInterfaceController] login request param is {}", loginRequestVo);
+        LoginResponse responseVo = new LoginResponse();
         responseVo.setServiceCode(loginRequestVo.getServiceCode());
         try {
             accountService.login(loginRequestVo.getUserName(), loginRequestVo.getPassword());
         } catch (BusinessException e) {
             String message = e.getMessage();
-            responseVo.setErrorCode(Status.ERROR);
+            responseVo.setErrorCode(String.valueOf(Status.ERROR));
             responseVo.setErrorDesc(message);
         }
-
+        responseVo.setErrorCode(SUCCESS_CODE);
         return responseVo;
     }
 
@@ -61,7 +76,7 @@ public class ExternalInterfaceController {
         return externalInterfaceService.synCarInfo();
     }
 
-    /**
+     /**
      * 获取全部配置
      */
     @GetMapping("/inition")
@@ -69,4 +84,69 @@ public class ExternalInterfaceController {
     public Inition inition() {
         return externalInterfaceService.inition();
     }
+
+    @PostMapping("/version/update")
+    @ResponseBody
+    public VersionResponse versionUpdate(VersionRequest versionRequest) {
+        log.info("[ExternalInterfaceController] update request param is {}", versionRequest);
+        String json = redisDao.get(YstCommon.VERSION_INFO);
+        VersionResponse versionResponse = new VersionResponse();
+        versionResponse.setServiceCode(versionRequest.getServiceCode());
+        if (json == null) {
+            versionResponse.setErrorCode(String.valueOf(Status.ERROR));
+            versionResponse.setErrorDesc("未上传apk到服务器，请上传之后下载");
+            return versionResponse;
+        }
+        VersionInfo versionInfo = gson.fromJson(json, VersionInfo.class);
+        if (StringUtils.isEmpty(versionRequest.getVersionCode())) { // 请求版本号为空
+            // 第一次请求该接口app版本号可以为空
+            if (StringUtils.isEmpty(versionInfo.getOldVersionCode())) {
+                versionResponse.setErrorCode(SUCCESS_CODE);
+                versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
+                versionResponse.setUpdateContent(versionInfo.getUpdateContent());
+                versionResponse.setVersionCode(versionInfo.getNewVersionCode());
+                versionInfo.setOldVersionCode(versionInfo.getNewVersionCode());
+                redisDao.set(YstCommon.VERSION_INFO, gson.toJson(versionInfo));
+                return versionResponse;
+            }
+            // 如果不是第一次请求该接口，那么app版本号不能为空，否则报错
+            if (!StringUtils.isEmpty(versionInfo.getOldVersionCode())) {
+                versionResponse.setErrorCode(String.valueOf(Status.ERROR));
+                versionResponse.setErrorDesc("版本号不能为空");
+                return versionResponse;
+            }
+        }
+
+        if (!StringUtils.isEmpty(versionRequest.getVersionCode()) &&
+                StringUtils.isEmpty(versionInfo.getOldVersionCode())) {
+            // 如果版本号不为空，但是redis中的OldVersionCode为空，还是代表第一次请求该接口
+            versionResponse.setErrorCode(SUCCESS_CODE);
+            versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
+            return versionResponse;
+        }
+
+        // 如果版本号不为空，需要验证该版本号是否正确，不能随便一个版本号都能下载，安全着想
+        if (!versionRequest.getVersionCode().equals(versionInfo.getOldVersionCode())) {
+            versionResponse.setErrorCode(String.valueOf(Status.ERROR));
+            versionResponse.setErrorDesc("版本号不正确");
+            return versionResponse;
+        }
+        // 版本号不为空，并且版本号也正确，且新老版本号不一致，给予最新下载地址
+        if (!versionRequest.getVersionCode().equals(versionInfo.getNewVersionCode())) {
+            versionResponse.setErrorCode(SUCCESS_CODE);
+            versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
+            versionResponse.setUpdateContent(versionInfo.getUpdateContent());
+            versionResponse.setVersionCode(versionInfo.getNewVersionCode());
+        } else {
+            versionResponse.setErrorCode(String.valueOf(Status.ERROR));
+            versionResponse.setErrorDesc("无新版本需要更新");
+        }
+        return versionResponse;
+    }
+
+    @GetMapping("/version/download/{versionCode}")
+    public ResponseEntity<byte[]> download(@PathVariable("versionCode") String versionCode) {
+        return fileResourceService.downloadByUuid(versionCode);
+    }
+
 }
