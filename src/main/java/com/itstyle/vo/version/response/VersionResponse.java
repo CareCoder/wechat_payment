@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class VersionResponse {
     private String serviceCode;
-    private String errorCode;
+    private int errorCode;
     private String errorDesc;
     private String downloadUrl;
     private String updateContent;
