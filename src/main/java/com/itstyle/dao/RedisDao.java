@@ -50,6 +50,10 @@ public class RedisDao {
         return ops.get(key);
     }
 
+    public void delete(String key) {
+        template.delete(key);
+    }
+
     public void hset(String filed, String key, String value) {
         HashOperations<String, String, String> ops = template.opsForHash();
         ops.put(filed, key, value);

@@ -58,4 +58,10 @@ public class YstCommon {
 
 	/** 版本信息 */
 	public static final String VERSION_INFO = "VERSION_INFO";
+
+	/**新增月租车辆的信息*/
+	public static final String MONLY_CAR_ADD_INFO = "MONLY_CAR_ADD_INFO";
+
+	/**新增月租续费的信息*/
+	public static final String MONLY_CAR_RENEW_INFO = "MONLY_CAR_RENEW_INFO";
 }
