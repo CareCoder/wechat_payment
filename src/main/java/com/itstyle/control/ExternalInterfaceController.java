@@ -98,31 +98,22 @@ public class ExternalInterfaceController {
             return versionResponse;
         }
         VersionInfo versionInfo = gson.fromJson(json, VersionInfo.class);
-        if (StringUtils.isEmpty(versionRequest.getVersionCode())) { // 请求版本号为空
-            // 第一次请求该接口app版本号可以为空
-            if (StringUtils.isEmpty(versionInfo.getOldVersionCode())) {
-                versionResponse.setErrorCode(Status.NORMAL);
-                versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
-                versionResponse.setUpdateContent(versionInfo.getUpdateContent());
-                versionResponse.setVersionCode(versionInfo.getNewVersionCode());
-                versionInfo.setOldVersionCode(versionInfo.getNewVersionCode());
-                redisDao.set(YstCommon.VERSION_INFO, gson.toJson(versionInfo));
-                return versionResponse;
-            }
+        if (StringUtils.isEmpty(versionInfo.getOldVersionCode())) { // 老版本号为空，代表是第一次请求
+            versionResponse.setErrorCode(Status.NORMAL);
+            versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
+            versionResponse.setUpdateContent(versionInfo.getUpdateContent());
+            versionResponse.setVersionCode(versionInfo.getNewVersionCode());
+            versionInfo.setOldVersionCode(versionInfo.getNewVersionCode());
+            versionInfo.setDownload(true);
+            redisDao.set(YstCommon.VERSION_INFO, gson.toJson(versionInfo));
+            return versionResponse;
+        } else if (StringUtils.isEmpty(versionRequest.getVersionCode())) {
             // 如果不是第一次请求该接口，那么app版本号不能为空，否则报错
             if (!StringUtils.isEmpty(versionInfo.getOldVersionCode())) {
                 versionResponse.setErrorCode(Status.ERROR);
                 versionResponse.setErrorDesc("版本号不能为空");
                 return versionResponse;
             }
-        }
-
-        if (!StringUtils.isEmpty(versionRequest.getVersionCode()) &&
-                StringUtils.isEmpty(versionInfo.getOldVersionCode())) {
-            // 如果版本号不为空，但是redis中的OldVersionCode为空，还是代表第一次请求该接口
-            versionResponse.setErrorCode(Status.NORMAL);
-            versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
-            return versionResponse;
         }
 
         // 如果版本号不为空，需要验证该版本号是否正确，不能随便一个版本号都能下载，安全着想
@@ -137,6 +128,8 @@ public class ExternalInterfaceController {
             versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
             versionResponse.setUpdateContent(versionInfo.getUpdateContent());
             versionResponse.setVersionCode(versionInfo.getNewVersionCode());
+            versionInfo.setDownload(true);
+            redisDao.set(YstCommon.VERSION_INFO, gson.toJson(versionInfo));
         } else {
             versionResponse.setErrorCode(Status.ERROR);
             versionResponse.setErrorDesc("无新版本需要更新");

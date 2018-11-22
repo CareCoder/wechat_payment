@@ -42,10 +42,13 @@ public class VersionController {
         String json = redisDao.get(YstCommon.VERSION_INFO);
         if (json != null) {
             VersionInfo oldVersionInfo = gson.fromJson(json, VersionInfo.class);
-            versionInfo.setOldVersionCode(oldVersionInfo.getNewVersionCode());
+            if (oldVersionInfo.getDownload()) {
+                versionInfo.setOldVersionCode(oldVersionInfo.getNewVersionCode());
+            }
         }
         versionInfo.setNewVersionCode(uuid);
         versionInfo.setUpdateContent(updateContent);
+        versionInfo.setDownload(false);
         redisDao.set(YstCommon.VERSION_INFO, gson.toJson(versionInfo));
         return Response.build(Status.NORMAL, null, null);
     }
