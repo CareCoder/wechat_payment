@@ -62,7 +62,9 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
     public void edit(MonthCarInfo monthCarInfo) {
         if (monthCarInfo.getId() == null) {
             //add
-            monthCarInfo.setStartTime(System.currentTimeMillis());
+            if (monthCarInfo.getStartTime() == null) {
+                monthCarInfo.setStartTime(System.currentTimeMillis());
+            }
             add(monthCarInfo);
             addCarInfo(monthCarInfo);
         }else{
