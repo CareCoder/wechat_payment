@@ -44,6 +44,8 @@
         var $ = layui.jquery
             ,upload = layui.upload;
 
+        var index;
+
         upload.render({
             elem: '#file'
             ,url: '/version/upload/'
@@ -52,8 +54,10 @@
             ,bindAction: '#submit'
             ,before: function () {
                 this.data={"updateContent" : $("input[name='updateContent']").val()};
+                index = layer.load();
             }
             ,done: function(resp){
+                layer.close(index);
                 if (resp.status == 200) {
                     layer.msg("上传成功！", {icon: 6, time: 1000, anim: 4}, function () {
                             window.location.href = "javascript:location.replace(location.href);";
