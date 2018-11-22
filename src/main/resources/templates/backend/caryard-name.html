@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/lib/layui/css/layui.css">
     <link rel="stylesheet" href="/css/scroll-bar.css">
     <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
 </head>
 <body>
 <div class="ok-body">
@@ -14,39 +15,56 @@
     <div class="ok-body-breadcrumb">
             <span class="layui-breadcrumb">
                 <a><cite>首页</cite></a>
-                <a><cite>车辆管理</cite></a>
-                <a><cite>车辆管理</cite></a>
-                <a><cite>添加车辆管理</cite></a>
+                <a><cite>车辆设置</cite></a>
+                <a><cite>车场信息设置</cite></a>
             </span>
         <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
             <i class="layui-icon layui-icon-refresh"></i>
         </a>
     </div>
     <!--form表单-->
-    <form class="layui-form layui-form-pane ok-form">
+    <form class="layui-form layui-col-md12 ok-form">
         <input type="hidden" name="id">
         <div class="layui-form-item">
-            <label class="layui-form-label">原名称</label>
-            <div class="layui-input-block">
-                <input type="text" name="oldName" readonly autocomplete="off" class="layui-input">
+            <label class="layui-form-label" style="width: 140px;">停车场名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="parkingName" placeholder="请输入停车场名称" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">原车位数</label>
-            <div class="layui-input-block">
-                <input type="text" name="oldParkNum" readonly autocomplete="off" class="layui-input">
+            <label class="layui-form-label" style="width: 140px;">车位数</label>
+            <div class="layui-input-inline">
+                <input type="number" name="parkingNum" placeholder="请输入车位数" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">新名称</label>
+            <label class="layui-form-label" style="width: 140px;">预制车牌收费</label>
             <div class="layui-input-block">
-                <input type="text" name="name" placeholder="请输入停车场名称" autocomplete="off" class="layui-input" lay-verify="required">
+                <input type="checkbox" name="isPrefabricationCharge" lay-skin="switch" lay-text="是|否" checked>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">新车位数</label>
-            <div class="layui-input-block">
-                <input type="text" name="parkNum" placeholder="请输入车位数" autocomplete="off" class="layui-input" lay-verify="required">
+            <label class="layui-form-label" style="width: 140px;">无入场记录车牌处理</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="unlicensedHandle" lay-skin="switch" lay-text="是|否" checked>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 140px;">中央收费后的免费时间</label>
+            <div class="layui-input-inline">
+                <input type="number" name="centralFeeFreeTime" placeholder="请输入免费时间" autocomplete="off" class="layui-input" lay-verify="required">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 140px;">是否选定固定停车位</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="fixedParkingSpace" lay-skin="switch" lay-text="是|否" checked>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 140px;">是否需要精确匹配</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" name="isAccurateMatching" lay-skin="switch" lay-text="是|否" checked>
             </div>
         </div>
         <div class="layui-form-item">
@@ -59,20 +77,27 @@
 <!--js逻辑-->
 <script src="/lib/layui/layui.js"></script>
 <script>
-    layui.use(['element', 'form', 'jquery', 'laydate'], function () {
-        var element = layui.element;
-        var table = layui.table;
+    layui.use(['form', 'jquery'], function () {
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
 
-        $("input[name='oldName']").val('[[${car_yard_name.name}]]');
-        $("input[name='oldParkNum']").val('[[${car_yard_name.parkNum}]]');
-
-        laydate.render({
-            elem: '#birthday',
-            type: "datetime"
-        });
+        debugger;
+        $("input[name='parkingName']").val('[[${car_yard_name?.parkingName}]]');
+        $("input[name='parkingNum']").val('[[${car_yard_name?.parkingNum}]]');
+        if (!'[[${car_yard_name?.isPrefabricationCharge}]]') {
+            $("input[name='isPrefabricationCharge']").attr("checked", false);
+        }
+        if (!'[[${car_yard_name?.unlicensedHandle}]]') {
+            $("input[name='unlicensedHandle']").attr("checked", false);
+        }
+        $("input[name='centralFeeFreeTime']").val('[[${car_yard_name?.centralFeeFreeTime}]]');
+        if (!'[[${car_yard_name?.fixedParkingSpace}]]') {
+            $("input[name='fixedParkingSpace']").attr("checked", false);
+        }
+        if (!'[[${car_yard_name?.isAccurateMatching}]]') {
+            $("input[name='isAccurateMatching']").attr("checked", false);
+        }
+        form.render();
 
         form.on('submit(add)', function (data) {
             $.ajax({
