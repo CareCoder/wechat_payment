@@ -7,4 +7,5 @@ public class VersionInfo {
     private String oldVersionCode;
     private String newVersionCode;
     private String updateContent;
+    private Boolean download;
 }
