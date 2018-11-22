@@ -239,29 +239,31 @@
                url:'/fee/sz/get/' + data.value,
                type:'GET',
                success:function(resp) {
+                   debugger;
                    if (resp.status == 200) {
-                       if (resp.data != null) {
-                           $("input[name='freeTime']").val(resp.data.freeTime);
-                           $("input[name='cappingAmount']").val(resp.data.cappingAmount);
-                           $("input[name='centralChargesTime']").val(resp.data.centralChargesTime);
+                       var chargeRule = resp.data.chargeRule;
+                       if (chargeRule != null) {
+                           $("input[name='freeTime']").val(chargeRule.freeTime);
+                           $("input[name='cappingAmount']").val(chargeRule.cappingAmount);
+                           $("input[name='centralChargesTime']").val(chargeRule.centralChargesTime);
                            if ('[[${sz_charges?.optionalCycle}]]' != 24) {
                                $("input[name='optionalCycle']").attr("checked", false);
                                layui.form.render();
                            }
-                           $("input[name='peakModelPeakTimeStart']").val(resp.data.peakModelPeakTimeStart + ":00:00");
-                           $("input[name='peakModelPeakTimeEnd']").val(resp.data.peakModelPeakTimeEnd + ":00:00");
-                           $("input[name='peakFirstTime']").val(resp.data.peakFirstTime);
-                           $("input[name='peakFirstAmount']").val(resp.data.peakFirstAmount);
-                           $("input[name='peakIncreasingTime']").val(resp.data.peakIncreasingTime);
-                           $("input[name='peakIncreasingAmount']").val(resp.data.peakIncreasingAmount);
-                           $("input[name='nonPeakFirstTime']").val(resp.data.nonPeakFirstTime);
-                           $("input[name='nonPeakFirstAmount']").val(resp.data.nonPeakFirstAmount);
-                           $("input[name='nonPeakIncreasingTime']").val(resp.data.nonPeakIncreasingTime);
-                           $("input[name='nonPeakIncreasingAmount']").val(resp.data.nonPeakIncreasingAmount);
-                           $("input[name='nonWorkingDayFirstTime']").val(resp.data.nonWorkingDayFirstTime);
-                           $("input[name='nonWorkingDayFirstAmount']").val(resp.data.nonWorkingDayFirstAmount);
-                           $("input[name='nonWorkingDayIncreasingTime']").val(resp.data.nonWorkingDayIncreasingTime);
-                           $("input[name='nonWorkingDayIncreasingAmount']").val(resp.data.nonWorkingDayIncreasingAmount);
+                           $("input[name='peakModelPeakTimeStart']").val(chargeRule.peakModelPeakTimeStart + ":00:00");
+                           $("input[name='peakModelPeakTimeEnd']").val(chargeRule.peakModelPeakTimeEnd + ":00:00");
+                           $("input[name='peakFirstTime']").val(chargeRule.peakFirstTime);
+                           $("input[name='peakFirstAmount']").val(chargeRule.peakFirstAmount);
+                           $("input[name='peakIncreasingTime']").val(chargeRule.peakIncreasingTime);
+                           $("input[name='peakIncreasingAmount']").val(chargeRule.peakIncreasingAmount);
+                           $("input[name='nonPeakFirstTime']").val(chargeRule.nonPeakFirstTime);
+                           $("input[name='nonPeakFirstAmount']").val(chargeRule.nonPeakFirstAmount);
+                           $("input[name='nonPeakIncreasingTime']").val(chargeRule.nonPeakIncreasingTime);
+                           $("input[name='nonPeakIncreasingAmount']").val(chargeRule.nonPeakIncreasingAmount);
+                           $("input[name='nonWorkingDayFirstTime']").val(chargeRule.nonWorkingDayFirstTime);
+                           $("input[name='nonWorkingDayFirstAmount']").val(chargeRule.nonWorkingDayFirstAmount);
+                           $("input[name='nonWorkingDayIncreasingTime']").val(chargeRule.nonWorkingDayIncreasingTime);
+                           $("input[name='nonWorkingDayIncreasingAmount']").val(chargeRule.nonWorkingDayIncreasingAmount);
                        } else {
                            $("input[name='freeTime']").val('');
                            $("input[name='cappingAmount']").val('');

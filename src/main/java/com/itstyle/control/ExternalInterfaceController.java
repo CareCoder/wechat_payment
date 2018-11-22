@@ -3,8 +3,13 @@ package com.itstyle.control;
 import com.google.gson.Gson;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
+import com.itstyle.domain.feesettings.ByCharges;
+import com.itstyle.domain.feesettings.response.ByChargesResponse;
+import com.itstyle.domain.feesettings.response.SZChargesResponse;
+import com.itstyle.domain.feesettings.response.StandardChargesResponse;
 import com.itstyle.domain.version.VersionInfo;
 import com.itstyle.service.FileResourceService;
+import com.itstyle.vo.charges.reponse.ChargesResponse;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.login.request.LoginRequest;
 import com.itstyle.vo.login.reponse.LoginResponse;
@@ -22,6 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -85,6 +94,9 @@ public class ExternalInterfaceController {
         return externalInterfaceService.inition();
     }
 
+    /**
+     * apk版本更新
+     * */
     @PostMapping("/version/update")
     @ResponseBody
     public VersionResponse versionUpdate(VersionRequest versionRequest) {
@@ -149,6 +161,32 @@ public class ExternalInterfaceController {
     @ResponseBody
     public IncrementMonly incrementMonly(Long startTime, Long endTime) {
         return externalInterfaceService.incrementMonly(startTime, endTime);
+    }
+
+    @GetMapping("/charges")
+    @ResponseBody
+    public Object getCharges() {
+        String currentCharges = redisDao.get(YstCommon.CURRENT_CHARGES);
+        Map<Object, Object> map = redisDao.hgetAll(currentCharges);
+        if (YstCommon.SZ_CHARGES.equals(currentCharges)) {
+            ChargesResponse<SZChargesResponse.ChargeRule> c = new ChargesResponse<>();
+            c.setChargeModel(3);
+            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), SZChargesResponse.ChargeRule.class)).collect(Collectors.toList()));
+            return c;
+        }
+        if (YstCommon.STANDARD_CHARGES.equals(currentCharges)) {
+            ChargesResponse<StandardChargesResponse.ChargeRule> c = new ChargesResponse<>();
+            c.setChargeModel(2);
+            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), StandardChargesResponse.ChargeRule.class)).collect(Collectors.toList()));
+            return c;
+        }
+        if (YstCommon.BY_CHARGES.equals(currentCharges)) {
+            ChargesResponse<ByChargesResponse.ChargeRule> c = new ChargesResponse<>();
+            c.setChargeModel(1);
+            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), ByChargesResponse.ChargeRule.class)).collect(Collectors.toList()));
+            return c;
+        }
+        return "查询无数据";
     }
 
 }

@@ -55,6 +55,8 @@ public class YstCommon {
 	public static final String STANDARD_CHARGES = "STANDARD_CHARGES";
 	/** 按次收费 */
 	public static final String BY_CHARGES = "BY_CHARGES";
+	/** 当前收费标准 */
+	public static final String CURRENT_CHARGES = "CURRENT_CHARGES";
 
 	/** 版本信息 */
 	public static final String VERSION_INFO = "VERSION_INFO";

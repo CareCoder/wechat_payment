@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>添加用户</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>收费设置</cite></a>
+                <a><cite>当前收费标准</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--form表单-->
+    <form class="layui-form layui-form-pane ok-form">
+        <label class="layui-form-label">收费标准</label>
+        <div class="layui-input-block" style="width: 200px;">
+            <select name="charges">
+                <option value="BY_CHARGES">按次收费</option>
+                <option value="STANDARD_CHARGES">标准收费</option>
+                <option value="SC_CHARGES">深圳收费</option>
+            </select>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'jquery'], function () {
+        var form = layui.form;
+        var $ = layui.jquery;
+        $("select[name='charges']").val('[[${charges}]]');
+        form.render('select');
+        form.on('submit(add)', function (data) {
+            $.ajax({
+                url:"/fee/current/" + data.field.charges,
+                type:"GET",
+                success:function(resp){
+                    if (resp.status == 200) {
+                        layer.msg("修改成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                            window.location.href = "javascript:location.replace(location.href);";
+                        });
+                    }
+                    if (resp.status == 500) {
+                        layer.msg(resp.msg, {icon: 2, time: 2000});
+                    }
+
+                },
+                error:function(){
+                    layer.msg("修改失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }
+            });
+            return false;
+        });
+    })
+</script>
+</body>
+</html>

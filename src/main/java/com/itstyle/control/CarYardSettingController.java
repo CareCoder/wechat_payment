@@ -35,9 +35,6 @@ public class CarYardSettingController {
     @GetMapping("/name/query")
     public String getCarYardName(Model model) {
         CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
-        if (carYardName == null) {
-            carYardName = new CarYardName();
-        }
         model.addAttribute("car_yard_name", carYardName);
         return "/backend/caryard-name";
     }
@@ -45,9 +42,6 @@ public class CarYardSettingController {
     @PostMapping("/name/save")
     @ResponseBody
     public Response setCarYardName(CarYardName carYardName) {
-        AssertUtil.assertNotNull(carYardName, () -> new BusinessException("car yard name is null"));
-        AssertUtil.assertNotEmpty(carYardName.getName(), () -> new BusinessException("车场名称不能为空"));
-        AssertUtil.assertNotNull(carYardName.getParkNum(), () -> new BusinessException("车位数不能为空"));
         globalSettingService.set(YstCommon.CAR_YARD_NAME, carYardName);
         return Response.build(Status.NORMAL, null, null);
     }

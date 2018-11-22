@@ -145,18 +145,19 @@
                 type:'GET',
                 success:function(resp) {
                     if (resp.status == 200) {
-                        if (resp.data != null) {
-                            $("input[name='freeTime']").val(resp.data.freeTime);
-                            $("input[name='cappingAmount']").val(resp.data.cappingAmount);
+                        var chargeRule = resp.data.chargeRule;
+                        if (chargeRule != null) {
+                            $("input[name='freeTime']").val(chargeRule.freeTime);
+                            $("input[name='cappingAmount']").val(chargeRule.cappingAmount);
                             if ('[[${standard_charges?.optionalCycle}]]' != 24) {
                                 $("input[name='optionalCycle']").attr("checked", false);
                                 layui.form.render();
                             }
-                            $("input[name='centralChargesTime']").val(resp.data.centralChargesTime);
-                            $("input[name='firstTime']").val(resp.data.firstTime);
-                            $("input[name='firstAmount']").val(resp.data.firstAmount);
-                            $("input[name='increasingTime']").val(resp.data.increasingTime);
-                            $("input[name='increasingAmount']").val(resp.data.increasingAmount);
+                            $("input[name='centralChargesTime']").val(chargeRule.centralChargesTime);
+                            $("input[name='firstTime']").val(chargeRule.firstTime);
+                            $("input[name='firstAmount']").val(chargeRule.firstAmount);
+                            $("input[name='increasingTime']").val(chargeRule.increasingTime);
+                            $("input[name='increasingAmount']").val(chargeRule.increasingAmount);
                         } else {
                             $("input[name='freeTime']").val('');
                             $("input[name='cappingAmount']").val('');
