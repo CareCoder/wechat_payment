@@ -147,8 +147,8 @@ public class ExternalInterfaceController {
      */
     @GetMapping("/incrementMonly")
     @ResponseBody
-    public IncrementMonly incrementMonly() {
-        return externalInterfaceService.incrementMonly();
+    public IncrementMonly incrementMonly(Long startTime, Long endTime) {
+        return externalInterfaceService.incrementMonly(startTime, endTime);
     }
 
 }

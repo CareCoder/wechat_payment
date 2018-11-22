@@ -54,6 +54,12 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">开始日期 :</label>
+            <div class="layui-input-block">
+                <input name="startTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="startTime">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">截止日期 :</label>
             <div class="layui-input-block">
                 <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
@@ -101,6 +107,7 @@
         $("input[name='id']").val(id);
         if (id != '') {
             $("input[name='endTime']").attr("disabled", "disabled");
+            $("input[name='startTime']").attr("disabled", "disabled");
         }
 
         var carNum = '[[${monthCarInfo?.carNum}]]';
@@ -123,14 +130,26 @@
             endTime = new Date().getTime();
         }
 
+        var startTime = '[[${monthCarInfo?.startTime}]]';
+        if (startTime === '') {
+            startTime = new Date().getTime();
+        }
+
         laydate.render({
             elem: '#endTime',
             type: "datetime",
             value: new Date(parseInt(endTime))
+        })
+
+        laydate.render({
+            elem: '#startTime',
+            type: "datetime",
+            value: new Date(parseInt(startTime))
         });
 
         form.on('submit(add)', function (data) {
             data.field.endTime = new Date(data.field.endTime).getTime();
+            data.field.startTime = new Date(data.field.startTime).getTime();
             data.field.carNum = data.field.carNumHead + data.field.carNum;
             console.log(data.field);
             $.ajax({

@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -55,16 +57,18 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         Long endTime = one.getEndTime();
         endTime = endTime + (day * 24 * 60 * 60 * 1000);
         one.setEndTime(endTime);
+        one.setModifyTime(new Date());
         update(one.getId(), one);
-        addCarRenewInfo(one);
     }
 
     public void edit(MonthCarInfo monthCarInfo) {
         if (monthCarInfo.getId() == null) {
             //add
-            monthCarInfo.setStartTime(System.currentTimeMillis());
+            if (monthCarInfo.getStartTime() == null) {
+                monthCarInfo.setStartTime(System.currentTimeMillis());
+            }
+            monthCarInfo.setCreateTime(new Date());
             add(monthCarInfo);
-            addCarInfo(monthCarInfo);
         }else{
             //update 这个接口不得修改 startTime 和 endTime ，如果需要修改需要去续费接口
             monthCarInfo.setStartTime(null);
@@ -74,35 +78,38 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
     }
 
     /**
-     * 新增月租车后,写入redis
-     * @param monthCarInfo 车辆信息
+     * 查找区域时间内新增的车
+     * @param startTime 开始时间
+     * @param endTime 结束时间
      */
-    private void addCarInfo(MonthCarInfo monthCarInfo) {
-        MonlyCarAddInfo carAddInfo = MonlyCarAddInfo.convert(monthCarInfo);
-        String redisStr = redisDao.get(YstCommon.MONLY_CAR_ADD_INFO);
-        List<MonlyCarAddInfo> mcis = gson.fromJson(redisStr, new TypeToken<List<MonlyCarAddInfo>>(){}.getType());
-        if (mcis == null) {
-            mcis = new ArrayList<>();
-        }
-        mcis.add(carAddInfo);
-        redisDao.set(YstCommon.MONLY_CAR_ADD_INFO, gson.toJson(mcis));
+    public List<MonthCarInfo> getCarAddInfo(Long startTime, Long endTime) {
+        Specification<MonthCarInfo> sp = (root, query, cb) -> {
+            if (startTime != null && endTime != null) {
+                Predicate p1 = cb.ge(root.get("createTime").as(Long.class), startTime);
+                Predicate p2 = cb.le(root.get("createTime").as(Long.class), endTime);
+                query.where(cb.and(p1, p2));
+            }
+            return query.getRestriction();
+        };
+        return monthCarInfoMapper.findAll(sp);
+    }
+    /**
+     * 查找区域时间内续费的车
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     */
+    public List<MonthCarInfo> getCarRenewInfo(Long startTime, Long endTime) {
+        Specification<MonthCarInfo> sp = (root, query, cb) -> {
+            if (startTime != null && endTime != null) {
+                Predicate p1 = cb.ge(root.get("modifyTime").as(Long.class), startTime);
+                Predicate p2 = cb.le(root.get("modifyTime").as(Long.class), endTime);
+                query.where(cb.and(p1, p2));
+            }
+            return query.getRestriction();
+        };
+        return monthCarInfoMapper.findAll(sp);
     }
 
-    /**
-     * 月租车续费后,写入redis
-     * @param monthCarInfo 车辆信息
-     */
-    private void addCarRenewInfo(MonthCarInfo monthCarInfo) {
-        MonlyCarRenewInfo carRenewInfo = MonlyCarRenewInfo.convert(monthCarInfo);
-        String redisStr = redisDao.get(YstCommon.MONLY_CAR_RENEW_INFO);
-        List<MonlyCarRenewInfo> list = gson.fromJson(redisStr, new TypeToken<List<MonlyCarRenewInfo>>() {
-        }.getType());
-        if (list == null) {
-            list = new ArrayList<>();
-        }
-        list.add(carRenewInfo);
-        redisDao.set(YstCommon.MONLY_CAR_RENEW_INFO, gson.toJson(list));
-    }
 
     public List<MonthCarInfo> list() {
         return monthCarInfoMapper.findAll();

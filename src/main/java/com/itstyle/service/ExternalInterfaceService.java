@@ -53,17 +53,12 @@ public class ExternalInterfaceService {
     /**
      * 获取到临时的新增信息并且删除掉
      */
-    public IncrementMonly incrementMonly() {
-        List<MonlyCarAddInfo> mcais = gson.fromJson(redisDao.get(YstCommon.MONLY_CAR_ADD_INFO),
-                new TypeToken<List<MonlyCarAddInfo>>(){}.getType());
-        List<MonlyCarRenewInfo> mcri = gson.fromJson(redisDao.get(YstCommon.MONLY_CAR_RENEW_INFO),
-                new TypeToken<List<MonlyCarRenewInfo>>() {
-        }.getType());
-        redisDao.delete(YstCommon.MONLY_CAR_ADD_INFO);
-        redisDao.delete(YstCommon.MONLY_CAR_RENEW_INFO);
-        IncrementMonly incrementMonly = new IncrementMonly();
-        incrementMonly.monlyCarAddInfos = mcais;
-        incrementMonly.monlyCarRenewInfos = mcri;
-        return incrementMonly;
+    public IncrementMonly incrementMonly(Long startTime, Long endTime) {
+        List<MonthCarInfo> carAddInfo = monthCarInfoService.getCarAddInfo(startTime, endTime);
+        List<MonthCarInfo> carRenewInfo = monthCarInfoService.getCarRenewInfo(startTime, endTime);
+        IncrementMonly icm = new IncrementMonly();
+        icm.monlyCarAddInfos = carAddInfo.stream().map(MonlyCarAddInfo::convert).collect(Collectors.toList());
+        icm.monlyCarRenewInfos = carRenewInfo.stream().map(MonlyCarRenewInfo::convert).collect(Collectors.toList());
+        return icm;
     }
 }
