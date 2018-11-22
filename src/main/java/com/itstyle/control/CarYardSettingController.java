@@ -2,20 +2,21 @@ package com.itstyle.control;
 
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
-import com.itstyle.domain.caryard.CarYardName;
-import com.itstyle.domain.caryard.PassCarStatus;
-import com.itstyle.domain.caryard.ResponsePassCarStatus;
+import com.itstyle.domain.caryard.*;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.exception.AssertUtil;
 import com.itstyle.exception.BusinessException;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.service.PassPermissionService;
+import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -67,16 +68,18 @@ public class CarYardSettingController {
     @ResponseBody
     public Response addCarPassPermission(PassCarStatus passCarStatus) {
         AssertUtil.assertNotNull(passCarStatus, () -> new BusinessException("pass cat status is null"));
-        AssertUtil.assertNotEmpty(passCarStatus.getChannelName(), () -> new BusinessException("通道名称不能为空"));
-        AssertUtil.assertNotNull(passCarStatus.getChannelTypeId(), () -> new BusinessException("通道类型不能为空"));
         passPermissionService.save(passCarStatus);
         return Response.build(Status.NORMAL, null, null);
     }
 
-    @GetMapping("/pass-permission-edzit.html")
+    @GetMapping("/pass-permission-edit.html")
     public String editCarPassPermissionPage(Long id, Model model) {
         PassCarStatus passCarStatus = passPermissionService.getById(id);
-        model.addAttribute("pass_car_status", passCarStatus);
+        AccessType accessType = passPermissionService.getAccessTypeId(passCarStatus.getAccessTypeId());
+        ResponsePassCarStatusEdit responsePassCarStatusEdit = new ResponsePassCarStatusEdit();
+        BeanUtilIgnore.copyPropertiesIgnoreNull(passCarStatus, responsePassCarStatusEdit);
+        responsePassCarStatusEdit.setChannelTypeId(accessType.getChannelTypeId());
+        model.addAttribute("pass_car_status", responsePassCarStatusEdit);
         return "/backend/pass-permission-edit";
     }
 

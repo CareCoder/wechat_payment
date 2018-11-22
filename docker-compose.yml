@@ -9,9 +9,9 @@ services:
       - /data/img:/data/img
     environment:
       - SERVER_PORT=8080
-      - REDIS_HOST=localhost
+      - REDIS_HOST=172.16.0.9
       - REDIS_PORT=6380
-      - MYSQL_HOST=localhost
+      - MYSQL_HOST=172.16.0.9
       - MYSQL_PORT=3307
       - MYSQL_USERNAME=root
       - MYSQL_PASSWORD=SATYmmMvf8tH

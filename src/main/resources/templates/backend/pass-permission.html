@@ -38,14 +38,12 @@
                 <th lay-data="{fixed:'right', width: 160, align: 'center', templet:'#operationTpl'}" rowspan="2">操作</th>
             </tr>
             <tr>
-                <th lay-data="{field:'tempCarA', width:150, align:'center', templet:'#tempCarAIcon'}">蓝牌</th>
-                <th lay-data="{field:'tempCarB', width:150, align:'center', templet:'#tempCarBIcon'}">黄牌</th>
-                <th lay-data="{field:'tempCarC', width:150, align:'center', templet:'#tempCarCIcon'}">黑牌</th>
-                <th lay-data="{field:'tempCarD', width:150, align:'center', templet:'#tempCarDIcon'}">绿牌</th>
-                <th lay-data="{field:'monthCarA', width:150, align:'center', templet:'#monthCarAIcon'}">月租车A</th>
-                <th lay-data="{field:'monthCarB', width:150, align:'center', templet:'#monthCarBIcon'}">月租车B</th>
-                <th lay-data="{field:'monthCarC', width:150, align:'center', templet:'#monthCarCIcon'}">月租车C</th>
-                <th lay-data="{field:'vipCar', width:150, align:'center', templet:'#vipCarIcon'}">贵宾车</th>
+                <th lay-data="{field:'entrance_tempCar_1', width:150, align:'center', templet:'#entrance_tempCar_1Icon'}">临时车_1</th>
+                <th lay-data="{field:'entrance_monlyCar_1', width:150, align:'center', templet:'#entrance_monlyCar_1Icon'}">月卡车_1</th>
+                <th lay-data="{field:'entrance_specialCar_1', width:150, align:'center', templet:'#entrance_specialCar_1Icon'}">特种车_1</th>
+                <th lay-data="{field:'entrance_tempCar_2', width:150, align:'center', templet:'#entrance_tempCar_2Icon'}">临时车_2</th>
+                <th lay-data="{field:'entrance_monlyCar_2', width:150, align:'center', templet:'#entrance_monlyCar_2Icon'}">月卡车_2</th>
+                <th lay-data="{field:'entrance_specialCar_2', width:150, align:'center', templet:'#entrance_specialCar_2Icon'}">特种车_2</th>
             </tr>
         </thead>
     </table>
@@ -124,57 +122,43 @@
         })
     })
 </script>
-<script type="text/html" id="tempCarAIcon">
-    {{# if(d.tempCarA == '1'){ }}
+<script type="text/html" id="entrance_tempCar_1Icon">
+    {{# if(d.entrance_tempCar_1 == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
     {{# } }}
 </script>
-<script type="text/html" id="tempCarBIcon">
-    {{# if(d.tempCarB == '1'){ }}
+<script type="text/html" id="entrance_monlyCar_1Icon">
+    {{# if(d.entrance_monlyCar_1 == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
     {{# } }}
 </script>
-<script type="text/html" id="tempCarCIcon">
-    {{# if(d.tempCarC == '1'){ }}
+<script type="text/html" id="entrance_specialCar_1Icon">
+    {{# if(d.entrance_specialCar_1 == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
     {{# } }}
 </script>
-<script type="text/html" id="tempCarDIcon">
-    {{# if(d.tempCarD == '1'){ }}
+<script type="text/html" id="entrance_tempCar_2Icon">
+    {{# if(d.entrance_tempCar_2 == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
     {{# } }}
 </script>
-<script type="text/html" id="monthCarAIcon">
-    {{# if(d.monthCarA == '1'){ }}
+<script type="text/html" id="entrance_monlyCar_2Icon">
+    {{# if(d.entrance_monlyCar_2 == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
     {{# } }}
 </script>
-<script type="text/html" id="monthCarBIcon">
-    {{# if(d.monthCarB == '1'){ }}
-    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
-    {{# }else{ }}
-    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
-    {{# } }}
-</script>
-<script type="text/html" id="monthCarCIcon">
-    {{# if(d.monthCarC == '1'){ }}
-    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
-    {{# }else{ }}
-    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
-    {{# } }}
-</script>
-<script type="text/html" id="vipCarIcon">
-    {{# if(d.vipCar == '1'){ }}
+<script type="text/html" id="entrance_specialCar_2Icon">
+    {{# if(d.entrance_specialCar_2 == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>

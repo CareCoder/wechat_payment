@@ -20,13 +20,11 @@ public class PassCarStatus {
     @Id
     @GeneratedValue
     private Long id;
-    private String channelName;
-    private Long channelTypeId;
-    private Integer tempCarA;
-    private Integer tempCarB;
-    private Integer tempCarC;
-    private Integer monthCarA;
-    private Integer monthCarB;
-    private Integer monthCarC;
-    private Integer vipCar;
+    private Long accessTypeId;
+    private Integer entrance_tempCar_1;
+    private Integer entrance_monlyCar_1;
+    private Integer entrance_specialCar_1;
+    private Integer entrance_tempCar_2;
+    private Integer entrance_monlyCar_2;
+    private Integer entrance_specialCar_2;
 }

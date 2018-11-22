@@ -51,6 +51,7 @@ public class FeeSettingController {
         SZChargesResponse szChargesResponse = new SZChargesResponse();
         szChargesResponse.setChargeModel(3);
         if (szCharges != null) {
+            szChargesResponse.setChargeRule(new SZChargesResponse.ChargeRule());
             BeanUtilIgnore.copyPropertiesIgnoreNull(szCharges, szChargesResponse.getChargeRule());
         }
         return Response.build(Status.NORMAL, null, szChargesResponse);
@@ -81,6 +82,7 @@ public class FeeSettingController {
         StandardChargesResponse standardChargesResponse = new StandardChargesResponse();
         standardChargesResponse.setChargeModel(2);
         if (standardCharges != null) {
+            standardChargesResponse.setChargeRule(new StandardChargesResponse.ChargeRule());
             BeanUtilIgnore.copyPropertiesIgnoreNull(standardCharges, standardChargesResponse.getChargeRule());
         }
         return Response.build(Status.NORMAL, null, standardChargesResponse);
@@ -111,6 +113,7 @@ public class FeeSettingController {
         ByChargesResponse byChargesResponse = new ByChargesResponse();
         byChargesResponse.setChargeModel(1);
         if (byCharges != null) {
+            byChargesResponse.setChargeRule(new ByChargesResponse.ChargeRule());
             BeanUtilIgnore.copyPropertiesIgnoreNull(byCharges, byChargesResponse.getChargeRule());
         }
         return Response.build(Status.NORMAL, null, byChargesResponse);

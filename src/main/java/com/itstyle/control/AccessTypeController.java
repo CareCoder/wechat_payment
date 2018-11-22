@@ -88,4 +88,10 @@ public class AccessTypeController {
         return "/backend/access-type-edit";
     }
 
+    @GetMapping("/getAll")
+    @ResponseBody
+    public PageResponse<ResponseAccessType> getAllAccessType() {
+        return new PageResponse<>(0L, accessTypeService.listNoPage());
+    }
+
 }

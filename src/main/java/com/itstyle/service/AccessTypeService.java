@@ -10,6 +10,7 @@ import java.util.List;
 public interface AccessTypeService {
 
     PageResponse<ResponseAccessType> list(int page, int limit);
+    List<ResponseAccessType> listNoPage();
 
     void save(AccessType accessType);
 

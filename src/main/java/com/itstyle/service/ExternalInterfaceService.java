@@ -6,10 +6,12 @@ import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.MonthCarInfo;
+import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.incrementmonly.response.MonlyCarAddInfo;
 import com.itstyle.vo.incrementmonly.response.MonlyCarRenewInfo;
 import com.itstyle.vo.inition.response.Inition;
+import com.itstyle.vo.inition.response.ParkingSetup;
 import com.itstyle.vo.syncarinfo.response.BlackListVehicle;
 import com.itstyle.vo.syncarinfo.response.FreeVehicle;
 import com.itstyle.vo.syncarinfo.response.MonlyCarInfo;
@@ -28,6 +30,8 @@ public class ExternalInterfaceService {
     private RedisDao redisDao;
     @Resource
     private Gson gson;
+    @Resource
+    private GlobalSettingService globalSettingService;
 
     @Resource
     private CarInfoService carInfoService;
@@ -47,7 +51,13 @@ public class ExternalInterfaceService {
         Inition inition = new Inition();
 
         inition.synCarInfo = synCarInfo();
+        inition.carYardName = carYardName();
         return inition;
+    }
+
+    public CarYardName carYardName() {
+        CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
+        return carYardName;
     }
 
     /**

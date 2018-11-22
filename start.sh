@@ -1,4 +1,11 @@
 #!/bin/bash
+image=$(sudo docker images | grep hrxz/spring-boot-pay | awk '{ print $3 }')
+if [[ -z "$image" ]]
+  then
+    docker build --no-cache -t hrxz/spring-boot-pay:0.0.1 \
+        --build-arg JAR_FILE=target/spring-boot-pay.jar .
+     docker rmi -f $(sudo docker images -f "dangling=true" -q)
+fi
 container_stop=$(docker ps | grep spring-boot-pay | awk '{ print $1 }')
 if [ -n "$container_stop" ]
   then
@@ -19,30 +26,8 @@ if [ -n "$container_del" ]
     fi
     echo "delete spring-boot-pa container success.."
 fi
-image_del=$(sudo docker images | grep hrxz/spring-boot-pay | awk '{ print $3 }')
-if [ -n "$image_del" ]
-  then
-    sudo docker rmi $image_del
-    if [ $? -ne 0 ]
-      then
-        exit 4
-    fi
-    echo "delete image success..."
-fi
-git pull
-if [ $? -ne 0 ]
-  then
-    exit 5
-fi
-docker build --no-cache -t hrxz/spring-boot-pay:0.0.1 \
---build-arg JAR_FILE=target/spring-boot-pay.jar .
-if [ $? -ne 0 ]
-  then
-    exit 7
-fi
 docker-compose up -d
 if [ $? -eq 0 ]
   then
     echo "============================SUCCESS=================================================="
 fi
-docker rmi -f $(sudo docker images -f "dangling=true" -q)
