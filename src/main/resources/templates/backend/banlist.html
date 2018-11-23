@@ -38,21 +38,27 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">临时车A :</label>
+                <label class="layui-form-label">蓝牌 :</label>
                 <div class="layui-input-block">
                     <input type="checkbox" name="tempCarA" lay-skin="switch" value="true" lay-text="启用|停用" >
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">临时车B :</label>
+                <label class="layui-form-label">黄牌 :</label>
                 <div class="layui-input-block">
                     <input type="checkbox" name="tempCarB" lay-skin="switch" value="true" lay-text="启用|停用" >
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">临时车C :</label>
+                <label class="layui-form-label">黑牌 :</label>
                 <div class="layui-input-block">
                     <input type="checkbox" name="tempCarC" lay-skin="switch" value="true" lay-text="启用|停用" >
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">绿牌 :</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="tempCarD" lay-skin="switch" value="true" lay-text="启用|停用" >
                 </div>
             </div>
             <div class="layui-form-item">
@@ -100,6 +106,7 @@
     var tempCarA = '[[${banlist?.tempCarA}]]';
     var tempCarB = '[[${banlist?.tempCarB}]]';
     var tempCarC = '[[${banlist?.tempCarC}]]';
+    var tempCarD = '[[${banlist?.tempCarD}]]';
     var monthCarA = '[[${banlist?.monthCarA}]]';
     var monthCarB = '[[${banlist?.monthCarB}]]';
     var monthCarC = '[[${banlist?.monthCarC}]]';
@@ -123,6 +130,9 @@
         }
         if (tempCarC === 'true') {
             $("input[name='tempCarC']").attr('checked', 'checked');
+        }
+        if (tempCarD === 'true') {
+            $("input[name='tempCarD']").attr('checked', 'checked');
         }
         if (monthCarA === 'true') {
             $("input[name='monthCarA']").attr('checked', 'checked');
@@ -159,6 +169,7 @@
                     tempCarA:data.field.tempCarA,
                     tempCarB:data.field.tempCarB,
                     tempCarC:data.field.tempCarC,
+                    tempCarD:data.field.tempCarD,
                     monthCarA:data.field.monthCarA,
                     monthCarB:data.field.monthCarB,
                     monthCarC:data.field.monthCarC,
