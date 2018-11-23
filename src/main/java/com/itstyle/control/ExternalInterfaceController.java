@@ -159,7 +159,8 @@ public class ExternalInterfaceController {
      */
     @GetMapping("/incrementMonly")
     @ResponseBody
-    public IncrementMonly incrementMonly(Long startTime, Long endTime) {
+    public IncrementMonly incrementMonly(@RequestParam Long startTime,
+                                         @RequestParam Long endTime) {
         return externalInterfaceService.incrementMonly(startTime, endTime);
     }
 

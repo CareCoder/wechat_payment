@@ -152,7 +152,6 @@
                 });
             }
         });
-
         $("#addCarInfo").click(function () {
             console.log("添加车辆")
             layer.open({
@@ -178,7 +177,7 @@
     {{#
     var date = new Date();
     date.setTime(d.endTime);
-    return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
+    return date.toLocaleDateString();
     }}
 </script>
 
@@ -186,7 +185,7 @@
     {{#
     var date = new Date();
     date.setTime(d.startTime);
-    return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
+    return date.toLocaleDateString();
     }}
 </script>
 
