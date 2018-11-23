@@ -45,6 +45,15 @@
             </div>
             <label class="layui-form-label">车辆类型</label>
             <div class="layui-input-block">
+                <select name="carColor" lay-verify="required">
+                    <option value="LC_BLUE">蓝牌</option>
+                    <option value="LC_YELLOW">黄牌</option>
+                    <option value="LC_BLACK">黑牌</option>
+                    <option value="LC_GREEN">绿牌</option>
+                </select>
+            </div>
+            <label class="layui-form-label">车辆颜色</label>
+            <div class="layui-input-block">
                 <select name="carType" lay-verify="required">
                     <option value="MONTH_CAR_A">月租车A</option>
                     <option value="MONTH_CAR_B">月租车B</option>
@@ -58,8 +67,6 @@
             <div class="layui-input-block">
                 <input name="startTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="startTime">
             </div>
-        </div>
-        <div class="layui-form-item">
             <label class="layui-form-label">截止日期 :</label>
             <div class="layui-input-block">
                 <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
@@ -124,6 +131,12 @@
             carType = "MONTH_CAR_A";
         }
         $("select option[value=" + carType + "]").attr("selected", 'selected');
+
+        var carColor = '[[${monthCarInfo?.carColor}]]';
+        if (carColor === '') {
+            carColor = "LC_BLUE";
+        }
+        $("select option[value=" + carColor + "]").attr("selected", 'selected');
 
         var endTime = '[[${monthCarInfo?.endTime}]]';
         if (endTime === '') {
