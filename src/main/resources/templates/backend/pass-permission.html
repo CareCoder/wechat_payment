@@ -38,9 +38,10 @@
                 <th lay-data="{fixed:'right', width: 160, align: 'center', templet:'#operationTpl'}" rowspan="2">操作</th>
             </tr>
             <tr>
-                <th lay-data="{field:'tempCarA', width:150, align:'center', templet:'#tempCarAIcon'}">临时车A</th>
-                <th lay-data="{field:'tempCarB', width:150, align:'center', templet:'#tempCarBIcon'}">临时车B</th>
-                <th lay-data="{field:'tempCarC', width:150, align:'center', templet:'#tempCarCIcon'}">临时车C</th>
+                <th lay-data="{field:'tempCarA', width:150, align:'center', templet:'#tempCarAIcon'}">蓝牌</th>
+                <th lay-data="{field:'tempCarB', width:150, align:'center', templet:'#tempCarBIcon'}">黄牌</th>
+                <th lay-data="{field:'tempCarC', width:150, align:'center', templet:'#tempCarCIcon'}">黑牌</th>
+                <th lay-data="{field:'tempCarD', width:150, align:'center', templet:'#tempCarDIcon'}">绿牌</th>
                 <th lay-data="{field:'monthCarA', width:150, align:'center', templet:'#monthCarAIcon'}">月租车A</th>
                 <th lay-data="{field:'monthCarB', width:150, align:'center', templet:'#monthCarBIcon'}">月租车B</th>
                 <th lay-data="{field:'monthCarC', width:150, align:'center', templet:'#monthCarCIcon'}">月租车C</th>
@@ -139,6 +140,13 @@
 </script>
 <script type="text/html" id="tempCarCIcon">
     {{# if(d.tempCarC == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="tempCarDIcon">
+    {{# if(d.tempCarD == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>

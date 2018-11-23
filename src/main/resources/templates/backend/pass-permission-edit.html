@@ -25,21 +25,27 @@
     <form name="pass_form" class="layui-form layui-col-md12 ok-form">
         <input type="hidden" name="id">
         <div class="layui-form-item">
-            <label class="layui-form-label">临时车A：</label>
+            <label class="layui-form-label">蓝牌：</label>
             <div class="layui-input-block">
                 <input type="checkbox" name="tempCarA" lay-skin="switch" value="true" lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">临时车B：</label>
+            <label class="layui-form-label">黄牌：</label>
             <div class="layui-input-block">
                 <input type="checkbox" name="tempCarB" lay-skin="switch" lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">临时车C：</label>
+            <label class="layui-form-label">黑牌：</label>
             <div class="layui-input-block">
                 <input type="checkbox" name="tempCarC" lay-skin="switch" lay-text="允许|禁止">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">绿牌：</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="tempCarD" lay-skin="switch" lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
@@ -111,6 +117,9 @@
         }
         if ('[[${pass_car_status.tempCarC}]]' == 1) {
             $("input[name='tempCarC']").attr('checked', 'checked');
+        }
+        if ('[[${pass_car_status.tempCarD}]]' == 1) {
+            $("input[name='tempCarD']").attr('checked', 'checked');
         }
         if ('[[${pass_car_status.monthCarA}]]' == 1) {
             $("input[name='monthCarA']").attr('checked', 'checked');
