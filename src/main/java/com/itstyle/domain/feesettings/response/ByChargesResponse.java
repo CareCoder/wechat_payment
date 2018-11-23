@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ByChargesResponse {
     private Integer chargeModel;
-    private ChargeRule chargeRule = new ChargeRule();
+    private ChargeRule chargeRule;
 
     @Data
     public static class ChargeRule {

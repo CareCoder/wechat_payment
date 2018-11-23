@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>添加用户</title>
@@ -24,67 +24,52 @@
     <!--form表单-->
     <form name="pass_form" class="layui-form layui-col-md12 ok-form">
         <div class="layui-form-item">
-            <label class="layui-form-label">蓝牌：</label>
+            <label class="layui-form-label">临时车_1：</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="tempCarA" lay-skin="switch" checked lay-text="允许|禁止">
+                <input type="checkbox" name="entrance_tempCar_1" lay-skin="switch" checked lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">黄牌：</label>
+            <label class="layui-form-label">月卡车_1：</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="tempCarB" lay-skin="switch" checked lay-text="允许|禁止">
+                <input type="checkbox" name="entrance_monlyCar_1" lay-skin="switch" checked lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">黑牌：</label>
+            <label class="layui-form-label">特种车_1：</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="tempCarC" lay-skin="switch" checked lay-text="允许|禁止">
+                <input type="checkbox" name="entrance_specialCar_1" lay-skin="switch" checked lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">绿牌：</label>
+            <label class="layui-form-label">临时车_2：</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="tempCarD" lay-skin="switch" checked lay-text="允许|禁止">
+                <input type="checkbox" name="entrance_tempCar_2" lay-skin="switch" checked lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">月租车A：</label>
+            <label class="layui-form-label">月卡车_2：</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="monthCarA" lay-skin="switch" checked lay-text="允许|禁止">
+                <input type="checkbox" name="entrance_monlyCar_2" lay-skin="switch" checked lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">月租车B：</label>
+            <label class="layui-form-label">特种车_2：</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="monthCarB" lay-skin="switch" checked lay-text="允许|禁止">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">月租车C：</label>
-            <div class="layui-input-block">
-                <input type="checkbox" name="monthCarC" lay-skin="switch" checked lay-text="允许|禁止">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">贵宾车：</label>
-            <div class="layui-input-block">
-                <input type="checkbox" name="vipCar" lay-skin="switch" checked lay-text="允许|禁止">
+                <input type="checkbox" name="entrance_specialCar_2" lay-skin="switch" checked lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">通道名称：</label>
             <div class="layui-input-block">
-                <input type="text" name="channelName" placeholder="请输入通道名称" autocomplete="off" class="layui-input" lay-verify="required">
+                <select name="accessTypeId" lay-filter="selectChange">
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">通道类型</label>
             <div class="layui-input-block">
-                <select name="channelTypeId">
-                    <!--<option value="0">公告</option>-->
-                    <!--<option value="1">言情</option>-->
-                    <!--<option value="2">都市</option>-->
-                    <!--<option value="3">修仙</option>-->
+                <select name="channelTypeId" disabled>
                 </select>
             </div>
         </div>
@@ -98,13 +83,9 @@
 <!--js逻辑-->
 <script src="/lib/layui/layui.js"></script>
 <script>
-    var type = '[[${type}]]';
-    layui.use(['element', 'form', 'jquery', 'laydate'], function () {
-        var element = layui.element;
-        var table = layui.table;
+    layui.use(['form', 'jquery'], function () {
         var form = layui.form;
         var $ = layui.jquery;
-        var laydate = layui.laydate;
 
         $.ajax({
             url : "/type/all/channel",
@@ -114,20 +95,48 @@
                 if (data != null) {
                     var str = '';
                     for (var i = 0; i < data.length; i++) {
-                        str += '<option value="' + data[i].id + '">' + data[i].name + '</option>>';
+                        str += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
                     }
-                    $("select[name='channelTypeId']").append(str);
+                    $("select[name='channelTypeId']").append(str)
                 }
                 form.render('select');
             }
         });
 
+        $.ajax({
+            url : "/type/getAll",
+            type : "GET",
+            success : function (resp) {
+                var data = resp.data;
+                if (data != null) {
+                    var str = '<option value="0">请选择</option>';
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<option value="' + data[i].id + ',' + data[i].channelTypeId + '">' + data[i].channelName + '</option>';
+                    }
+                    $("select[name='accessTypeId']").append(str);
+                }
+                form.render('select');
+            }
+        });
+
+        form.on('select(selectChange)', function (data) {
+            var split = data.value.split(",");
+            if (split.length == 2) {
+                $("select[name='channelTypeId']").val(split[1]);
+            }
+            form.render('select');
+        });
+
         form.on('submit(add)', function (data) {
+            if (data.field.accessTypeId == "0") {
+                layer.msg("请选择通道名称", {icon: 2, time: 2000});
+                return;
+            }
             var edit_form = data.form;
             var json = {};
-            for (var i = 0; i < edit_form.length - 1; i++) {
-                if (edit_form[i].name == "channelTypeId" || edit_form[i].name == "channelName") {
-                    json[edit_form[i].name] = edit_form[i].value;
+            for (var i = 0; i < edit_form.length - 4; i++) {
+                if (edit_form[i].name == "accessTypeId") {
+                    json[edit_form[i].name] = edit_form[i].value.split(",")[1];
                     continue;
                 }
                 json[edit_form[i].name] = edit_form[i].checked ? 1 : 0;

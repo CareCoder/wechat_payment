@@ -24,7 +24,6 @@
     </div>
     <!--form表单-->
     <form class="layui-form layui-col-md12 ok-form">
-        <input type="hidden" name="id">
         <div class="layui-form-item">
             <label class="layui-form-label" style="width: 140px;">停车场名称</label>
             <div class="layui-input-inline">
@@ -50,9 +49,9 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label" style="width: 140px;">中央收费后的免费时间</label>
+            <label class="layui-form-label" style="width: 140px;">月租车允许过期的天数</label>
             <div class="layui-input-inline">
-                <input type="number" name="centralFeeFreeTime" placeholder="请输入免费时间" autocomplete="off" class="layui-input" lay-verify="required">
+                <input type="number" name="monthlyCarsOverDays" placeholder="请输入过期天数" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item">
@@ -90,7 +89,7 @@
         if (!'[[${car_yard_name?.unlicensedHandle}]]') {
             $("input[name='unlicensedHandle']").attr("checked", false);
         }
-        $("input[name='centralFeeFreeTime']").val('[[${car_yard_name?.centralFeeFreeTime}]]');
+        $("input[name='monthlyCarsOverDays']").val('[[${car_yard_name?.monthlyCarsOverDays}]]');
         if (!'[[${car_yard_name?.fixedParkingSpace}]]') {
             $("input[name='fixedParkingSpace']").attr("checked", false);
         }

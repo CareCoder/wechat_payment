@@ -240,7 +240,6 @@
                url:'/fee/sz/get/' + data.value,
                type:'GET',
                success:function(resp) {
-                   debugger;
                    if (resp.status == 200) {
                        var chargeRule = resp.data.chargeRule;
                        if (chargeRule != null) {

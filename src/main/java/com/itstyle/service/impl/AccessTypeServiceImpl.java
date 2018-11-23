@@ -36,13 +36,15 @@ public class AccessTypeServiceImpl implements AccessTypeService {
         List<AccessType> content = all.getContent();
         List<ChannelType> channelTypes = channelTypeMapper.findAll();
         Map<Long, String> mapChannelType = channelTypes.stream().collect(Collectors.toMap(ChannelType::getId, ChannelType::getName));
-        List<ResponseAccessType> collect = content.stream().map(accessType -> {
-            ResponseAccessType responseAccessType = new ResponseAccessType();
-            BeanUtilIgnore.copyPropertiesIgnoreNull(accessType, responseAccessType);
-            responseAccessType.setChannelTypeName(mapChannelType.get(accessType.getChannelTypeId()));
-            return responseAccessType;
-        }).collect(Collectors.toList());
-        return new PageResponse<>(all.getTotalElements(), collect);
+        return new PageResponse<>(all.getTotalElements(), convert(content, mapChannelType));
+    }
+
+    @Override
+    public List<ResponseAccessType> listNoPage() {
+        List<AccessType> all = accessTypeMapper.findAll();
+        List<ChannelType> channelTypes = channelTypeMapper.findAll();
+        Map<Long, String> mapChannelType = channelTypes.stream().collect(Collectors.toMap(ChannelType::getId, ChannelType::getName));
+        return convert(all, mapChannelType);
     }
 
     @Override
@@ -68,5 +70,14 @@ public class AccessTypeServiceImpl implements AccessTypeService {
     @Override
     public List<ChannelType> getAllChannelType() {
         return channelTypeMapper.findAll();
+    }
+
+    private List<ResponseAccessType> convert(List<AccessType> all, Map<Long, String> mapChannelType) {
+        return all.stream().map(accessType -> {
+            ResponseAccessType responseAccessType = new ResponseAccessType();
+            BeanUtilIgnore.copyPropertiesIgnoreNull(accessType, responseAccessType);
+            responseAccessType.setChannelTypeName(mapChannelType.get(accessType.getChannelTypeId()));
+            return responseAccessType;
+        }).collect(Collectors.toList());
     }
 }
