@@ -25,7 +25,7 @@ public class MonlyCarInfo {
         ml.monlyCarPlateColor = mc.getCarColor() != null ? mc.getCarColor().ordinal() : null;
         ml.name = mc.getName();
         ml.phoneNumber = mc.getPhone();
-        ml.plateID = mc.getIdCardNum();
+        ml.plateID = mc.getCarNum();
         return ml;
     }
 
