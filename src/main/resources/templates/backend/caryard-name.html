@@ -83,17 +83,17 @@
         debugger;
         $("input[name='parkingName']").val('[[${car_yard_name?.parkingName}]]');
         $("input[name='parkingNum']").val('[[${car_yard_name?.parkingNum}]]');
-        if (!'[[${car_yard_name?.isPrefabricationCharge}]]') {
+        if ('[[${car_yard_name?.isPrefabricationCharge}]]' == "false") {
             $("input[name='isPrefabricationCharge']").attr("checked", false);
         }
-        if (!'[[${car_yard_name?.unlicensedHandle}]]') {
+        if ('[[${car_yard_name?.unlicensedHandle}]]' == "false") {
             $("input[name='unlicensedHandle']").attr("checked", false);
         }
         $("input[name='monthlyCarsOverDays']").val('[[${car_yard_name?.monthlyCarsOverDays}]]');
-        if (!'[[${car_yard_name?.fixedParkingSpace}]]') {
+        if ('[[${car_yard_name?.fixedParkingSpace}]]' == "false") {
             $("input[name='fixedParkingSpace']").attr("checked", false);
         }
-        if (!'[[${car_yard_name?.isAccurateMatching}]]') {
+        if ('[[${car_yard_name?.isAccurateMatching}]]' == "false") {
             $("input[name='isAccurateMatching']").attr("checked", false);
         }
         form.render();
