@@ -1,6 +1,7 @@
 package com.itstyle.domain.feesettings.response;
 
 import com.google.gson.annotations.SerializedName;
+import com.itstyle.domain.car.manager.enums.CarType;
 import lombok.Data;
 
 @Data
