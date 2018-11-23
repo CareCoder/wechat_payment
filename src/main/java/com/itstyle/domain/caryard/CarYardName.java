@@ -6,9 +6,9 @@ import lombok.Data;
 public class CarYardName {
     private String parkingName;
     private Integer parkingNum;
-    private Boolean isPrefabricationCharge;
-    private Boolean unlicensedHandle;
+    private boolean isPrefabricationCharge;
+    private boolean unlicensedHandle;
     private Integer monthlyCarsOverDays;
-    private Boolean fixedParkingSpace;
-    private Boolean isAccurateMatching;
+    private boolean fixedParkingSpace;
+    private boolean isAccurateMatching;
 }

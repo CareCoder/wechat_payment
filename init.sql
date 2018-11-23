@@ -82,4 +82,27 @@ COMMIT;
 SET FOREIGN_KEY_CHECKS = 1;
 
 
+SET NAMES utf8;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+--  Table structure for `channel_type`
+-- ----------------------------
+DROP TABLE IF EXISTS `channel_type`;
+CREATE TABLE `channel_type` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- ----------------------------
+--  Records of `channel_type`
+-- ----------------------------
+BEGIN;
+INSERT INTO `channel_type` VALUES ('1', '标准入口'), ('2', '标准出口'), ('3', '嵌套入口'), ('4', '嵌套出口'), ('5', '半嵌套入口'), ('6', '半嵌套出口');
+COMMIT;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
 

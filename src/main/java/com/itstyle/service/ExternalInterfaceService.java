@@ -7,9 +7,12 @@ import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.caryard.CarYardName;
+import com.itstyle.domain.caryard.ResponsePassCarStatus;
+import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.incrementmonly.response.MonlyCarAddInfo;
 import com.itstyle.vo.incrementmonly.response.MonlyCarRenewInfo;
+import com.itstyle.vo.inition.response.AccessAuthoritySetup;
 import com.itstyle.vo.inition.response.Inition;
 import com.itstyle.vo.inition.response.ParkingSetup;
 import com.itstyle.vo.syncarinfo.response.BlackListVehicle;
@@ -36,6 +39,9 @@ public class ExternalInterfaceService {
     @Resource
     private CarInfoService carInfoService;
 
+    @Resource
+    private PassPermissionService passPermissionService;
+
     public SynCarInfo synCarInfo() {
         SynCarInfo synCarInfo = new SynCarInfo();
         List<MonthCarInfo> mcList = monthCarInfoService.list();
@@ -52,12 +58,33 @@ public class ExternalInterfaceService {
 
         inition.synCarInfo = synCarInfo();
         inition.carYardName = carYardName();
+        inition.accessAuthoritySetup = getAccessAuthoritySetup();
         return inition;
     }
 
     public CarYardName carYardName() {
         CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
         return carYardName;
+    }
+
+    public List<AccessAuthoritySetup> getAccessAuthoritySetup() {
+        List<ResponsePassCarStatus> list = passPermissionService.list();
+        if (list != null) {
+            return list.stream().map(responsePassCarStatus -> {
+                AccessAuthoritySetup accessAuthoritySetup = new AccessAuthoritySetup();
+                accessAuthoritySetup.setIp(responsePassCarStatus.getIp());
+                accessAuthoritySetup.setName(responsePassCarStatus.getChannelName());
+                accessAuthoritySetup.setType(responsePassCarStatus.getChannelTypeName());
+                accessAuthoritySetup.setEntrance_tempCar_1(isAllow(responsePassCarStatus.getEntrance_tempCar_1()));
+                accessAuthoritySetup.setEntrance_tempCar_2(isAllow(responsePassCarStatus.getEntrance_tempCar_2()));
+                accessAuthoritySetup.setEntrance_monlyCar_1(isAllow(responsePassCarStatus.getEntrance_monlyCar_1()));
+                accessAuthoritySetup.setEntrance_monlyCar_2(isAllow(responsePassCarStatus.getEntrance_monlyCar_2()));
+                accessAuthoritySetup.setEntrance_specialCar_1(isAllow(responsePassCarStatus.getEntrance_specialCar_1()));
+                accessAuthoritySetup.setEntrance_specialCar_2(isAllow(responsePassCarStatus.getEntrance_specialCar_2()));
+                return accessAuthoritySetup;
+            }).collect(Collectors.toList());
+        }
+        return null;
     }
 
     /**
@@ -70,5 +97,9 @@ public class ExternalInterfaceService {
         icm.monlyCarAddInfos = carAddInfo.stream().map(MonlyCarAddInfo::convert).collect(Collectors.toList());
         icm.monlyCarRenewInfos = carRenewInfo.stream().map(MonlyCarRenewInfo::convert).collect(Collectors.toList());
         return icm;
+    }
+
+    private boolean isAllow(Integer index) {
+        return index == 1 ? true : false;
     }
 }

@@ -14,4 +14,5 @@ public class ResponsePassCarStatus {
     private Integer entrance_monlyCar_2;
     private Integer entrance_specialCar_2;
     private String channelTypeName;
+    private String ip;
 }

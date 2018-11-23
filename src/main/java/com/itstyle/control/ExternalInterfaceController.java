@@ -3,13 +3,17 @@ package com.itstyle.control;
 import com.google.gson.Gson;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
-import com.itstyle.domain.feesettings.ByCharges;
+import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.feesettings.response.ByChargesResponse;
 import com.itstyle.domain.feesettings.response.SZChargesResponse;
 import com.itstyle.domain.feesettings.response.StandardChargesResponse;
 import com.itstyle.domain.version.VersionInfo;
 import com.itstyle.service.FileResourceService;
+import com.itstyle.utils.BeanUtilIgnore;
+import com.itstyle.vo.charges.reponse.ByChargesResponseVo;
 import com.itstyle.vo.charges.reponse.ChargesResponse;
+import com.itstyle.vo.charges.reponse.SZChargesResponseVo;
+import com.itstyle.vo.charges.reponse.StandardChargesResponseVo;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.login.request.LoginRequest;
 import com.itstyle.vo.login.reponse.LoginResponse;
@@ -29,7 +33,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -174,24 +177,45 @@ public class ExternalInterfaceController {
         String currentCharges = redisDao.get(YstCommon.CURRENT_CHARGES);
         Map<Object, Object> map = redisDao.hgetAll(currentCharges);
         if (YstCommon.SZ_CHARGES.equals(currentCharges)) {
-            ChargesResponse<SZChargesResponse.ChargeRule> c = new ChargesResponse<>();
+            ChargesResponse<SZChargesResponseVo> c = new ChargesResponse<>();
             c.setChargeModel(3);
             c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), SZChargesResponse.ChargeRule.class))
-                    .sorted(Comparator.comparing(SZChargesResponse.ChargeRule::getCarType)).collect(Collectors.toList()));
+                    .map(chargeRule -> {
+                        SZChargesResponseVo szChargesResponseVo = new SZChargesResponseVo();
+                        BeanUtilIgnore.copyPropertiesIgnoreNull(chargeRule, szChargesResponseVo);
+                        CarType carType = Enum.valueOf(CarType.class, chargeRule.getCarType());
+                        szChargesResponseVo.setPlateColor(carType.ordinal());
+                        return szChargesResponseVo;
+                    })
+                    .sorted(Comparator.comparing(SZChargesResponseVo::getPlateColor)).collect(Collectors.toList()));
             return c;
         }
         if (YstCommon.STANDARD_CHARGES.equals(currentCharges)) {
-            ChargesResponse<StandardChargesResponse.ChargeRule> c = new ChargesResponse<>();
+            ChargesResponse<StandardChargesResponseVo> c = new ChargesResponse<>();
             c.setChargeModel(2);
             c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), StandardChargesResponse.ChargeRule.class))
-                    .sorted(Comparator.comparing(StandardChargesResponse.ChargeRule::getCarType)).collect(Collectors.toList()));
+                    .map(chargeRule -> {
+                        StandardChargesResponseVo responseVo = new StandardChargesResponseVo();
+                        BeanUtilIgnore.copyPropertiesIgnoreNull(chargeRule, responseVo);
+                        CarType carType = Enum.valueOf(CarType.class, chargeRule.getCarType());
+                        responseVo.setPlateColor(carType.ordinal());
+                        return responseVo;
+                    })
+                    .sorted(Comparator.comparing(StandardChargesResponseVo::getPlateColor)).collect(Collectors.toList()));
             return c;
         }
         if (YstCommon.BY_CHARGES.equals(currentCharges)) {
-            ChargesResponse<ByChargesResponse.ChargeRule> c = new ChargesResponse<>();
+            ChargesResponse<ByChargesResponseVo> c = new ChargesResponse<>();
             c.setChargeModel(1);
             c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), ByChargesResponse.ChargeRule.class))
-                    .sorted(Comparator.comparing(ByChargesResponse.ChargeRule::getCarType)).collect(Collectors.toList()));
+                    .map(chargeRule -> {
+                        ByChargesResponseVo byChargesResponseVo = new ByChargesResponseVo();
+                        BeanUtilIgnore.copyPropertiesIgnoreNull(chargeRule, byChargesResponseVo);
+                        CarType carType = Enum.valueOf(CarType.class, chargeRule.getCarType());
+                        byChargesResponseVo.setPlateColor(carType.ordinal());
+                        return byChargesResponseVo;
+                    })
+                    .sorted(Comparator.comparing(ByChargesResponseVo::getPlateColor)).collect(Collectors.toList()));
             return c;
         }
         return "查询无数据";

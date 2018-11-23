@@ -124,8 +124,12 @@
                         var chargeRule = resp.data.chargeRule;
                         if (chargeRule != null) {
                             $("input[name='freeTime']").val(chargeRule.freeTime);
-                            if ('[[${by_charges?.optionalCycle}]]' != 24) {
+                            if (chargeRule.optionalCycle != 24) {
                                 $("input[name='optionalCycle']").attr("checked", false);
+                                layui.form.render();
+                            }
+                            if (chargeRule.optionalCycle == 24) {
+                                document.getElementsByName("optionalCycle")[0].checked = true;
                                 layui.form.render();
                             }
                             $("input[name='cappingAmount']").val(chargeRule.cappingAmount);

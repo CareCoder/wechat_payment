@@ -41,18 +41,13 @@ public class PassPermissionServiceImpl implements PassPermissionService {
     public PageResponse<ResponsePassCarStatus> list(int page, int limit) {
         Page<PassCarStatus> all = passPermissionMapper.findAll(PageResponse.getPageRequest(page, limit));
         List<PassCarStatus> content = all.getContent();
-        List<ChannelType> channelTypes = channelTypeMapper.findAll();
-        Map<Long, String> mapChannelType = channelTypes.stream().collect(Collectors.toMap(ChannelType::getId, ChannelType::getName));
-        List<AccessType> accessAll = accessTypeMapper.findAll();
-        Map<Long, AccessType> accessTypeMap = accessAll.stream().collect(Collectors.toMap(AccessType::getId, e -> e));
-        List<ResponsePassCarStatus> collect = content.stream().map(passCarStatus -> {
-            ResponsePassCarStatus responsePassCarStatus = new ResponsePassCarStatus();
-            BeanUtilIgnore.copyPropertiesIgnoreNull(passCarStatus, responsePassCarStatus);
-            responsePassCarStatus.setChannelName(accessTypeMap.get(passCarStatus.getAccessTypeId()).getChannelName());
-            responsePassCarStatus.setChannelTypeName(mapChannelType.get(accessTypeMap.get(passCarStatus.getAccessTypeId()).getChannelTypeId()));
-            return responsePassCarStatus;
-        }).collect(Collectors.toList());
-        return new PageResponse<>(all.getTotalElements(), collect);
+        return new PageResponse<>(all.getTotalElements(), conver(content));
+    }
+
+    @Override
+    public List<ResponsePassCarStatus> list() {
+        List<PassCarStatus> all = passPermissionMapper.findAll();
+        return conver(all);
     }
 
     @Override
@@ -84,6 +79,21 @@ public class PassPermissionServiceImpl implements PassPermissionService {
     @Override
     public AccessType getAccessTypeId(Long id) {
         return accessTypeMapper.findOne(id);
+    }
+
+    private List<ResponsePassCarStatus> conver(List<PassCarStatus> all) {
+        List<ChannelType> channelTypes = channelTypeMapper.findAll();
+        Map<Long, String> mapChannelType = channelTypes.stream().collect(Collectors.toMap(ChannelType::getId, ChannelType::getName));
+        List<AccessType> accessAll = accessTypeMapper.findAll();
+        Map<Long, AccessType> accessTypeMap = accessAll.stream().collect(Collectors.toMap(AccessType::getId, e -> e));
+        return all.stream().map(passCarStatus -> {
+            ResponsePassCarStatus responsePassCarStatus = new ResponsePassCarStatus();
+            BeanUtilIgnore.copyPropertiesIgnoreNull(passCarStatus, responsePassCarStatus);
+            responsePassCarStatus.setChannelName(accessTypeMap.get(passCarStatus.getAccessTypeId()).getChannelName());
+            responsePassCarStatus.setChannelTypeName(mapChannelType.get(accessTypeMap.get(passCarStatus.getAccessTypeId()).getChannelTypeId()));
+            responsePassCarStatus.setIp(accessTypeMap.get(passCarStatus.getAccessTypeId()).getIp());
+            return responsePassCarStatus;
+        }).collect(Collectors.toList());
     }
 
 

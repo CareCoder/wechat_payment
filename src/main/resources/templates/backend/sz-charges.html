@@ -213,7 +213,7 @@
             $("input[name='centralChargesTime']").val('[[${sz_charges?.centralChargesTime}]]');
             if ('[[${sz_charges?.optionalCycle}]]' != 24) {
                 $("input[name='optionalCycle']").attr("checked", false);
-                layui.form.render();
+                layui.form.render('checkbox');
             }
             $("input[name='peakModelPeakTimeStart']").val('[[${sz_charges?.peakModelPeakTimeStart}]]' + ":00:00");
             $("input[name='peakModelPeakTimeEnd']").val('[[${sz_charges?.peakModelPeakTimeEnd}]]' + ":00:00");
@@ -242,9 +242,13 @@
                            $("input[name='freeTime']").val(chargeRule.freeTime);
                            $("input[name='cappingAmount']").val(chargeRule.cappingAmount);
                            $("input[name='centralChargesTime']").val(chargeRule.centralChargesTime);
-                           if ('[[${sz_charges?.optionalCycle}]]' != 24) {
+                           if (chargeRule.optionalCycle != 24) {
                                $("input[name='optionalCycle']").attr("checked", false);
-                               layui.form.render();
+                               layui.form.render('checkbox');
+                           }
+                           if (chargeRule.optionalCycle == 24) {
+                               document.getElementsByName("optionalCycle")[0].checked = true;
+                               layui.form.render('checkbox');
                            }
                            $("input[name='peakModelPeakTimeStart']").val(chargeRule.peakModelPeakTimeStart + ":00:00");
                            $("input[name='peakModelPeakTimeEnd']").val(chargeRule.peakModelPeakTimeEnd + ":00:00");
@@ -279,6 +283,7 @@
                            $("input[name='nonWorkingDayIncreasingTime']").val('');
                            $("input[name='nonWorkingDayIncreasingAmount']").val('');
                        }
+
                    }
                    if (resp.status == 500) {
                        layer.msg(resp.msg, {icon: 2, time: 2000});
