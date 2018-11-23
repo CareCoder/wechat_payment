@@ -28,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -164,6 +165,9 @@ public class ExternalInterfaceController {
         return externalInterfaceService.incrementMonly(startTime, endTime);
     }
 
+    /**
+     * 计费规则
+     * */
     @GetMapping("/charges")
     @ResponseBody
     public Object getCharges() {
@@ -172,19 +176,22 @@ public class ExternalInterfaceController {
         if (YstCommon.SZ_CHARGES.equals(currentCharges)) {
             ChargesResponse<SZChargesResponse.ChargeRule> c = new ChargesResponse<>();
             c.setChargeModel(3);
-            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), SZChargesResponse.ChargeRule.class)).collect(Collectors.toList()));
+            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), SZChargesResponse.ChargeRule.class))
+                    .sorted(Comparator.comparing(SZChargesResponse.ChargeRule::getCarType)).collect(Collectors.toList()));
             return c;
         }
         if (YstCommon.STANDARD_CHARGES.equals(currentCharges)) {
             ChargesResponse<StandardChargesResponse.ChargeRule> c = new ChargesResponse<>();
             c.setChargeModel(2);
-            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), StandardChargesResponse.ChargeRule.class)).collect(Collectors.toList()));
+            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), StandardChargesResponse.ChargeRule.class))
+                    .sorted(Comparator.comparing(StandardChargesResponse.ChargeRule::getCarType)).collect(Collectors.toList()));
             return c;
         }
         if (YstCommon.BY_CHARGES.equals(currentCharges)) {
             ChargesResponse<ByChargesResponse.ChargeRule> c = new ChargesResponse<>();
             c.setChargeModel(1);
-            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), ByChargesResponse.ChargeRule.class)).collect(Collectors.toList()));
+            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), ByChargesResponse.ChargeRule.class))
+                    .sorted(Comparator.comparing(ByChargesResponse.ChargeRule::getCarType)).collect(Collectors.toList()));
             return c;
         }
         return "查询无数据";
