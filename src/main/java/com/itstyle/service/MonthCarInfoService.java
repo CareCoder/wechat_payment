@@ -28,10 +28,6 @@ import java.util.List;
 public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
     @Resource
     private MonthCarInfoMapper monthCarInfoMapper;
-    @Resource
-    private RedisDao redisDao;
-    @Resource
-    private Gson gson;
 
     @PostConstruct
     private void init() {
@@ -85,9 +81,8 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
     public List<MonthCarInfo> getCarAddInfo(Long startTime, Long endTime) {
         Specification<MonthCarInfo> sp = (root, query, cb) -> {
             if (startTime != null && endTime != null) {
-                Predicate p1 = cb.ge(root.get("createTime").as(Long.class), startTime);
-                Predicate p2 = cb.le(root.get("createTime").as(Long.class), endTime);
-                query.where(cb.and(p1, p2));
+                Predicate p1 = cb.between(root.get("createTime").as(Date.class), new Date(startTime), new Date(endTime));
+                query.where(p1);
             }
             return query.getRestriction();
         };
@@ -101,9 +96,8 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
     public List<MonthCarInfo> getCarRenewInfo(Long startTime, Long endTime) {
         Specification<MonthCarInfo> sp = (root, query, cb) -> {
             if (startTime != null && endTime != null) {
-                Predicate p1 = cb.ge(root.get("modifyTime").as(Long.class), startTime);
-                Predicate p2 = cb.le(root.get("modifyTime").as(Long.class), endTime);
-                query.where(cb.and(p1, p2));
+                Predicate p1 = cb.between(root.get("modifyTime").as(Date.class), new Date(startTime), new Date(endTime));
+                query.where(p1);
             }
             return query.getRestriction();
         };
