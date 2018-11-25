@@ -56,13 +56,13 @@
             <div class="layui-input-inline">
                 <input type="checkbox" name="optionalCycle" title="24小时为一个周期" checked>
             </div>
-            <div  class="layui-inline">
-                <label class="layui-form-label" style="width: 85px;">中央收费时间</label>
-                <div class="layui-input-inline" style="width: 60px;">
-                    <input type="number" name="centralChargesTime" autocomplete="off" class="layui-input" lay-verify="required">
-                </div>
-                <div class="layui-form-mid">分钟</div>
-            </div>
+            <!--<div  class="layui-inline">-->
+                <!--<label class="layui-form-label" style="width: 85px;">中央收费时间</label>-->
+                <!--<div class="layui-input-inline" style="width: 60px;">-->
+                    <!--<input type="number" name="centralChargesTime" autocomplete="off" class="layui-input" lay-verify="required">-->
+                <!--</div>-->
+                <!--<div class="layui-form-mid">分钟</div>-->
+            <!--</div>-->
         </div>
         <div class="layui-form-item">
             <div class="layui-inline">
@@ -129,7 +129,6 @@
                 $("input[name='optionalCycle']").attr("checked", false);
                 layui.form.render();
             }
-            $("input[name='centralChargesTime']").val('[[${standard_charges?.centralChargesTime}]]');
             $("input[name='firstTime']").val('[[${standard_charges?.firstTime}]]');
             $("input[name='firstAmount']").val('[[${standard_charges?.firstAmount}]]');
             $("input[name='increasingTime']").val('[[${standard_charges?.increasingTime}]]');
@@ -154,7 +153,7 @@
                                 document.getElementsByName("optionalCycle")[0].checked = true;
                                 layui.form.render();
                             }
-                            $("input[name='centralChargesTime']").val(chargeRule.centralChargesTime);
+//                            $("input[name='centralChargesTime']").val(chargeRule.centralChargesTime);
                             $("input[name='firstTime']").val(chargeRule.firstTime);
                             $("input[name='firstAmount']").val(chargeRule.firstAmount);
                             $("input[name='increasingTime']").val(chargeRule.increasingTime);
@@ -162,7 +161,7 @@
                         } else {
                             $("input[name='freeTime']").val('');
                             $("input[name='cappingAmount']").val('');
-                            $("input[name='centralChargesTime']").val('');
+//                            $("input[name='centralChargesTime']").val('');
                             $("input[name='firstTime']").val('');
                             $("input[name='firstAmount']").val('');
                             $("input[name='increasingTime']").val('');
