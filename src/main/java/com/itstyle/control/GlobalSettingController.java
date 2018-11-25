@@ -92,4 +92,17 @@ public class GlobalSettingController {
         }
         return new PageResponse<>(0, "", (long) f.size(), f);
     }
+
+    @RequestMapping("/get/specialcar")
+    public String specialcarGet(Model model) {
+        String keyWords = (String) globalSettingService.get(YstCommon.SPECAL_CAR, String.class);
+        model.addAttribute("keyWords", keyWords);
+        return "/backend/special-car";
+    }
+
+    @RequestMapping("/set/specialcar")
+    @ResponseBody
+    public void specialcarSet(String keyWords) {
+        globalSettingService.set(YstCommon.SPECAL_CAR, keyWords);
+    }
 }
