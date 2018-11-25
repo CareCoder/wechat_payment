@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>高峰期管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>车辆管理</cite></a>
+                <a><cite>特殊车辆管理</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <blockquote class="layui-elem-quote layui-text">
+        <label style="color: #eb141b">包含以上关键字字的车辆可以免费进入(如：警；WJ；民航),之间以“；”进行连接</label>
+    </blockquote>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form id="fastigium_form" class="layui-form layui-col-md12 ok-search">
+            <div class="layui-form-item">
+                <label class="layui-form-label">特殊车关键字:
+                </label>
+                <div class="layui-input-block">
+                    <input name="keyWords" class="layui-input" placeholder="警;WJ;民航(之间以“;”进行连接)" autocomplete="off">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    }
+    layui.use(['form', 'jquery'], function () {
+        var form = layui.form;
+        var $ = layui.jquery;
+        var keyWords = "[[${keyWords}]]"
+        $("input[name='keyWords']").val(keyWords);
+        form.on('submit(add)', function (data) {
+            $.ajax({
+                url:"/gs/set/specialcar",
+                type:"POST",
+                data:{
+                    keyWords:data.field.keyWords
+                },
+                success:function(resp){
+                    console.log(resp);
+                    layer.msg("修改成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                },
+                error:function(){
+                    layer.msg("修改失败！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }
+            });
+            return false;
+        });
+
+        form.render();
+    });
+</script>
+</body>
+</html>

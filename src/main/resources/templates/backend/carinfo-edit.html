@@ -43,6 +43,17 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">车牌颜色</label>
+            <div class="layui-input-block">
+                <select name="carColor" lay-verify="required">
+                    <option value="LC_BLUE">蓝牌</option>
+                    <option value="LC_YELLOW">黄牌</option>
+                    <option value="LC_BLACK">黑牌</option>
+                    <option value="LC_GREEN">绿牌</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
                 <input type="text" name="remarks" placeholder="请输入备注" autocomplete="off" class="layui-input">
@@ -71,6 +82,12 @@
         $("input[name='carNum']").val('[[${car_info.carNum}]]');
         $("input[name='phone']").val('[[${car_info.phone}]]');
         $("input[name='remarks']").val('[[${car_info.remarks}]]');
+
+        var carColor = '[[${car_info?.carColor}]]';
+        if (carColor === '') {
+            carColor = "LC_BLUE";
+        }
+        $("select option[value=" + carColor + "]").attr("selected", 'selected');
 
         laydate.render({
             elem: '#birthday',

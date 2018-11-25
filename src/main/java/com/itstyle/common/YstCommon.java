@@ -60,4 +60,7 @@ public class YstCommon {
 
 	/** 版本信息 */
 	public static final String VERSION_INFO = "VERSION_INFO";
+
+	/**特殊车辆*/
+	public static final String SPECAL_CAR = "SPECAL_CAR";
 }
