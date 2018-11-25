@@ -19,6 +19,6 @@ public class ByChargesResponse {
         /** 一次性收费 */
         private Long oneTimeCharge;
         /** 中央收费时间 */
-        private Integer centralChargesTime;
+//        private Integer centralChargesTime;
     }
 }

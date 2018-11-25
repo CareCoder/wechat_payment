@@ -8,6 +8,7 @@ public class CarYardName {
     private Integer parkingNum;
     private Boolean isPrefabricationCharge = false;
     private Boolean unlicensedHandle = false;
+    private Integer centralFeeFreeTime;
     private Integer monthlyCarsOverDays;
     private Boolean fixedParkingSpace = false;
     private Boolean isAccurateMatching = false;

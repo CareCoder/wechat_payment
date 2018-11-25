@@ -15,7 +15,7 @@ public class StandardCharges {
     /** 可选周期 */
     private Integer optionalCycle;
     /** 中央收费时间 */
-    private Integer centralChargesTime;
+//    private Integer centralChargesTime;
     /** 首段时长 */
     private Integer firstTime;
     /** 首段金额（元） */

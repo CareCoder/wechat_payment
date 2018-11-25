@@ -16,7 +16,7 @@ public class SZCharges {
     /** 免费时间（分钟） */
     private Integer freeTime;
     /** 中央收费时间 */
-    private Integer centralChargesTime;
+//    private Integer centralChargesTime;
     /** 工作日高峰期开始时间 */
     @SerializedName("peakModel_peakTimeStart")
     private Integer peakModelPeakTimeStart;
