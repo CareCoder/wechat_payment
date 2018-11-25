@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.CarInfo;
+import com.itstyle.domain.car.manager.Fastigium;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
@@ -12,9 +13,7 @@ import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.incrementmonly.response.MonlyCarAddInfo;
 import com.itstyle.vo.incrementmonly.response.MonlyCarRenewInfo;
-import com.itstyle.vo.inition.response.AccessAuthoritySetup;
-import com.itstyle.vo.inition.response.Inition;
-import com.itstyle.vo.inition.response.ParkingSetup;
+import com.itstyle.vo.inition.response.*;
 import com.itstyle.vo.syncarinfo.response.BlackListVehicle;
 import com.itstyle.vo.syncarinfo.response.FreeVehicle;
 import com.itstyle.vo.syncarinfo.response.MonlyCarInfo;
@@ -56,10 +55,25 @@ public class ExternalInterfaceService {
     public Inition inition() {
         Inition inition = new Inition();
 
-        inition.synCarInfo = synCarInfo();
+        inition.vehicleManagement = getVehicleManagement();
         inition.carYardName = carYardName();
         inition.accessAuthoritySetup = getAccessAuthoritySetup();
         return inition;
+    }
+
+    private VehicleManagement getVehicleManagement() {
+        VehicleManagement vehicleManagement = new VehicleManagement();
+        List<CarInfo> blackList = carInfoService.getBlackList();
+        vehicleManagement.blackVehicle = blackList.stream().map(BlackListVehicle::convert).collect(Collectors.toList());
+        List<CarInfo> freeList = carInfoService.getFree();
+        vehicleManagement.freeVehicle = freeList.stream().map(FreeVehicle::convert).collect(Collectors.toList());
+        Fastigium Fastigium = (Fastigium) globalSettingService.get(YstCommon.FASTIGIUM_KEY, Fastigium.class);
+        ForbidenVehicle fv = new ForbidenVehicle();
+        String keyWords = (String) globalSettingService.get(YstCommon.SPECAL_CAR, String.class);
+        fv.setFastigium(Fastigium);
+        fv.specialCar = keyWords;
+        vehicleManagement.forbidenVehicle = fv;
+        return vehicleManagement;
     }
 
     public CarYardName carYardName() {

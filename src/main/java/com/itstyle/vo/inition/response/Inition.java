@@ -10,5 +10,5 @@ public class Inition {
     public List<AccessAuthoritySetup> accessAuthoritySetup;
     public ChargeSetting chargeSetting;
     public ChargeRule chargeRule;
-    public SynCarInfo synCarInfo;
+    public VehicleManagement vehicleManagement;
 }
