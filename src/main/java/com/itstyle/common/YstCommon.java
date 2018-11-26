@@ -63,4 +63,8 @@ public class YstCommon {
 
 	/**特殊车辆*/
 	public static final String SPECAL_CAR = "SPECAL_CAR";
+	/**
+	 * 登录的filed,uuid作key,用户openid作value
+	 */
+	public static final String USER_SCAN_CODE_LOGIN = "USER_SCAN_CODE_LOGIN";
 }

@@ -28,7 +28,7 @@ public class MvcConfig {
             public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**")
                         .excludePathPatterns("/", "/backend/login.html", "/account/login", "/carnum/**", "/external/**",
-                                "/external/version/**", "/external/version/download/**","/file/**");
+                                "/external/version/**", "/external/version/download/**","/file/**","/wechat","/wx/**");
             }
         };
     }

@@ -9,10 +9,11 @@
     <link rel="stylesheet" href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css"/>
     <link rel="stylesheet" href="/css/login.css"/>
 	<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+    <script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
 </head>
 <body>
     <div class="login-box animated rotateIn">
-        <div class="head"></div>
+        <div id="login_container"></div>
         <div class="input-box">
             <form class="layui-form" action="">
                 <input type="text" name="account" required lay-verify="required" placeholder="平台账号" autocomplete="off" class="layui-input">
@@ -52,6 +53,34 @@
         layui.use(['form', 'jquery'], function () {
             var form = layui.form;
             var $ = layui.jquery;
+            var appid = "[[${appid}]]";
+            var uuid = "[[${uuid}]]";
+            var obj = new WxLogin
+            ({
+                id:"login_container",//div的id
+                appid: appid,
+                scope: "snsapi_login",//写死
+                redirect_uri:encodeURI("/account/scanLogin/callback?uuid="+uuid) ,
+                state: "",
+                style: "black"//二维码黑白风格
+            });
+
+            self.setInterval("queryLogin()",50)
+            function queryLogin()
+            {
+                console.log("登陆扫码查询...");
+                $.ajax({
+                    url : "/account/scanLogin/query",
+                    type : "POST",
+                    data : data.field,
+                    success : function (resp) {
+                        console.log("登陆扫码成功..." + resp);
+                        if (resp.status == 200) {
+                            window.location = "index.html";
+                        }
+                    }
+                });
+            }
 
             form.on('submit(login)', function (data) {
                 var account = data.field.account;

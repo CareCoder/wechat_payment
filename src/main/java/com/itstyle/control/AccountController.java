@@ -3,6 +3,7 @@ package com.itstyle.control;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
+import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.account.req.RequestAccount;
 import com.itstyle.domain.account.resp.ResponseAccount;
@@ -10,8 +11,10 @@ import com.itstyle.domain.park.resp.Response;
 import com.itstyle.exception.AssertUtil;
 import com.itstyle.exception.BusinessException;
 import com.itstyle.service.AccountService;
+import com.itstyle.utils.WxPayUtil;
 import com.itstyle.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @Slf4j
 @Controller
@@ -27,12 +31,15 @@ public class AccountController {
 
     private AccountService accountService;
 
+    private RedisDao redisDao;
+
     @Value("${super-admin.user-id}")
     private Long userId;
 
     @Autowired
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, RedisDao redisDao) {
         this.accountService = accountService;
+        this.redisDao = redisDao;
     }
 
     @GetMapping("/list")
@@ -88,6 +95,42 @@ public class AccountController {
         session.setAttribute(YstCommon.LOGIN_ACCOUNT, loginAccount);
         SystemLoggerHelper.log(loginAccount.getUsername(), loginAccount.getRoleId(), "登陆", "登陆系统");
         return Response.build(Status.NORMAL, null, null);
+    }
+
+
+    /**
+     * 根据uuid查询是否登陆成功
+     */
+    @PostMapping("/scanLogin/query")
+    @ResponseBody
+    public Response scanLoginQuery(String uuid, HttpSession session) {
+        String openId = redisDao.hget(YstCommon.USER_SCAN_CODE_LOGIN, uuid);
+        if (StringUtils.isNotEmpty(openId)) {
+            Account account = new Account();
+            account.setOpenid(openId);
+            account.setUsername(openId);
+            account.setPassword(openId);
+            account.setRoleId(1L);
+            accountService.insert(account);
+            session.setAttribute(YstCommon.LOGIN_ACCOUNT, account);
+            return Response.build(Status.NORMAL, null, openId);
+        }
+        return Response.build(Status.ERROR_STAT, null, openId);
+    }
+
+    /**
+     * 扫码登陆回调
+     */
+    @PostMapping("/scanLogin/callback")
+    @ResponseBody
+    public Response scanLoginCallback(String uuid, String code) {
+        try {
+            String openId = (String) WxPayUtil.getOpenIdByCode(code).get("openid");
+            redisDao.hset(YstCommon.USER_SCAN_CODE_LOGIN, uuid, openId);
+        } catch (IOException e) {
+            log.error("[AccountController] scanLoginCallback error", e);
+        }
+        return Response.build(Status.NORMAL, null, code);
     }
 
     @GetMapping("/logout")
