@@ -5,6 +5,7 @@ import com.itstyle.domain.caryard.AccessType;
 import com.itstyle.domain.caryard.ChannelType;
 import com.itstyle.domain.caryard.PassCarStatus;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
+import com.itstyle.exception.AssertUtil;
 import com.itstyle.exception.BusinessException;
 import com.itstyle.mapper.AccessTypeMapper;
 import com.itstyle.mapper.ChannelTypeMapper;
@@ -41,17 +42,19 @@ public class PassPermissionServiceImpl implements PassPermissionService {
     public PageResponse<ResponsePassCarStatus> list(int page, int limit) {
         Page<PassCarStatus> all = passPermissionMapper.findAll(PageResponse.getPageRequest(page, limit));
         List<PassCarStatus> content = all.getContent();
-        return new PageResponse<>(all.getTotalElements(), conver(content));
+        return new PageResponse<>(all.getTotalElements(), convert(content));
     }
 
     @Override
     public List<ResponsePassCarStatus> list() {
         List<PassCarStatus> all = passPermissionMapper.findAll();
-        return conver(all);
+        return convert(all);
     }
 
     @Override
     public void save(PassCarStatus passCarStatus) {
+        List<PassCarStatus> byAccessTypeId = passPermissionMapper.findByAccessTypeId(passCarStatus.getAccessTypeId());
+        AssertUtil.assertTrue(byAccessTypeId.size() == 0, () -> new BusinessException("通道名称已存在，请重新选择"));
         PassCarStatus save = passPermissionMapper.save(passCarStatus);
         if (save == null) {
             throw new BusinessException("修改失败，请稍后重试");
@@ -60,6 +63,13 @@ public class PassPermissionServiceImpl implements PassPermissionService {
 
     @Override
     public void update(PassCarStatus passCarStatus) {
+        List<PassCarStatus> byAccessTypeId = passPermissionMapper.findByAccessTypeId(passCarStatus.getAccessTypeId());
+        if (byAccessTypeId.size() == 1 && !byAccessTypeId.get(0).getId().equals(passCarStatus.getId())) {
+            throw new BusinessException("通道名称已存在，请重新修改");
+        }
+        if (byAccessTypeId.size() > 1) {
+            throw new BusinessException("通道名称已存在，请重新选择");
+        }
         PassCarStatus save = passPermissionMapper.save(passCarStatus);
         if (save == null) {
             throw new BusinessException("修改失败，请稍后重试");
@@ -81,7 +91,7 @@ public class PassPermissionServiceImpl implements PassPermissionService {
         return accessTypeMapper.findOne(id);
     }
 
-    private List<ResponsePassCarStatus> conver(List<PassCarStatus> all) {
+    private List<ResponsePassCarStatus> convert(List<PassCarStatus> all) {
         List<ChannelType> channelTypes = channelTypeMapper.findAll();
         Map<Long, String> mapChannelType = channelTypes.stream().collect(Collectors.toMap(ChannelType::getId, ChannelType::getName));
         List<AccessType> accessAll = accessTypeMapper.findAll();
