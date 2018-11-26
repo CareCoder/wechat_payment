@@ -4,6 +4,8 @@ import com.itstyle.common.PageResponse;
 import com.itstyle.domain.caryard.AccessType;
 import com.itstyle.domain.caryard.ChannelType;
 import com.itstyle.domain.caryard.ResponseAccessType;
+import com.itstyle.exception.AssertUtil;
+import com.itstyle.exception.BusinessException;
 import com.itstyle.mapper.AccessTypeMapper;
 import com.itstyle.mapper.ChannelTypeMapper;
 import com.itstyle.service.AccessTypeService;
@@ -49,11 +51,20 @@ public class AccessTypeServiceImpl implements AccessTypeService {
 
     @Override
     public void save(AccessType accessType) {
+        List<AccessType> byChannelName = accessTypeMapper.findByChannelName(accessType.getChannelName());
+        AssertUtil.assertTrue(byChannelName.size() == 0, () -> new BusinessException("通道名称已存在，请重新添加"));
         accessTypeMapper.save(accessType);
     }
 
     @Override
     public void edit(AccessType accessType) {
+        List<AccessType> byChannelName = accessTypeMapper.findByChannelName(accessType.getChannelName());
+        if (byChannelName.size() == 1 && !byChannelName.get(0).getId().equals(accessType.getId())) {
+            throw new BusinessException("通道名称已存在，请重新修改");
+        }
+        if (byChannelName.size() > 1) {
+            throw new BusinessException("通道名称已存在，请重新修改");
+        }
         accessTypeMapper.save(accessType);
     }
 
