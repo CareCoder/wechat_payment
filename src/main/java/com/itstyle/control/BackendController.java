@@ -19,7 +19,7 @@ public class BackendController {
         String uuid = UUID.randomUUID().toString();
         model.addAttribute("uuid", uuid);
         model.addAttribute("appid", YstCommon.APPID);
-        redisDao.hset(YstCommon.USER_SCAN_CODE_LOGIN, uuid, null);
+        redisDao.hset(YstCommon.USER_SCAN_CODE_LOGIN, uuid, "");
         return "/backend/login";
     }
 
