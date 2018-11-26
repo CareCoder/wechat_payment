@@ -160,7 +160,7 @@
             var json = {};
             for (var i = 0; i < edit_form.length - 4; i++) {
                 if (edit_form[i].name == "accessTypeId") {
-                    json[edit_form[i].name] = edit_form[i].value.split(",")[1];
+                    json[edit_form[i].name] = edit_form[i].value.split(",")[0];
                     continue;
                 }
                 if (edit_form[i].name == "id") {
