@@ -9,7 +9,9 @@ import com.itstyle.domain.car.manager.Fastigium;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
+import com.itstyle.domain.feesettings.response.SZChargesResponse;
 import com.itstyle.utils.BeanUtilIgnore;
+import com.itstyle.vo.charges.reponse.ChargeRuleVo;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.incrementmonly.response.MonlyCarAddInfo;
 import com.itstyle.vo.incrementmonly.response.MonlyCarRenewInfo;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,6 +62,10 @@ public class ExternalInterfaceService {
         inition.carYardName = carYardName();
         inition.accessAuthoritySetup = getAccessAuthoritySetup();
         return inition;
+    }
+
+    private void getChargeRule(Inition inition) {
+
     }
 
     private VehicleManagement getVehicleManagement() {

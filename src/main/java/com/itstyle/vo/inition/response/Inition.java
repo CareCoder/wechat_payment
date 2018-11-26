@@ -8,7 +8,6 @@ import java.util.List;
 public class Inition {
     public CarYardName carYardName;
     public List<AccessAuthoritySetup> accessAuthoritySetup;
-    public ChargeSetting chargeSetting;
-    public ChargeRule chargeRule;
+    public Object chargeRule;
     public VehicleManagement vehicleManagement;
 }

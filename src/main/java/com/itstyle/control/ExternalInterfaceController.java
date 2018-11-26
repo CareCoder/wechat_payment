@@ -95,7 +95,9 @@ public class ExternalInterfaceController {
     @GetMapping("/inition")
     @ResponseBody
     public Inition inition() {
-        return externalInterfaceService.inition();
+        Inition inition = externalInterfaceService.inition();
+        inition.chargeRule = charges();
+        return inition;
     }
 
     /**
@@ -174,6 +176,10 @@ public class ExternalInterfaceController {
     @GetMapping("/charges")
     @ResponseBody
     public Object getCharges() {
+        return charges();
+    }
+
+    private Object charges() {
         String currentCharges = redisDao.get(YstCommon.CURRENT_CHARGES);
         Map<Object, Object> map = redisDao.hgetAll(currentCharges);
         if (YstCommon.SZ_CHARGES.equals(currentCharges)) {
