@@ -14,6 +14,8 @@ public class BanListManager {
 
     private boolean tempCarC = false;
 
+    private boolean tempCarD = false;
+
     private boolean monthCarA = false;
 
     private boolean monthCarB = false;
