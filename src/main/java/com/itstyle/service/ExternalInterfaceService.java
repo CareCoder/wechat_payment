@@ -96,12 +96,12 @@ public class ExternalInterfaceService {
                 accessAuthoritySetup.setIp(responsePassCarStatus.getIp());
                 accessAuthoritySetup.setName(responsePassCarStatus.getChannelName());
                 accessAuthoritySetup.setType(responsePassCarStatus.getChannelTypeName());
-                accessAuthoritySetup.setEntrance_tempCar_1(isAllow(responsePassCarStatus.getEntrance_tempCar_1()));
-                accessAuthoritySetup.setEntrance_tempCar_2(isAllow(responsePassCarStatus.getEntrance_tempCar_2()));
-                accessAuthoritySetup.setEntrance_monlyCar_1(isAllow(responsePassCarStatus.getEntrance_monlyCar_1()));
-                accessAuthoritySetup.setEntrance_monlyCar_2(isAllow(responsePassCarStatus.getEntrance_monlyCar_2()));
-                accessAuthoritySetup.setEntrance_specialCar_1(isAllow(responsePassCarStatus.getEntrance_specialCar_1()));
-                accessAuthoritySetup.setEntrance_specialCar_2(isAllow(responsePassCarStatus.getEntrance_specialCar_2()));
+                accessAuthoritySetup.setTempCar_1(isAllow(responsePassCarStatus.getEntrance_tempCar_1()));
+                accessAuthoritySetup.setTempCar_2(isAllow(responsePassCarStatus.getEntrance_tempCar_2()));
+                accessAuthoritySetup.setMonlyCar_1(isAllow(responsePassCarStatus.getEntrance_monlyCar_1()));
+                accessAuthoritySetup.setMonlyCar_2(isAllow(responsePassCarStatus.getEntrance_monlyCar_2()));
+                accessAuthoritySetup.setSpecialCar_1(isAllow(responsePassCarStatus.getEntrance_specialCar_1()));
+                accessAuthoritySetup.setSpecialCar_2(isAllow(responsePassCarStatus.getEntrance_specialCar_2()));
                 return accessAuthoritySetup;
             }).collect(Collectors.toList());
         }
