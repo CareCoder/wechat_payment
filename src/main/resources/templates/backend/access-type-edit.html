@@ -38,9 +38,9 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">辅助相机</label>
+            <label class="layui-form-label">辅助相机IP</label>
             <div class="layui-input-block">
-                <input type="text" name="camera" placeholder="请输入辅助相机" autocomplete="off" class="layui-input">
+                <input type="text" name="camera" placeholder="请输入辅助相机ip" autocomplete="off" class="layui-input" lay-verify="cameraIp">
             </div>
         </div>
         <div class="layui-form-item">
@@ -81,8 +81,12 @@
             ip: [
                 /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
                 ,'IP地址不符合规则'
+            ],
+            cameraIp: [/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+                ,'IP地址不符合规则'
             ]
         });
+
 
         $.ajax({
             url : "/type/all/channel",
