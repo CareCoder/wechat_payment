@@ -4,16 +4,16 @@ import lombok.Data;
 
 @Data
 public class Fastigium {
-    private Long startTime;
+    private String startTime;
 
-    private Long endTime;
+    private String endTime;
 
     private boolean status = false;
 
     public static Fastigium buildDefault() {
         Fastigium fastigium = new Fastigium();
-        fastigium.setStartTime(0L);
-        fastigium.setEndTime(0L);
+        fastigium.setStartTime("");
+        fastigium.setEndTime("");
         fastigium.setStatus(false);
         return fastigium;
     }
