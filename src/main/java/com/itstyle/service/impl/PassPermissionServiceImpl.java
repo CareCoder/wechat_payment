@@ -102,6 +102,7 @@ public class PassPermissionServiceImpl implements PassPermissionService {
             responsePassCarStatus.setChannelName(accessTypeMap.get(passCarStatus.getAccessTypeId()).getChannelName());
             responsePassCarStatus.setChannelTypeName(mapChannelType.get(accessTypeMap.get(passCarStatus.getAccessTypeId()).getChannelTypeId()));
             responsePassCarStatus.setIp(accessTypeMap.get(passCarStatus.getAccessTypeId()).getIp());
+            responsePassCarStatus.setCamera(accessTypeMap.get(passCarStatus.getAccessTypeId()).getCamera());
             return responsePassCarStatus;
         }).collect(Collectors.toList());
     }

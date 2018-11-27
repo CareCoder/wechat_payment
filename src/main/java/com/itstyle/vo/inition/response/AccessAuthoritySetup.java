@@ -11,6 +11,8 @@ public class AccessAuthoritySetup {
 
     public String ip;//通道的ip
 
+    public String cameraIp; // 辅助相机IP
+
     public boolean tempCar_1;//	true表示 入口1允许临时车入场，false则不允许
 
     public boolean monlyCar_1;//true表示 入口1允许月租车入场，false则不允许

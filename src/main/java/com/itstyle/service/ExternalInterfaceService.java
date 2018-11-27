@@ -64,10 +64,6 @@ public class ExternalInterfaceService {
         return inition;
     }
 
-    private void getChargeRule(Inition inition) {
-
-    }
-
     private VehicleManagement getVehicleManagement() {
         VehicleManagement vehicleManagement = new VehicleManagement();
         List<CarInfo> blackList = carInfoService.getBlackList();
@@ -94,6 +90,7 @@ public class ExternalInterfaceService {
             return list.stream().map(responsePassCarStatus -> {
                 AccessAuthoritySetup accessAuthoritySetup = new AccessAuthoritySetup();
                 accessAuthoritySetup.setIp(responsePassCarStatus.getIp());
+                accessAuthoritySetup.setCameraIp(responsePassCarStatus.getCamera());
                 accessAuthoritySetup.setName(responsePassCarStatus.getChannelName());
                 accessAuthoritySetup.setType(responsePassCarStatus.getChannelTypeName());
                 accessAuthoritySetup.setTempCar_1(isAllow(responsePassCarStatus.getEntrance_tempCar_1()));
