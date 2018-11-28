@@ -17,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/carnum")
@@ -27,7 +29,9 @@ public class CarNumController {
 
     @GetMapping("/tempcarinfo.html")
     public String tempcarinfo(CarNumQueryVo queryVo, Model model) {
-        List<CarNumVo> carNumVos = carNumService.query(queryVo);
+        List<CarNumVo> carNumVos = carNumService.query(queryVo).stream()
+                .filter(e -> e.getCarNumExtVos() != null && e.getCarNumExtVos().size() > 1)
+                .collect(Collectors.toList());
         carNumVos.forEach(e -> {
             List<CarNumExtVo> carNumExtVos = e.getCarNumExtVos();
             carNumExtVos.sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
