@@ -62,25 +62,25 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">月租车A :</label>
+                <label class="layui-form-label" name="MONTH_CAR_A">MONTH_CAR_A :</label>
                 <div class="layui-input-block">
                     <input type="checkbox" name="monthCarA" lay-skin="switch" value="true" lay-text="启用|停用" >
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">月租车B :</label>
+                <label class="layui-form-label" name="MONTH_CAR_B">MONTH_CAR_B :</label>
                 <div class="layui-input-block">
                     <input type="checkbox" name="monthCarB" lay-skin="switch" value="true" lay-text="启用|停用" >
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">月租车C :</label>
+                <label class="layui-form-label" name="MONTH_CAR_C">MONTH_CAR_C :</label>
                 <div class="layui-input-block">
                     <input type="checkbox" name="monthCarC" lay-skin="switch" value="true" lay-text="启用|停用" >
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">贵宾车 :</label>
+                <label class="layui-form-label" name="VIP_CAR">VIP_CAR :</label>
                 <div class="layui-input-block">
                     <input type="checkbox" name="vipCar" lay-skin="switch" value="true" lay-text="启用|停用" >
                 </div>
@@ -98,6 +98,7 @@
 <script src="/lib/nprogress/nprogress.js"></script>
 <script>
     NProgress.start();
+    var fixedcarData = new Map();
     window.onload = function () {
         NProgress.done();
     }
@@ -121,7 +122,19 @@
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
-
+        $.ajax({
+            url: "/gs/get/fixedcar/data",
+            type: "GET",
+            success: function (resp) {
+                resp.data.forEach(function(e){
+                    fixedcarData.set(e.carType,e.customName);
+                });
+                fixedcarData.forEach(function (value, key) {
+                    console.log("属性：" + key + ",值：" + value);
+                    $("label[name="+ key  +"]").html(value + ": ");
+                })
+            }
+        });
         if (tempCarA === 'true') {
             $("input[name='tempCarA']").attr('checked', 'checked');
         }

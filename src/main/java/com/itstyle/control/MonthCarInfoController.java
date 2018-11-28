@@ -1,7 +1,10 @@
 package com.itstyle.control;
 
 import com.itstyle.common.PageResponse;
+import com.itstyle.common.YstCommon;
+import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.MonthCarInfo;
+import com.itstyle.service.GlobalSettingService;
 import com.itstyle.service.MonthCarInfoService;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +20,8 @@ import java.util.List;
 public class MonthCarInfoController {
     @Resource
     private MonthCarInfoService monthCarInfoService;
+    @Resource
+    private GlobalSettingService globalSettingService;
 
     @GetMapping("/monthcarinfo.html")
     public String monthcarinfo() {
@@ -28,6 +33,8 @@ public class MonthCarInfoController {
         if (id != null) {
             MonthCarInfo monthCarInfo = monthCarInfoService.findById(id);
             model.addAttribute("monthCarInfo", monthCarInfo);
+            List<FixedCarManager> fixedCars = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
+            model.addAttribute("fixedCars", fixedCars);
         }
         return "/backend/monthcarinfo-edit";
     }
