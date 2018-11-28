@@ -32,9 +32,10 @@ public class CarNumController {
         if (queryVo.getPage() <= 0) {
             queryVo.setPage(1);
         }
-        List<CarNumVo> carNumVos = carNumService.query(queryVo).stream()
-                .filter(e -> e.getCarNumExtVos() != null && e.getCarNumExtVos().size() > 1)
-                .collect(Collectors.toList());
+        List<CarNumVo> carNumVos = carNumService.query(queryVo);
+//                .stream()
+//                .filter(e -> e.getCarNumExtVos() != null && e.getCarNumExtVos().size() > 1)
+//                .collect(Collectors.toList());
         carNumVos.forEach(e -> {
             List<CarNumExtVo> carNumExtVos = e.getCarNumExtVos();
             carNumExtVos.sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
