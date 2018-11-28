@@ -45,14 +45,24 @@
 <script src="/lib/nprogress/nprogress.js"></script>
 <script>
     NProgress.start();
+    var fixedcarData = new Map();;
     window.onload = function () {
         NProgress.done();
-    }
+    };
     layui.use(['table', 'form', 'jquery', 'laydate'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
+        $.ajax({
+            url: "/gs/get/fixedcar/data",
+            type: "GET",
+            success: function (resp) {
+                resp.data.forEach(function(e){
+                    fixedcarData.set(e.carType,e.customName);
+                });
+            }
+        });
 
         laydate.render({
             elem: '#startTime',
@@ -190,18 +200,10 @@
 </script>
 
 <script type="text/html" id="carType">
-    {{#  if(d.carType === 'MONTH_CAR_A'){ }}
-    月租车A
-    {{#  } }}
-    {{#  if(d.carType === 'MONTH_CAR_B'){ }}
-    月租车B
-    {{#  } }}
-    {{#  if(d.carType === 'MONTH_CAR_C'){ }}
-    月租车C
-    {{#  } }}
-    {{#  if(d.carType === 'VIP_CAR'){ }}
-    贵宾车
-    {{#  } }}
+    {{#
+        return fixedcarData.get(d.carType);
+    }}
+
 </script>
 
 <script type="text/html" id="operationTpl">

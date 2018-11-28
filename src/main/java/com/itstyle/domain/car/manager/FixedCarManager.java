@@ -13,7 +13,7 @@ public class FixedCarManager {
     private String typeName;
     private Integer monthFee;
     private String remark;
-    private boolean status = false;
+    private boolean status = true;
 
     /**
      * 如果没取到数据则，默认返回此数据
@@ -29,7 +29,7 @@ public class FixedCarManager {
             f.setTypeName(names[i]);
             f.setMonthFee(0);
             f.setRemark("");
-            f.setStatus(false);
+            f.setStatus(true);
             list.add(f);
         }
         return list;
