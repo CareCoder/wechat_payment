@@ -17,6 +17,6 @@ services:
       - MYSQL_USERNAME=root
       - MYSQL_PASSWORD=SATYmmMvf8tH
       - ADMIN_USER_ID=1
-      - FILE_PATH=/data/img
+      - FILE_PATH=/data/img/
       - FILE_URL_PREFIX=/file/
       - JAVA_OPTIONS=-XX:CompressedClassSpaceSize=32m
