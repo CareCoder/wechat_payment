@@ -46,9 +46,9 @@ feature:
     - feature-name: 无牌车收费
       feature-definition: 启用后无牌车、识别错误车牌均按首段费用处理
       enable: true
-    - feature-name: 月租车允许过期
-      feature-definition: 过期后还可以允许免费进出3天
-      enable: true
+#    - feature-name: 月租车允许过期
+#      feature-definition: 过期后还可以允许免费进出3天
+#      enable: true
     - feature-name: 线上自助续费期
       feature-definition: 勾选后车主可以自主在公众号APP等客户端进行月租车的缴费续期操作
       enable: true
