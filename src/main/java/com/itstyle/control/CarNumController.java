@@ -1,12 +1,15 @@
 package com.itstyle.control;
 
+import com.itstyle.common.YstCommon;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
+import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
 import com.itstyle.domain.car.manager.enums.CarNumType;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.CarNumService;
+import com.itstyle.service.GlobalSettingService;
 import com.itstyle.utils.FeeUtil;
 import com.itstyle.utils.enums.Status;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,8 @@ import java.util.stream.Collectors;
 public class CarNumController {
     @Resource
     private CarNumService carNumService;
+    @Resource
+    private GlobalSettingService globalSettingService;
 
     @GetMapping("/tempcarinfo.html")
     public String tempcarinfo(CarNumQueryVo queryVo, Model model) {
@@ -42,6 +47,8 @@ public class CarNumController {
         });
         model.addAttribute("carNumVos", carNumVos);
         model.addAttribute("queryVo", queryVo);
+        List<FixedCarManager> fixedCars = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
+        model.addAttribute("fixedCars", fixedCars);
         return "/backend/tempcarinfo";
     }
 

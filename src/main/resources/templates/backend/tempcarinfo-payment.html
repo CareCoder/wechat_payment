@@ -120,6 +120,7 @@
 <script src="/lib/nprogress/nprogress.js"></script>
 <script>
     NProgress.start();
+    var fixedcarData = new Map();
     window.onload = function () {
         NProgress.done();
     }
@@ -131,22 +132,32 @@
         if (carType == '') {
             carType = "TEMP_CAR_A";
         }
-        var carTypeMap = new Map();
-        carTypeMap.set("TEMP_CAR_A", "蓝牌");
-        carTypeMap.set("TEMP_CAR_B", "黄牌");
-        carTypeMap.set("TEMP_CAR_C", "黑牌");
-        carTypeMap.set("TEMP_CAR_D", "绿牌");
-        carTypeMap.set("MONTH_CAR_A", "月租车A");
-        carTypeMap.set("MONTH_CAR_B", "月租车B");
-        carTypeMap.set("MONTH_CAR_C", "月租车C");
-        carTypeMap.set("TEMP_CAR_A", "贵宾车");
+        $.ajax({
+            url: "/gs/get/fixedcar/data",
+            type: "GET",
+            success: function (resp) {
+                resp.data.forEach(function(e){
+                    fixedcarData.set(e.carType,e.customName);
+                });
+                var carTypeMap = new Map();
+                carTypeMap.set("TEMP_CAR_A", "蓝牌");
+                carTypeMap.set("TEMP_CAR_B", "黄牌");
+                carTypeMap.set("TEMP_CAR_C", "黑牌");
+                carTypeMap.set("TEMP_CAR_D", "绿牌");
+                carTypeMap.set("MONTH_CAR_A", fixedcarData.get("MONTH_CAR_A"));
+                carTypeMap.set("MONTH_CAR_B", fixedcarData.get("MONTH_CAR_B"));
+                carTypeMap.set("MONTH_CAR_C", fixedcarData.get("MONTH_CAR_C"));
+                carTypeMap.set("TEMP_CAR_A", fixedcarData.get("TEMP_CAR_A"));
+                $("input[name='carType']").val(carTypeMap.get(carType));
+            }
+        });
+
         if (enterTime != 0) {
             $("input[name='enterTime']").val(new Date(parseInt(enterTime)).toLocaleDateString());
         }
         if (leaveTime != 0) {
             $("input[name='leaveTime']").val(new Date(parseInt(leaveTime)).toLocaleDateString());
         }
-        $("input[name='carType']").val(carTypeMap.get(carType));
     })
 
 </script>

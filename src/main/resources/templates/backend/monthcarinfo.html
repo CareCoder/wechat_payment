@@ -45,7 +45,7 @@
 <script src="/lib/nprogress/nprogress.js"></script>
 <script>
     NProgress.start();
-    var fixedcarData = new Map();;
+    var fixedcarData = new Map();
     window.onload = function () {
         NProgress.done();
     };
@@ -61,9 +61,32 @@
                 resp.data.forEach(function(e){
                     fixedcarData.set(e.carType,e.customName);
                 });
+                table.render({
+                    elem: '#tableId',
+                    url: '/monthcarinfo/list',
+                    limit: 5,
+                    page: true,
+                    cols: [
+                        [
+                            {field: 'id', title: 'ID', width: 80},
+                            {field: 'carNum', title: '车牌号', width: 100},
+                            {field: 'name', title: '姓名', width: 100},
+                            {field: 'phone', title: '手机', width: 100},
+                            {field: 'carType', title: '车辆类型', width: 100, templet: '#carType'},
+                            {field: 'startTime', title: '发行时间', width: 150, templet: '#startTime'},
+                            {field: 'endTime', title: '截止时间', width: 150, templet: '#endTime'},
+                            {field: 'carGroup', title: '车位组', width: 100},
+                            {field: 'idCardNum', title: '身份证号码', width: 100},
+                            {field: 'remarks', title: '备注', width: 100},
+                            {title: '操作', width: 200, templet: '#operationTpl', align: 'center'}
+                        ]
+                    ],
+                    done: function (res, curr, count) {
+                        $("#countNum").text(count);
+                    }
+                });
             }
         });
-
         laydate.render({
             elem: '#startTime',
             type: "datetime"
@@ -74,30 +97,7 @@
             type: "datetime"
         });
 
-        table.render({
-            elem: '#tableId',
-            url: '/monthcarinfo/list',
-            limit: 5,
-            page: true,
-            cols: [
-                [
-                    {field: 'id', title: 'ID', width: 80},
-                    {field: 'carNum', title: '车牌号', width: 100},
-                    {field: 'name', title: '姓名', width: 100},
-                    {field: 'phone', title: '手机', width: 100},
-                    {field: 'carType', title: '车辆类型', width: 100, templet: '#carType'},
-                    {field: 'startTime', title: '发行时间', width: 150, templet: '#startTime'},
-                    {field: 'endTime', title: '截止时间', width: 150, templet: '#endTime'},
-                    {field: 'carGroup', title: '车位组', width: 100},
-                    {field: 'idCardNum', title: '身份证号码', width: 100},
-                    {field: 'remarks', title: '备注', width: 100},
-                    {title: '操作', width: 200, templet: '#operationTpl', align: 'center'}
-                ]
-            ],
-            done: function (res, curr, count) {
-                $("#countNum").text(count);
-            }
-        });
+
 
         form.on('submit(search)', function () {
             layer.msg('正在查询，请稍后...');

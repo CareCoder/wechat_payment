@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>编辑固定车辆</title>
@@ -55,10 +55,7 @@
             <label class="layui-form-label">车辆类型</label>
             <div class="layui-input-block">
                 <select name="carType" lay-verify="required">
-                    <option value="MONTH_CAR_A">月租车A</option>
-                    <option value="MONTH_CAR_B">月租车B</option>
-                    <option value="MONTH_CAR_C">月租车C</option>
-                    <option value="VIP_CAR">贵宾车</option>
+                    <option th:each="vo,it : ${fixedCars}" th:value="${vo.carType}" th:text="${vo.customName}"></option>
                 </select>
             </div>
         </div>
@@ -103,6 +100,20 @@
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
+        // var fixedcarData = new Map();
+        // $.ajax({
+        //     url: "/gs/get/fixedcar/data",
+        //     type: "GET",
+        //     success: function (resp) {
+        //         resp.data.forEach(function(e){
+        //             fixedcarData.set(e.carType,e.customName);
+        //         });
+        //         fixedcarData.forEach(function (value, key) {
+        //             console.log("属性：" + key + ",值：" + value);
+        //             $("dd[lay-value="+ key  +"]").html(value);
+        //         })
+        //     }
+        // });
 
         $("input[name='name']").val('[[${monthCarInfo?.name}]]');
         $("input[name='phone']").val('[[${monthCarInfo?.phone}]]');
