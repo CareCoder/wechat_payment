@@ -1,13 +1,20 @@
 package com.itstyle.service;
 
 import com.itstyle.common.PageResponse;
+import com.itstyle.common.YstCommon;
+import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
+import com.itstyle.domain.car.manager.enums.CarNumType;
+import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.ChargeType;
+import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.mapper.CarNumExtMapper;
 import com.itstyle.mapper.CarNumMapper;
 import com.itstyle.utils.enums.Status;
 import com.itstyle.utils.hibernate.BaseDaoService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -20,12 +27,15 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     @Resource
     private CarNumMapper carNumMapper;
@@ -33,13 +43,15 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     private CarNumExtMapper carNumExtMapper;
     @Resource
     private FileResourceService fileResourceService;
+    @Resource
+    private ChargeRecordService chargeRecordService;
 
     @PostConstruct
     private void init() {
         jpaRepository = carNumMapper;
     }
 
-    public int upload(MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
+    public int upload(MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo, Account account) {
         int status = Status.NORMAL;
         String uuid = UUID.randomUUID().toString();
         carNumExtVo.setUuid(uuid);
@@ -59,6 +71,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         try {
             carNumMapper.save(carNumVo);
             fileResourceService.upload(file, uuid);
+            //上传收费记录
+            chargeRecord(carNumVo, carNumExtVo, account);
         } catch (Exception e) {
             status = Status.WARN_ALREAD_EXIST;
         }
@@ -98,7 +112,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 predicate.add(cb.like(root.get("carNum").as(String.class), "%" + queryVo.getCarNum() + "%"));
             }
             if (queryVo.getCarType() != null) {
-                predicate.add(cb.equal(root.get("carNumType").as(String.class), queryVo.getCarType()));
+                predicate.add(cb.equal(root.get("carType").as(Integer.class), queryVo.getCarType().ordinal()));
             }
             if (queryVo.getStartTime() != null) {
                 predicate.add(cb.ge(root.get("time").as(Long.class), queryVo.getStartTime()));
@@ -111,5 +125,20 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         };
         Page<CarNumVo> all = carNumMapper.findAll(sp, pageRequest);
         return all.getContent();
+    }
+
+    private void chargeRecord(CarNumVo carNumVo, CarNumExtVo carNumExtVo,Account account) {
+        if (carNumExtVo.getCarNumType() != CarNumType.LEAVE_BIG) {
+            return;
+        }
+        ChargeRecord chargeRecord = new ChargeRecord();
+        chargeRecord.setCarNum(carNumVo.getCarNum());
+        chargeRecord.setCarType(CarType.TEMP_CAR_A);
+        chargeRecord.setChargeType(ChargeType.CASH_PAYMENT);
+        chargeRecord.setEnterTime(carNumVo.getTime());
+        chargeRecord.setLeaveTime(carNumExtVo.getTime());
+        chargeRecord.setFee(carNumVo.getFee());
+        chargeRecord.setChargePersonnel(account.getUsername());
+        chargeRecordService.upload(chargeRecord);
     }
 }

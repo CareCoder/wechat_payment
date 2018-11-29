@@ -30,13 +30,13 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">缴费月数</label>
                 <div class="layui-input-block">
-                    <select name="day" lay-verify="required">
-                        <option value="30">一个月</option>
-                        <option value="60">二个月</option>
-                        <option value="90">三个月</option>
-                        <option value="120">四个月</option>
-                        <option value="150">五个月</option>
-                        <option value="180">六个月</option>
+                    <select name="month" lay-filter="month" class="select" lay-verify="type">
+                        <option value="1">一个月</option>
+                        <option value="2">二个月</option>
+                        <option value="3">三个月</option>
+                        <option value="4">四个月</option>
+                        <option value="5">五个月</option>
+                        <option value="6">六个月</option>
                     </select>
                 </div>
             </div>
@@ -55,7 +55,7 @@
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">缴费金额：</label>
-                <label class="layui-form-label"><p><span id="span_fee">200</span><span>元人名币</span></p></label>
+                <label class="layui-form-label"><p><span id="span_fee">0</span><span>元人名币</span></p></label>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">到期时间：</label>
@@ -89,6 +89,7 @@
         var name = '[[${monthCarInfo?.name}]]';
         var carNum = '[[${monthCarInfo?.carNum}]]';
         var endTime = parseInt('[[${monthCarInfo?.endTime}]]');
+        var monthFee = parseInt('[[${monthFee}]]');
 
         $("input[name='id']").val(id);
         $("#span_carNum").html(carNum);
@@ -98,6 +99,12 @@
         restDay = restDay > 0 ? restDay : 0;
         restDay = Math.floor(restDay);
         $("#span_restDay").html(restDay);
+        $("#span_fee").html(monthFee);
+
+        form.on('select(month)', function(data){
+            debugger;
+            $("#span_fee").html(monthFee*data.value);
+        })
 
 
         form.on('submit(add)', function (data) {
@@ -106,7 +113,7 @@
                 type: "POST",
                 data: {
                     id: id,
-                    day: data.field.day
+                    month: data.field.month
                 },
                 success: function (resp) {
                     console.log(resp);

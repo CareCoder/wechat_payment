@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>收费报表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>报表查询</cite></a>
+                <a><cite>收费报表</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 ok-search">
+            <input name="chargePersonnel" class="layui-input" placeholder="收费员的名称" autocomplete="off">
+            <select name="chargeType">
+                <option value="CASH_PAYMENT">线下支付</option>
+                <option value="ONLINE_PAYMENT">线上支付</option>
+            </select>
+            <input name="startTime" class="layui-input" placeholder="入场时间" autocomplete="off" id="startTime">
+            <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
+            <button class="layui-btn" lay-submit="" lay-filter="search">
+                <i class="layui-icon layui-icon-search"></i>
+            </button>
+        </form>
+    </div>
+    <!--数据表格-->
+    <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+    var carType = "[[${carType}]]";
+    layui.use(['table', 'form', 'jquery', 'laydate'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        table.render({
+            elem: '#tableId',
+            url: '/report/charge/list?carType=' + carType,
+            limit: 5,
+            page: true,
+            cols: [
+                [
+                    {field: 'id', title: 'ID', width: 80},
+                    {field: 'carNum', title: '车牌号', width: 150},
+                    {field: 'enterTime', title: '入场时间', width: 250, templet: '#enterTimeTemp'},
+                    {field: 'leaveTime', title: '出场时间', width: 250, templet: '#leaveTimeTemp'},
+                    {field: 'fee', title: '收费金额', width: 100},
+                    {field: 'chargeType', title: '收费类型', width: 100, templet: '#chargeTypeTemp'},
+                    {field: 'discountAmount', title: '优惠金额', width: 100},
+                    {field: 'chargePersonnel', title: '收费人员', width: 100}
+                ]
+            ],
+            done: function (res, curr, count) {
+                $("#countNum").text(count);
+            }
+        });
+        laydate.render({
+            elem: '#startTime',
+            type: "datetime"
+        });
+
+        laydate.render({
+            elem: '#endTime',
+            type: "datetime"
+        });
+
+        form.on('submit(search)', function (data) {
+            layer.msg('正在查询，请稍后...');
+            data.field.startTime = new Date(data.field.startTime).getTime();
+            data.field.endTime = new Date(data.field.endTime).getTime();
+            table.reload('tableId', {
+                url: '/report/charge/list?carType=' + carType,
+                where: data.field,
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+    })
+
+</script>
+<!--模板-->
+<script type="text/html" id="enterTimeTemp">
+    {{#
+    var date = new Date();
+    date.setTime(d.enterTime);
+    return date.toLocaleString();
+    }}
+</script>
+<script type="text/html" id="leaveTimeTemp">
+    {{#
+    var date = new Date();
+    date.setTime(d.leaveTime);
+    return date.toLocaleString();
+    }}
+</script>
+<script type="text/html" id="carType">
+    {{#
+        return fixedcarData.get(d.carType);
+    }}
+</script>
+
+<script type="text/html" id="chargeTypeTemp">
+    {{#
+    return d.chargeType == "CASH_PAYMENT"?"线下收费":"线上收费";
+    }}
+</script>
+</body>
+</html>

@@ -84,7 +84,7 @@ public class GlobalSettingController {
     @GetMapping("/get/fixedcar/data")
     @ResponseBody
     public PageResponse<FixedCarManager> fixedcarGetData() {
-        List<FixedCarManager> f = (List<FixedCarManager>) globalSettingService.get(YstCommon.FIXEDCARMANAGER_KEY, List.class);
+        List<FixedCarManager> f = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
         //如果初次启动系统没有数据则生成默认数据并返回
         if (f == null) {
             f = FixedCarManager.defaultList();
