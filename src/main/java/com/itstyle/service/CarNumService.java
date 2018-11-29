@@ -12,6 +12,7 @@ import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.mapper.CarNumExtMapper;
 import com.itstyle.mapper.CarNumMapper;
+import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.utils.enums.Status;
 import com.itstyle.utils.hibernate.BaseDaoService;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +56,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         int status = Status.NORMAL;
         String uuid = UUID.randomUUID().toString();
         carNumExtVo.setUuid(uuid);
-        List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo));
+        CarNumVo queryVo = carNumVo.getQueryVo();
+        List<CarNumVo> find = carNumMapper.findAll(Example.of(queryVo));
         if (find != null && !find.isEmpty()) {
             Optional<CarNumExtVo> any = find.stream().flatMap(e -> e.getCarNumExtVos().stream())
                     .filter(e -> e.getCarNumType() == carNumExtVo.getCarNumType()).findAny();
@@ -63,16 +65,17 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 return Status.WARN_ALREAD_EXIST;
             }
             if (find.size() == 1) {
-                carNumVo = find.get(0);
+                queryVo = find.get(0);
+                BeanUtilIgnore.copyPropertiesIgnoreNull(carNumVo, queryVo);
             }
         }
 
-        carNumVo.getCarNumExtVos().add(carNumExtVo);
+        queryVo.getCarNumExtVos().add(carNumExtVo);
         try {
-            carNumMapper.save(carNumVo);
+            carNumMapper.save(queryVo);
             fileResourceService.upload(file, uuid);
             //上传收费记录
-            chargeRecord(carNumVo, carNumExtVo, account);
+            chargeRecord(queryVo, carNumExtVo, account);
         } catch (Exception e) {
             status = Status.WARN_ALREAD_EXIST;
         }

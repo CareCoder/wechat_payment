@@ -6,6 +6,7 @@ import com.itstyle.domain.car.manager.enums.CarNumType;
 import com.itstyle.domain.car.manager.enums.CarType;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,6 +26,9 @@ public class CarNumVo{
     private CarColor carColor;
     private int fee;
     private Long time;
+    private String enterPass;
+    private String leavePass;
+    private String enterWay;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_num_id")
@@ -32,5 +36,14 @@ public class CarNumVo{
 
     public String getUuid(CarNumType carNumType) {
         return carNumExtVos.stream().filter(e -> e.getCarNumType() == carNumType).findAny().get().getUuid();
+    }
+
+    public CarNumVo getQueryVo() {
+        CarNumVo vo = new CarNumVo();
+        BeanUtils.copyProperties(this, vo);
+        vo.setEnterPass(null);
+        vo.setLeavePass(null);
+        vo.setEnterWay(null);
+        return vo;
     }
 }
