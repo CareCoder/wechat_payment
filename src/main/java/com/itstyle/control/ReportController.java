@@ -1,7 +1,6 @@
 package com.itstyle.control;
 
 import com.itstyle.common.PageResponse;
-import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
@@ -22,12 +21,12 @@ public class ReportController {
     @RequestMapping("/charge/temp/list.html")
     public String chargeTempList(Model model) {
         model.addAttribute("carType", CarType.TEMP_CAR_A.toString());
-        return "/backend/chargelist";
+        return "/backend/chargelist-temp";
     }
     @RequestMapping("/charge/month/list.html")
     public String chargeMonthList(Model model) {
         model.addAttribute("carType", CarType.MONTH_CAR_A.toString());
-        return "/backend/chargelist";
+        return "/backend/chargelist-month";
     }
 
     @RequestMapping("/charge/list")
