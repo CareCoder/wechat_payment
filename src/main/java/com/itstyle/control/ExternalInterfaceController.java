@@ -8,25 +8,24 @@ import com.itstyle.domain.feesettings.response.ByChargesResponse;
 import com.itstyle.domain.feesettings.response.SZChargesResponse;
 import com.itstyle.domain.feesettings.response.StandardChargesResponse;
 import com.itstyle.domain.version.VersionInfo;
+import com.itstyle.exception.BusinessException;
+import com.itstyle.service.AccountService;
+import com.itstyle.service.ExternalInterfaceService;
 import com.itstyle.service.FileResourceService;
 import com.itstyle.utils.BeanUtilIgnore;
+import com.itstyle.utils.enums.Status;
 import com.itstyle.vo.charges.reponse.ByChargesResponseVo;
 import com.itstyle.vo.charges.reponse.ChargesResponse;
 import com.itstyle.vo.charges.reponse.SZChargesResponseVo;
 import com.itstyle.vo.charges.reponse.StandardChargesResponseVo;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
-import com.itstyle.vo.login.request.LoginRequest;
-import com.itstyle.vo.login.reponse.LoginResponse;
-import com.itstyle.exception.BusinessException;
-import com.itstyle.service.AccountService;
-import com.itstyle.service.ExternalInterfaceService;
-import com.itstyle.utils.enums.Status;
 import com.itstyle.vo.inition.response.Inition;
+import com.itstyle.vo.login.reponse.LoginResponse;
+import com.itstyle.vo.login.request.LoginRequest;
 import com.itstyle.vo.syncarinfo.response.SynCarInfo;
 import com.itstyle.vo.version.request.VersionRequest;
 import com.itstyle.vo.version.response.VersionResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -110,53 +109,31 @@ public class ExternalInterfaceController {
         String json = redisDao.get(YstCommon.VERSION_INFO);
         VersionResponse versionResponse = new VersionResponse();
         versionResponse.setServiceCode(versionRequest.getServiceCode());
+        if (versionRequest.getVersionCode() == null) {
+            versionResponse.setErrorCode(Status.ERROR);
+            versionResponse.setErrorDesc("版本号不能为空");
+            return versionResponse;
+        }
         if (json == null) {
             versionResponse.setErrorCode(Status.ERROR);
             versionResponse.setErrorDesc("未上传apk到服务器，请上传之后下载");
             return versionResponse;
         }
         VersionInfo versionInfo = gson.fromJson(json, VersionInfo.class);
-        if (StringUtils.isEmpty(versionInfo.getOldVersionCode())) { // 老版本号为空，代表是第一次请求
-            versionResponse.setErrorCode(Status.NORMAL);
-            versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
-            versionResponse.setUpdateContent(versionInfo.getUpdateContent());
-            versionResponse.setVersionCode(versionInfo.getNewVersionCode());
-            versionInfo.setOldVersionCode(versionInfo.getNewVersionCode());
-            versionInfo.setDownload(true);
-            redisDao.set(YstCommon.VERSION_INFO, gson.toJson(versionInfo));
-            return versionResponse;
-        } else if (StringUtils.isEmpty(versionRequest.getVersionCode())) {
-            // 如果不是第一次请求该接口，那么app版本号不能为空，否则报错
-            if (!StringUtils.isEmpty(versionInfo.getOldVersionCode())) {
-                versionResponse.setErrorCode(Status.ERROR);
-                versionResponse.setErrorDesc("版本号不能为空");
-                return versionResponse;
-            }
-        }
-
-        // 如果版本号不为空，需要验证该版本号是否正确，不能随便一个版本号都能下载，安全着想
-        if (!versionRequest.getVersionCode().equals(versionInfo.getOldVersionCode())) {
+        if (versionRequest.getVersionCode() > versionInfo.getVersionCode()) {
             versionResponse.setErrorCode(Status.ERROR);
-            versionResponse.setErrorDesc("版本号不正确");
+            versionResponse.setErrorDesc("版本号大于服务器当前最近版本");
             return versionResponse;
         }
-        // 版本号不为空，并且版本号也正确，且新老版本号不一致，给予最新下载地址
-        if (!versionRequest.getVersionCode().equals(versionInfo.getNewVersionCode())) {
-            versionResponse.setErrorCode(Status.NORMAL);
-            versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getNewVersionCode());
-            versionResponse.setUpdateContent(versionInfo.getUpdateContent());
-            versionResponse.setVersionCode(versionInfo.getNewVersionCode());
-            versionInfo.setDownload(true);
-            redisDao.set(YstCommon.VERSION_INFO, gson.toJson(versionInfo));
-        } else {
-            versionResponse.setErrorCode(Status.ERROR);
-            versionResponse.setErrorDesc("无新版本需要更新");
-        }
+        versionResponse.setErrorCode(Status.NORMAL);
+        versionResponse.setDownloadUrl("/external/version/download/" + versionInfo.getUuid());
+        versionResponse.setUpdateContent(versionInfo.getUpdateContent());
+        versionResponse.setVersionCode(versionInfo.getVersionCode());
         return versionResponse;
     }
 
-    @GetMapping("/version/download/{versionCode}")
-    public ResponseEntity<byte[]> download(@PathVariable("versionCode") String versionCode) {
+    @GetMapping("/version/download/{uuid}")
+    public ResponseEntity<byte[]> download(@PathVariable("uuid") String versionCode) {
         return fileResourceService.downloadByUuid(versionCode);
     }
 

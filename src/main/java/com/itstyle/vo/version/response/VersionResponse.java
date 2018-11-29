@@ -9,5 +9,5 @@ public class VersionResponse {
     private String errorDesc;
     private String downloadUrl;
     private String updateContent;
-    private String versionCode;
+    private Integer versionCode;
 }
