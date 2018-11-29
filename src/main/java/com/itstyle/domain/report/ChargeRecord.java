@@ -56,4 +56,10 @@ public class ChargeRecord {
      * 车辆类型
      */
     private CarType carType;
+
+    /**
+     * 收费时间
+     */
+
+    private Long time;
 }
