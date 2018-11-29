@@ -18,6 +18,11 @@ public class ReportController {
     @Resource
     private ChargeRecordService chargeRecordService;
 
+    @RequestMapping("/list.html")
+    public String reportList() {
+        return "/backend/report-list";
+    }
+
     @RequestMapping("/charge/temp/list.html")
     public String chargeTempList(Model model) {
         model.addAttribute("carType", CarType.TEMP_CAR_A.toString());
