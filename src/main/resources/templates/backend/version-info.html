@@ -28,7 +28,19 @@
     <div class="layui-form-item">
         <label class="layui-form-label">更新信息</label>
         <div class="layui-input-block" style="width: 400px;">
-            <input type="text" name="updateContent" placeholder="请输入版本更新信息" autocomplete="off" class="layui-input" lay-verify="ip">
+            <input type="text" name="updateContent" placeholder="请输入版本更新信息" autocomplete="off" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">版本号</label>
+        <div class="layui-input-block" style="width: 400px;">
+            <input type="number" name="versionCode" placeholder="请输入版本号" autocomplete="off" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">文件名</label>
+        <div class="layui-input-block" style="width: 400px;">
+            <input type="text" name="filename" autocomplete="off" class="layui-input" readonly>
         </div>
     </div>
     <div class="layui-form-item">
@@ -44,6 +56,10 @@
         var $ = layui.jquery
             ,upload = layui.upload;
 
+        $("input[name='updateContent']").val('[[${version_info?.updateContent}]]');
+        $("input[name='versionCode']").val('[[${version_info?.versionCode}]]');
+        $("input[name='filename']").val('[[${version_info?.filename}]]');
+
         var index;
 
         upload.render({
@@ -53,7 +69,10 @@
             ,auto: false
             ,bindAction: '#submit'
             ,before: function () {
-                this.data={"updateContent" : $("input[name='updateContent']").val()};
+                this.data={
+                    "updateContent" : $("input[name='updateContent']").val(),
+                    "versionCode" : $("input[name='versionCode']").val()
+                };
                 index = layer.load();
             }
             ,done: function(resp){

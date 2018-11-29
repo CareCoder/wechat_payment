@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class VersionInfo {
-    private String oldVersionCode;
-    private String newVersionCode;
+    private Integer versionCode;
     private String updateContent;
-    private Boolean download;
+    private String filename;
+    private String uuid;
 }
