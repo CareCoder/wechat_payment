@@ -1,15 +1,16 @@
 package com.itstyle.service;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
-import com.itstyle.dao.RedisDao;
+import com.itstyle.domain.account.Account;
+import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.MonthCarInfo;
+import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.ChargeType;
+import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.mapper.MonthCarInfoMapper;
 import com.itstyle.utils.hibernate.BaseDaoService;
-import com.itstyle.vo.incrementmonly.response.MonlyCarAddInfo;
-import com.itstyle.vo.incrementmonly.response.MonlyCarRenewInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,15 +20,19 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
-import javax.xml.crypto.Data;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Slf4j
 public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
     @Resource
     private MonthCarInfoMapper monthCarInfoMapper;
+    @Resource
+    private ChargeRecordService chargeRecordService;
+    @Resource
+    private GlobalSettingService globalSettingService;
 
     @PostConstruct
     private void init() {
@@ -48,13 +53,19 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         return PageResponse.build(all);
     }
 
-    public void payment(Long day, Long id) {
+    public void payment(Integer month, Long id, Account account) {
         MonthCarInfo one = findById(id);
         Long endTime = one.getEndTime();
-        endTime = endTime + (day * 24 * 60 * 60 * 1000);
+        Long now = System.currentTimeMillis();
+        if (endTime < now) {
+            endTime = now;
+        }
+        endTime = endTime + (new Long(month) * 30 * 24 * 60 * 60 * 1000);
         one.setEndTime(endTime);
         one.setModifyTime(new Date());
         update(one.getId(), one);
+        //上传月租车续费信息
+        chargeRecord(one, month, account);
     }
 
     public void edit(MonthCarInfo monthCarInfo) {
@@ -88,6 +99,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         };
         return monthCarInfoMapper.findAll(sp);
     }
+
     /**
      * 查找区域时间内续费的车
      * @param startTime 开始时间
@@ -104,8 +116,33 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         return monthCarInfoMapper.findAll(sp);
     }
 
-
     public List<MonthCarInfo> list() {
         return monthCarInfoMapper.findAll();
+    }
+
+    private void chargeRecord(MonthCarInfo one, Integer month, Account account) {
+        Integer fee = getMonthFee(one.getCarType()) * month;
+        ChargeRecord chargeRecord = new ChargeRecord();
+        chargeRecord.setCarNum(one.getCarNum());
+        chargeRecord.setCarType(CarType.MONTH_CAR_A);
+        chargeRecord.setChargeType(ChargeType.CASH_PAYMENT);
+        chargeRecord.setEnterTime(one.getStartTime());
+        chargeRecord.setLeaveTime(one.getEndTime());
+        chargeRecord.setFee(fee);
+        chargeRecord.setChargePersonnel(account.getUsername());
+        chargeRecordService.upload(chargeRecord);
+    }
+
+    public int getMonthFee(CarType carType) {
+        List<FixedCarManager> f = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
+        Optional<FixedCarManager> any = f.stream().filter(e -> e.getCarType() == carType).findAny();
+        if (any.isPresent()) {
+            FixedCarManager fixedCarManager = any.get();
+            if (fixedCarManager.getMonthFee() == null) {
+                return 0;
+            }
+            return fixedCarManager.getMonthFee();
+        }
+        return 0;
     }
 }

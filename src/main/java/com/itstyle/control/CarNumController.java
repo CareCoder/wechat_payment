@@ -1,12 +1,12 @@
 package com.itstyle.control;
 
 import com.itstyle.common.YstCommon;
+import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
 import com.itstyle.domain.car.manager.enums.CarNumType;
-import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.CarNumService;
 import com.itstyle.service.GlobalSettingService;
@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/carnum")
@@ -76,11 +76,13 @@ public class CarNumController {
 
     @RequestMapping("/upload")
     @ResponseBody
-    public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo, Long leaveTime) {
+    public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo, Long leaveTime, HttpServletRequest request) {
         int status = Status.NORMAL;
         try {
             carNumExtVo.setTime(leaveTime);//这里不要mvc自动注入 是因为两个注入对象的param相同了
-            status = carNumService.upload(file, carNumVo, carNumExtVo);
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
+            status = carNumService.upload(file, carNumVo, carNumExtVo, account);
         } catch (Exception e) {
             return Response.build(status, "系统错误", null);
         }

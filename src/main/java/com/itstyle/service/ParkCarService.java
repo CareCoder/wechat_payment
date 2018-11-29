@@ -4,9 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
+import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.park.ParkCar;
 import com.itstyle.domain.park.ParkCarOrder;
 import com.itstyle.domain.park.enums.ParkCarStatus;
+import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.task.AssessTokenTask;
 import com.itstyle.utils.TemplateUtils;
 import com.itstyle.utils.enums.Status;
@@ -26,6 +29,8 @@ public class ParkCarService {
     private RedisDao redisDao;
     @Resource
     private AssessTokenTask assessTokenTask;
+    @Resource
+    private ChargeRecordService chargeRecordService;
 
     private static Gson gson = new Gson();
 
@@ -177,6 +182,8 @@ public class ParkCarService {
             parkCars.put(openId, parkCar);
             writeRedis(parkCar.mcNo, parkCars);
             TemplateUtils.createOrder(queryPay(openId), assessTokenTask.getAssessToken(), true);
+            //上传费用记录
+            chargeRecode(order);
         } catch (Exception e) {
             log.error("[ParkCarService] done error", e);
             return Status.ERROR;
@@ -204,6 +211,18 @@ public class ParkCarService {
     private void makeOrderRecord(ParkCar parkCar) {
         ParkCarOrder order = ParkCarOrder.make(parkCar);
         writeRedisOrder(parkCar.openId, order);
+    }
+
+    private void chargeRecode(ParkCarOrder order) {
+        ChargeRecord chargeRecord = new ChargeRecord();
+        chargeRecord.setCarNum(order.carNo);
+        chargeRecord.setCarType(CarType.TEMP_CAR_A);
+        chargeRecord.setChargeType(ChargeType.ONLINE_PAYMENT);
+        chargeRecord.setEnterTime(order.enterTime);
+        chargeRecord.setFee(order.fee);
+        chargeRecord.setLeaveTime(order.operTime);
+        chargeRecord.setChargePersonnel(null);
+        chargeRecordService.upload(chargeRecord);
     }
 
     private static String PARK_SERVICE_REDIS_KEY = "PARK_SERVICE";

@@ -2,6 +2,7 @@ package com.itstyle.control;
 
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
+import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.service.GlobalSettingService;
@@ -13,6 +14,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -43,6 +46,7 @@ public class MonthCarInfoController {
     public String monthcarinfoPayment(Long id, Model model) {
         MonthCarInfo monthCarInfo = monthCarInfoService.findById(id);
         model.addAttribute("monthCarInfo", monthCarInfo);
+        model.addAttribute("monthFee", monthCarInfoService.getMonthFee(monthCarInfo.getCarType()));
         return "/backend/monthcarinfo-payment";
     }
 
@@ -80,8 +84,11 @@ public class MonthCarInfoController {
      */
     @PostMapping("/payment")
     @ResponseBody
-    public void payment(@RequestParam Long day,
-                        @RequestParam Long id) {
-        monthCarInfoService.payment(day, id);
+    public void payment(@RequestParam Integer month,
+                        @RequestParam Long id,
+                        HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
+        monthCarInfoService.payment(month, id, account);
     }
 }
