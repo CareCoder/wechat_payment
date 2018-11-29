@@ -1,7 +1,6 @@
 package com.itstyle.service;
 
 import com.itstyle.common.PageResponse;
-import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
@@ -12,7 +11,6 @@ import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.mapper.CarNumExtMapper;
 import com.itstyle.mapper.CarNumMapper;
-import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.utils.enums.Status;
 import com.itstyle.utils.hibernate.BaseDaoService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +62,10 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             }
             if (find.size() == 1) {
                 queryVo = find.get(0);
-                BeanUtilIgnore.copyPropertiesIgnoreNull(carNumVo, queryVo);
+                queryVo.setEnterWay(carNumVo.getEnterWay());
+                queryVo.setLeavePass(carNumVo.getLeavePass());
+                queryVo.setEnterPass(carNumVo.getEnterPass());
+                queryVo.setLTime(carNumExtVo.getTime());
             }
         }
 
@@ -107,7 +106,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         return carNumMapper.findAll(Example.of(carNumVo));
     }
 
-    public List<CarNumVo> query(CarNumQueryVo queryVo) {
+    public Page<CarNumVo> query(CarNumQueryVo queryVo) {
         PageRequest pageRequest = PageResponse.getPageRequest(queryVo.getPage(), queryVo.getLimit());
         Specification<CarNumVo> sp = (root, query, cb) -> {
             List<Predicate> predicate = new ArrayList<>();
@@ -123,11 +122,16 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             if (queryVo.getEndTime() != null) {
                 predicate.add(cb.le(root.get("time").as(Long.class), queryVo.getEndTime()));
             }
+            if (queryVo.getLeavePass() != null) {
+                predicate.add(cb.equal(root.get("leavePass").as(String.class), queryVo.getLeavePass()));
+            }
+            if (queryVo.getLeaveEndTime() != null && queryVo.getLeaveStartTime() != null) {
+                predicate.add(cb.between(root.get("lTime").as(Long.class), queryVo.getLeaveStartTime(), queryVo.getLeaveEndTime()));
+            }
             query.where(predicate.toArray(new Predicate[0]));
             return query.getRestriction();
         };
-        Page<CarNumVo> all = carNumMapper.findAll(sp, pageRequest);
-        return all.getContent();
+        return carNumMapper.findAll(sp, pageRequest);
     }
 
     private void chargeRecord(CarNumVo carNumVo, CarNumExtVo carNumExtVo,Account account) {

@@ -29,6 +29,7 @@ public class CarNumVo{
     private String enterPass;
     private String leavePass;
     private String enterWay;
+    private Long lTime;//算是扩展字段,离开时间,为了提高性能添加这个字段,和扩展字段重复
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_num_id")
@@ -44,6 +45,35 @@ public class CarNumVo{
         vo.setEnterPass(null);
         vo.setLeavePass(null);
         vo.setEnterWay(null);
+        vo.setLTime(null);
         return vo;
+    }
+
+    public void setLTime(Long time) {
+        if (time == null) {
+            return;
+        }
+        this.lTime = time;
+    }
+
+    public void setEnterPass(String enterPass) {
+        if (enterPass == null) {
+            return;
+        }
+        this.enterPass = enterPass;
+    }
+
+    public void setLeavePass(String leavePass) {
+        if (leavePass == null) {
+            return;
+        }
+        this.leavePass = leavePass;
+    }
+
+    public void setEnterWay(String enterWay) {
+        if (enterWay == null) {
+            return;
+        }
+        this.enterWay = enterWay;
     }
 }

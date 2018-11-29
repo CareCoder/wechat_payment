@@ -1,5 +1,6 @@
 package com.itstyle.control;
 
+import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
@@ -12,6 +13,7 @@ import com.itstyle.service.CarNumService;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.utils.FeeUtil;
 import com.itstyle.utils.enums.Status;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +39,7 @@ public class CarNumController {
         if (queryVo.getPage() <= 0) {
             queryVo.setPage(1);
         }
-        List<CarNumVo> carNumVos = carNumService.query(queryVo);
+        List<CarNumVo> carNumVos = carNumService.query(queryVo).getContent();
 //                .stream()
 //                .filter(e -> e.getCarNumExtVos() != null && e.getCarNumExtVos().size() > 1)
 //                .collect(Collectors.toList());
@@ -52,6 +54,10 @@ public class CarNumController {
         return "/backend/tempcarinfo";
     }
 
+    @RequestMapping("/access/report.html")
+    public String accessReport() {
+        return "/backend/access-report";
+    }
     @GetMapping("/tempcarinfo-payment.html")
     public String tempcarinfo(Long id, Model model) {
         CarNumVo carNumVo = carNumService.findById(id);
@@ -122,5 +128,12 @@ public class CarNumController {
             return Response.build(Status.ERROR, "系统错误", null);
         }
         return Response.build(Status.NORMAL, "", vos);
+    }
+
+    @RequestMapping("/list")
+    @ResponseBody
+    public PageResponse query(CarNumQueryVo queryVo) {
+        Page<CarNumVo> page = carNumService.query(queryVo);
+        return PageResponse.build(page);
     }
 }
