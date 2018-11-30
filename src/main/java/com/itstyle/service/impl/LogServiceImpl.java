@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +63,8 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public PageResponse<SysLoggerResponse> list(int page, int limit, Date start, Date end, Long roleId) {
-        PageRequest pageRequest = PageResponse.getPageRequest(page, limit);
+        Sort sort = new Sort(Sort.Direction.DESC, "logDate");
+        PageRequest pageRequest = PageResponse.getPageRequest(page, limit, sort);
         Specification<SysLogger> sp = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             Path<Date> logDate = root.get("logDate");
@@ -83,7 +85,7 @@ public class LogServiceImpl implements LogService {
             BeanUtilIgnore.copyPropertiesIgnoreNull(sysLogger, sysLoggerResponse);
             sysLoggerResponse.setRoleName(mapRole.get(sysLoggerResponse.getRoleId()));
             return sysLoggerResponse;
-        }).collect(Collectors.toList());
+        }).sorted((SysLoggerResponse e1, SysLoggerResponse e2) -> e2.getLogDate().compareTo(e1.getLogDate())).collect(Collectors.toList());
         return new PageResponse<>(all.getTotalElements(), collect);
     }
 }

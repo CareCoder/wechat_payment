@@ -2,6 +2,7 @@ package com.itstyle.control;
 
 import com.itstyle.common.FeatureSettingConfig;
 import com.itstyle.common.PageResponse;
+import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.domain.caryard.FeatureSetting;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.exception.AssertUtil;
@@ -52,6 +53,7 @@ public class FeatureSettingController {
         AssertUtil.assertNotEmpty(featureSetting.getFeatureName(), () -> new BusinessException("功能名称不能为空"));
         AssertUtil.assertNotEmpty(featureSetting.getFeatureDefinition(), () -> new BusinessException("功能定义不能为空"));
         featureSettingService.update(featureSetting);
+        SystemLoggerHelper.log("设置", "功能性设置");
         return Response.build(Status.NORMAL, null, null);
     }
 

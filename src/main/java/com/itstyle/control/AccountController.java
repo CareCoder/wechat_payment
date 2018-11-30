@@ -54,6 +54,7 @@ public class AccountController {
         AssertUtil.assertNotNull(account.getRoleId(), () -> new BusinessException("类型不能为空"));
         Account insert = accountService.insert(account);
         log.info("[AccountController] save success [{}]", insert);
+        SystemLoggerHelper.log("保存", "新增管理员");
         return Response.build(Status.NORMAL, null, null);
     }
 
@@ -66,6 +67,7 @@ public class AccountController {
         AssertUtil.assertNotNull(requestAccount.getRoleId(), () -> new BusinessException("类型不能为空"));
         RequestAccount account = accountService.edit(requestAccount);
         log.info("[AccountController] edit success [{}]", account);
+        SystemLoggerHelper.log("修改", "修改管理员");
         return Response.build(Status.NORMAL, null, null);
     }
 
@@ -75,6 +77,7 @@ public class AccountController {
         AssertUtil.assertNotNull(id, () -> new BusinessException("删除的id不能为空"));
         AssertUtil.assertFalse(id.equals(userId), () -> new BusinessException("超级管理员不能被删除"));
         accountService.delete(id);
+        SystemLoggerHelper.log("删除", "删除管理员");
         return Response.build(Status.NORMAL, null, null);
     }
 

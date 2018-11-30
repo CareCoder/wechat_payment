@@ -1,6 +1,7 @@
 package com.itstyle.control;
 
 import com.google.gson.Gson;
+import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.enums.CarType;
@@ -39,6 +40,7 @@ public class FeeSettingController {
         AssertUtil.assertNotNull(szCharges, () -> new BusinessException("sz charges is null"));
         AssertUtil.assertNotEmpty(szCharges.getCarType(), () -> new BusinessException("车辆类型不能为空"));
         redisDao.hset(YstCommon.SZ_CHARGES, szCharges.getCarType(), gson.toJson(szCharges));
+        SystemLoggerHelper.log("修改", "修改深圳收费");
         return Response.build(Status.NORMAL, null, null);
     }
 
@@ -70,6 +72,7 @@ public class FeeSettingController {
         AssertUtil.assertNotNull(standardCharges, () -> new BusinessException("standard charges is null"));
         AssertUtil.assertNotEmpty(standardCharges.getCarType(), () -> new BusinessException("车辆类型不能为空"));
         redisDao.hset(YstCommon.STANDARD_CHARGES, standardCharges.getCarType(), gson.toJson(standardCharges));
+        SystemLoggerHelper.log("修改", "修改标准收费");
         return Response.build(Status.NORMAL, null, null);
     }
 
@@ -101,6 +104,7 @@ public class FeeSettingController {
         AssertUtil.assertNotNull(byCharges, () -> new BusinessException("by charges is null"));
         AssertUtil.assertNotNull(byCharges.getCarType(), () -> new BusinessException("车辆类型不能为空"));
         redisDao.hset(YstCommon.BY_CHARGES, byCharges.getCarType(), gson.toJson(byCharges));
+        SystemLoggerHelper.log("修改", "修改按次收费");
         return Response.build(Status.NORMAL, null, null);
     }
 
@@ -131,6 +135,7 @@ public class FeeSettingController {
     public Response setCurrentCharges(@PathVariable("current") String current) {
         AssertUtil.assertNotEmpty(current, () -> new BusinessException("当前收费标准不能为空"));
         redisDao.set(YstCommon.CURRENT_CHARGES, current);
+        SystemLoggerHelper.log("修改", "修改当前收费标准");
         return Response.build(Status.NORMAL, null, null);
     }
 

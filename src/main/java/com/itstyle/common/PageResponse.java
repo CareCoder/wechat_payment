@@ -3,6 +3,7 @@ package com.itstyle.common;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -33,5 +34,9 @@ public class PageResponse<T> {
 
     public static PageRequest getPageRequest(int page, int limit) {
         return new PageRequest(page - 1, limit);
+    }
+
+    public static PageRequest getPageRequest(int page, int limit, Sort sort) {
+        return new PageRequest(page - 1, limit, sort);
     }
 }
