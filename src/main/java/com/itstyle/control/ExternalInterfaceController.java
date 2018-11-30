@@ -120,9 +120,9 @@ public class ExternalInterfaceController {
             return versionResponse;
         }
         VersionInfo versionInfo = gson.fromJson(json, VersionInfo.class);
-        if (versionRequest.getVersionCode() > versionInfo.getVersionCode()) {
+        if (versionRequest.getVersionCode() >= versionInfo.getVersionCode()) {
             versionResponse.setErrorCode(Status.ERROR);
-            versionResponse.setErrorDesc("版本号大于服务器当前最近版本");
+            versionResponse.setErrorDesc("版本号大于或等于服务器当前最近版本");
             return versionResponse;
         }
         versionResponse.setErrorCode(Status.NORMAL);
