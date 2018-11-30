@@ -1,6 +1,7 @@
 package com.itstyle.control;
 
 import com.google.gson.Gson;
+import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.park.resp.Response;
@@ -49,6 +50,7 @@ public class VersionController {
         versionInfo.setVersionCode(versionCode);
         versionInfo.setUuid(uuid);
         redisDao.set(YstCommon.VERSION_INFO, gson.toJson(versionInfo));
+        SystemLoggerHelper.log("文件上传", "版本发布");
         return Response.build(Status.NORMAL, null, null);
     }
 
