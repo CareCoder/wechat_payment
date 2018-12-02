@@ -1,5 +1,6 @@
 package com.itstyle.domain.car.manager;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.itstyle.domain.car.manager.enums.CarColor;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
 import com.itstyle.domain.car.manager.enums.CarNumType;
@@ -39,7 +40,7 @@ public class CarNumVo{
         return carNumExtVos.stream().filter(e -> e.getCarNumType() == carNumType).findAny().get().getUuid();
     }
 
-    public CarNumVo getQueryVo() {
+    public CarNumVo buildQueryVo() {
         CarNumVo vo = new CarNumVo();
         BeanUtils.copyProperties(this, vo);
         vo.setEnterPass(null);

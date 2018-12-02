@@ -52,7 +52,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         int status = Status.NORMAL;
         String uuid = UUID.randomUUID().toString();
         carNumExtVo.setUuid(uuid);
-        CarNumVo queryVo = carNumVo.getQueryVo();
+        CarNumVo queryVo = carNumVo.buildQueryVo();
         List<CarNumVo> find = carNumMapper.findAll(Example.of(queryVo));
         if (find != null && !find.isEmpty()) {
             Optional<CarNumExtVo> any = find.stream().flatMap(e -> e.getCarNumExtVos().stream())
@@ -122,7 +122,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             if (queryVo.getEndTime() != null) {
                 predicate.add(cb.le(root.get("time").as(Long.class), queryVo.getEndTime()));
             }
-            if (queryVo.getLeavePass() != null) {
+            if (StringUtils.isNotEmpty(queryVo.getLeavePass())) {
                 predicate.add(cb.equal(root.get("leavePass").as(String.class), queryVo.getLeavePass()));
             }
             if (queryVo.getLeaveEndTime() != null && queryVo.getLeaveStartTime() != null) {

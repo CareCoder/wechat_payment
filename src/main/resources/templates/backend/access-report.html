@@ -28,6 +28,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">车辆类型</label>
                 <select name="carType">
+                    <option value="">暂无选择</option>
                     <option th:each="vo,it : ${fixedCars}" th:value="${vo.carType}" th:text="${vo.customName}"></option>
                     <option value="TEMP_CAR_A">蓝牌</option>
                     <option value="TEMP_CAR_B">黄牌</option>
@@ -49,6 +50,7 @@
                 <label class="layui-form-label">出口</label>
                 <div class="layui-input-block">
                     <select name="leavePass">
+                        <option value="">暂无选择</option>
                         <option th:each="vo,it : ${accessTypes}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
                     </select>
                 </div>
@@ -93,7 +95,7 @@
         var laydate = layui.laydate;
         table.render({
             elem: '#tableId',
-            url: '/carnum/list/',
+            url: '/carnum/list',
             limit: 5,
             page: true,
             cols: [
@@ -101,7 +103,7 @@
                     {field: 'id', title: 'ID', width: 80},
                     {field: 'carNum', title: '车牌号', width: 150},
                     {field: 'time', title: '入场时间', width: 250, templet: '#timeTemp'},
-                    {field: 'lTime', title: '出场时间', width: 250, templet: '#lTimeTemp'},
+                    {field: 'ltime', title: '出场时间', width: 250, templet: '#lTimeTemp'},
                     {field: 'enterPass', title: '入口通道', width: 100},
                     {field: 'leavePass', title: '出口通道', width: 100},
                     {field: 'enterWay', title: '入场类型', width: 100}
@@ -133,8 +135,14 @@
 
         form.on('submit(search)', function (data) {
             layer.msg('正在查询，请稍后...');
-            data.field.startTime = new Date(data.field.startTime).getTime();
-            data.field.endTime = new Date(data.field.endTime).getTime();
+            if (data.field.startTime != "" && data.field.endTime != "") {
+                data.field.startTime = new Date(data.field.startTime).getTime();
+                data.field.endTime = new Date(data.field.endTime).getTime();
+            }
+            if (data.field.leaveStartTime != "" && data.field.leaveEndTime != "") {
+                data.field.leaveStartTime = new Date(data.field.leaveStartTime).getTime();
+                data.field.leaveEndTime = new Date(data.field.leaveEndTime).getTime();
+            }
             table.reload('tableId', {
                 url: '/carnum/list',
                 where: data.field,
@@ -158,7 +166,7 @@
 <script type="text/html" id="lTimeTemp">
     {{#
     var date = new Date();
-    date.setTime(d.lTime);
+    date.setTime(d.ltime);
     return date.toLocaleString();
     }}
 </script>
