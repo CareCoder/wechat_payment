@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>收费报表</title>
@@ -25,13 +25,50 @@
     <!--模糊搜索区域-->
     <div class="layui-row">
         <form class="layui-form layui-col-md12 ok-search">
-            <input name="chargePersonnel" class="layui-input" placeholder="收费员的名称" autocomplete="off">
-            <select name="chargeType">
-                <option value="CASH_PAYMENT">线下支付</option>
-                <option value="ONLINE_PAYMENT">线上支付</option>
-            </select>
-            <input name="startTime" class="layui-input" placeholder="入场时间" autocomplete="off" id="startTime">
-            <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
+            <div class="layui-form-item">
+                <label class="layui-form-label">车辆类型</label>
+                <select name="carType">
+                    <option th:each="vo,it : ${fixedCars}" th:value="${vo.carType}" th:text="${vo.customName}"></option>
+                    <option value="TEMP_CAR_A">蓝牌</option>
+                    <option value="TEMP_CAR_B">黄牌</option>
+                    <option value="TEMP_CAR_C">黑牌</option>
+                    <option value="TEMP_CAR_D">绿牌</option>
+                </select>
+                <div class="layui-inline">
+                    <label class="layui-form-label">出场时间</label>
+                    <div class="layui-input-inline">
+                        <input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
+                    </div>
+                    <div class="layui-form-mid">至</div>
+                    <div class="layui-input-inline">
+                        <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出口</label>
+                <div class="layui-input-block">
+                    <select name="leavePass">
+                        <option th:each="vo,it : ${accessTypes}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">场内车辆</label>
+                <div class="layui-input-inline">
+                    <input type="checkbox" name="isEnter" title="场内">
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">入场时间</label>
+                    <div class="layui-input-inline">
+                        <input name="leaveStartTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="leaveStartTime">
+                    </div>
+                    <div class="layui-form-mid">至</div>
+                    <div class="layui-input-inline">
+                        <input name="leaveEndTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="leaveEndTime">
+                    </div>
+                </div>
+            </div>
             <button class="layui-btn" lay-submit="" lay-filter="search">
                 <i class="layui-icon layui-icon-search"></i>
             </button>
@@ -56,18 +93,18 @@
         var laydate = layui.laydate;
         table.render({
             elem: '#tableId',
-            url: '/report/charge/list?carType=' + carType,
+            url: '/carnum/list/',
             limit: 5,
             page: true,
             cols: [
                 [
                     {field: 'id', title: 'ID', width: 80},
                     {field: 'carNum', title: '车牌号', width: 150},
-                    {field: 'time', title: '续费时间', width: 250, templet: '#timeTemp'},
-                    {field: 'fee', title: '收费金额', width: 100},
-                    {field: 'chargeType', title: '收费类型', width: 100, templet: '#chargeTypeTemp'},
-                    {field: 'discountAmount', title: '优惠金额', width: 100},
-                    {field: 'chargePersonnel', title: '收费人员', width: 100}
+                    {field: 'time', title: '入场时间', width: 250, templet: '#timeTemp'},
+                    {field: 'lTime', title: '出场时间', width: 250, templet: '#lTimeTemp'},
+                    {field: 'enterPass', title: '入口通道', width: 100},
+                    {field: 'leavePass', title: '出口通道', width: 100},
+                    {field: 'enterWay', title: '入场类型', width: 100}
                 ]
             ],
             done: function (res, curr, count) {
@@ -84,12 +121,22 @@
             type: "datetime"
         });
 
+        laydate.render({
+            elem: '#leaveStartTime',
+            type: "datetime"
+        });
+
+        laydate.render({
+            elem: '#leaveEndTime',
+            type: "datetime"
+        });
+
         form.on('submit(search)', function (data) {
             layer.msg('正在查询，请稍后...');
             data.field.startTime = new Date(data.field.startTime).getTime();
             data.field.endTime = new Date(data.field.endTime).getTime();
             table.reload('tableId', {
-                url: '/report/charge/list?carType=' + carType,
+                url: '/carnum/list',
                 where: data.field,
                 page: {
                     curr: 1
@@ -108,15 +155,11 @@
     return date.toLocaleString();
     }}
 </script>
-<script type="text/html" id="carType">
+<script type="text/html" id="lTimeTemp">
     {{#
-        return fixedcarData.get(d.carType);
-    }}
-</script>
-
-<script type="text/html" id="chargeTypeTemp">
-    {{#
-    return d.chargeType == "CASH_PAYMENT"?"线下收费":"线上收费";
+    var date = new Date();
+    date.setTime(d.lTime);
+    return date.toLocaleString();
     }}
 </script>
 </body>
