@@ -1,7 +1,6 @@
 package com.itstyle.service;
 
 import com.itstyle.common.PageResponse;
-import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
@@ -27,8 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +52,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         int status = Status.NORMAL;
         String uuid = UUID.randomUUID().toString();
         carNumExtVo.setUuid(uuid);
-        List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo));
+        CarNumVo queryVo = carNumVo.buildQueryVo();
+        List<CarNumVo> find = carNumMapper.findAll(Example.of(queryVo));
         if (find != null && !find.isEmpty()) {
             Optional<CarNumExtVo> any = find.stream().flatMap(e -> e.getCarNumExtVos().stream())
                     .filter(e -> e.getCarNumType() == carNumExtVo.getCarNumType()).findAny();
@@ -63,16 +61,20 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 return Status.WARN_ALREAD_EXIST;
             }
             if (find.size() == 1) {
-                carNumVo = find.get(0);
+                queryVo = find.get(0);
+                queryVo.setEnterWay(carNumVo.getEnterWay());
+                queryVo.setLeavePass(carNumVo.getLeavePass());
+                queryVo.setEnterPass(carNumVo.getEnterPass());
+                queryVo.setLTime(carNumExtVo.getTime());
             }
         }
 
-        carNumVo.getCarNumExtVos().add(carNumExtVo);
+        queryVo.getCarNumExtVos().add(carNumExtVo);
         try {
-            carNumMapper.save(carNumVo);
+            carNumMapper.save(queryVo);
             fileResourceService.upload(file, uuid);
             //上传收费记录
-            chargeRecord(carNumVo, carNumExtVo, account);
+            chargeRecord(queryVo, carNumExtVo, account);
         } catch (Exception e) {
             status = Status.WARN_ALREAD_EXIST;
         }
@@ -104,7 +106,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         return carNumMapper.findAll(Example.of(carNumVo));
     }
 
-    public List<CarNumVo> query(CarNumQueryVo queryVo) {
+    public Page<CarNumVo> query(CarNumQueryVo queryVo) {
         PageRequest pageRequest = PageResponse.getPageRequest(queryVo.getPage(), queryVo.getLimit());
         Specification<CarNumVo> sp = (root, query, cb) -> {
             List<Predicate> predicate = new ArrayList<>();
@@ -120,11 +122,16 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             if (queryVo.getEndTime() != null) {
                 predicate.add(cb.le(root.get("time").as(Long.class), queryVo.getEndTime()));
             }
+            if (StringUtils.isNotEmpty(queryVo.getLeavePass())) {
+                predicate.add(cb.equal(root.get("leavePass").as(String.class), queryVo.getLeavePass()));
+            }
+            if (queryVo.getLeaveEndTime() != null && queryVo.getLeaveStartTime() != null) {
+                predicate.add(cb.between(root.get("lTime").as(Long.class), queryVo.getLeaveStartTime(), queryVo.getLeaveEndTime()));
+            }
             query.where(predicate.toArray(new Predicate[0]));
             return query.getRestriction();
         };
-        Page<CarNumVo> all = carNumMapper.findAll(sp, pageRequest);
-        return all.getContent();
+        return carNumMapper.findAll(sp, pageRequest);
     }
 
     private void chargeRecord(CarNumVo carNumVo, CarNumExtVo carNumExtVo,Account account) {
@@ -140,5 +147,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         chargeRecord.setFee(carNumVo.getFee());
         chargeRecord.setChargePersonnel(account.getUsername());
         chargeRecordService.upload(chargeRecord);
+    }
+
+    public List<Object> statisticsAccess(Integer count) {
+        return carNumMapper.statisticsAccess(count);
     }
 }

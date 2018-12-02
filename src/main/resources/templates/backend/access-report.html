@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>收费报表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>报表查询</cite></a>
+                <a><cite>出入明细</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 ok-search">
+            <div class="layui-form-item">
+                <label class="layui-form-label">车辆类型</label>
+                <select name="carType">
+                    <option value="">暂无选择</option>
+                    <option th:each="vo,it : ${fixedCars}" th:value="${vo.carType}" th:text="${vo.customName}"></option>
+                    <option value="TEMP_CAR_A">蓝牌</option>
+                    <option value="TEMP_CAR_B">黄牌</option>
+                    <option value="TEMP_CAR_C">黑牌</option>
+                    <option value="TEMP_CAR_D">绿牌</option>
+                </select>
+                <div class="layui-inline">
+                    <label class="layui-form-label">出场时间</label>
+                    <div class="layui-input-inline">
+                        <input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
+                    </div>
+                    <div class="layui-form-mid">至</div>
+                    <div class="layui-input-inline">
+                        <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出口</label>
+                <div class="layui-input-block">
+                    <select name="leavePass">
+                        <option value="">暂无选择</option>
+                        <option th:each="vo,it : ${accessTypes}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">场内车辆</label>
+                <div class="layui-input-inline">
+                    <input type="checkbox" name="isEnter" title="场内">
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">入场时间</label>
+                    <div class="layui-input-inline">
+                        <input name="leaveStartTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="leaveStartTime">
+                    </div>
+                    <div class="layui-form-mid">至</div>
+                    <div class="layui-input-inline">
+                        <input name="leaveEndTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="leaveEndTime">
+                    </div>
+                </div>
+            </div>
+            <button class="layui-btn" lay-submit="" lay-filter="search">
+                <i class="layui-icon layui-icon-search"></i>
+            </button>
+        </form>
+    </div>
+    <!--数据表格-->
+    <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+    var carType = "[[${carType}]]";
+    layui.use(['table', 'form', 'jquery', 'laydate'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        table.render({
+            elem: '#tableId',
+            url: '/carnum/list',
+            limit: 5,
+            page: true,
+            cols: [
+                [
+                    {field: 'id', title: 'ID', width: 80},
+                    {field: 'carNum', title: '车牌号', width: 150},
+                    {field: 'time', title: '入场时间', width: 250, templet: '#timeTemp'},
+                    {field: 'ltime', title: '出场时间', width: 250, templet: '#lTimeTemp'},
+                    {field: 'enterPass', title: '入口通道', width: 100},
+                    {field: 'leavePass', title: '出口通道', width: 100},
+                    {field: 'enterWay', title: '入场类型', width: 100}
+                ]
+            ],
+            done: function (res, curr, count) {
+                $("#countNum").text(count);
+            }
+        });
+        laydate.render({
+            elem: '#startTime',
+            type: "datetime"
+        });
+
+        laydate.render({
+            elem: '#endTime',
+            type: "datetime"
+        });
+
+        laydate.render({
+            elem: '#leaveStartTime',
+            type: "datetime"
+        });
+
+        laydate.render({
+            elem: '#leaveEndTime',
+            type: "datetime"
+        });
+
+        form.on('submit(search)', function (data) {
+            layer.msg('正在查询，请稍后...');
+            if (data.field.startTime != "" && data.field.endTime != "") {
+                data.field.startTime = new Date(data.field.startTime).getTime();
+                data.field.endTime = new Date(data.field.endTime).getTime();
+            }
+            if (data.field.leaveStartTime != "" && data.field.leaveEndTime != "") {
+                data.field.leaveStartTime = new Date(data.field.leaveStartTime).getTime();
+                data.field.leaveEndTime = new Date(data.field.leaveEndTime).getTime();
+            }
+            table.reload('tableId', {
+                url: '/carnum/list',
+                where: data.field,
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+    })
+
+</script>
+<!--模板-->
+<script type="text/html" id="timeTemp">
+    {{#
+    var date = new Date();
+    date.setTime(d.time);
+    return date.toLocaleString();
+    }}
+</script>
+<script type="text/html" id="lTimeTemp">
+    {{#
+    var date = new Date();
+    date.setTime(d.ltime);
+    return date.toLocaleString();
+    }}
+</script>
+</body>
+</html>

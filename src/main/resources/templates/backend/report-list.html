@@ -26,7 +26,7 @@
     </tr>
     <tr>
         <td width="50%" height="50%"><div id="main3" style="width: 100%;height:100%;"></div></td>
-        <td width="50%" height="50%"><div id="main4" style="width: 100%;height:100%;"></div></td>
+        <!--<td width="50%" height="50%"><div id="main4" style="width: 100%;height:100%;"></div></td>-->
     </tr>
 </table>
 <!--js逻辑-->
@@ -34,40 +34,74 @@
 <script src="/lib/nprogress/nprogress.js"></script>
 <script src="/js/echarts.min.js"></script>
 <script>
-    layui.use(['element', 'form', 'jquery', 'laydate'], function () {
-        var form = layui.form;
+    layui.use(['jquery'], function () {
         var $ = layui.jquery;
 
         // 基于准备好的dom，初始化echarts实例
         var myChart1 = echarts.init(document.getElementById('main1'));
         var myChart2 = echarts.init(document.getElementById('main2'));
         var myChart3 = echarts.init(document.getElementById('main3'));
-        var myChart4 = echarts.init(document.getElementById('main4'));
-
+        // var myChart4 = echarts.init(document.getElementById('main4'));
+        var count = 7;
         // 指定图表的配置项和数据
         var option = {
             title: {
-                text: '我是示例'
+                text: '临时车近日报表'
             },
             tooltip: {},
             legend: {
-                data:['销量']
+                data:['收入']
             },
             xAxis: {
-                data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+                data: ["","2","3","4","5","6","7"]
             },
             yAxis: {},
             series: [{
-                name: '销量',
+                name: '收入',
                 type: 'bar',
-                data: [5, 20, 36, 10, 10, 20]
+                data: [5, 20, 36, 10, 10, 20, 30]
             }]
         };
-        // 使用刚指定的配置项和数据显示图表。
-        myChart1.setOption(option);
-        myChart2.setOption(option);
-        myChart3.setOption(option);
-        myChart4.setOption(option);
+
+
+        $.ajax({
+            url: "/report/statistics/temp",
+            data : {
+                count: count
+            },
+            success : function (data) {
+                option.series[0].data = data;
+                option.series[0].name = "收入";
+                option.legend.data[0] = "收入";
+                myChart1.setOption(option);
+            }
+        });
+
+        $.ajax({
+            url: "/report/statistics/month",
+            data : {
+                count: count
+            },
+            success : function (data) {
+                option.series[0].data = data;
+                option.series[0].name = "收入";
+                option.legend.data[0] = "收入";
+                myChart2.setOption(option);
+            }
+        });
+
+        $.ajax({
+            url: "/report/statistics/access",
+            data : {
+                count: count
+            },
+            success : function (data) {
+                option.series[0].data = data;
+                option.series[0].name = "出入次数";
+                option.legend.data[0] = "出入次数";
+                myChart3.setOption(option);
+            }
+        });
     })
 </script>
 </body>

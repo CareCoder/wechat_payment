@@ -1,5 +1,6 @@
 package com.itstyle.control;
 
+import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
@@ -7,11 +8,15 @@ import com.itstyle.domain.car.manager.CarNumVo;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
 import com.itstyle.domain.car.manager.enums.CarNumType;
+import com.itstyle.domain.caryard.ResponseAccessType;
 import com.itstyle.domain.park.resp.Response;
+import com.itstyle.service.AccessTypeService;
 import com.itstyle.service.CarNumService;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.utils.FeeUtil;
 import com.itstyle.utils.enums.Status;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,13 +36,15 @@ public class CarNumController {
     private CarNumService carNumService;
     @Resource
     private GlobalSettingService globalSettingService;
+    @Resource
+    private AccessTypeService accessTypeService;
 
     @GetMapping("/tempcarinfo.html")
     public String tempcarinfo(CarNumQueryVo queryVo, Model model) {
         if (queryVo.getPage() <= 0) {
             queryVo.setPage(1);
         }
-        List<CarNumVo> carNumVos = carNumService.query(queryVo);
+        List<CarNumVo> carNumVos = carNumService.query(queryVo).getContent();
 //                .stream()
 //                .filter(e -> e.getCarNumExtVos() != null && e.getCarNumExtVos().size() > 1)
 //                .collect(Collectors.toList());
@@ -52,6 +59,14 @@ public class CarNumController {
         return "/backend/tempcarinfo";
     }
 
+    @RequestMapping("/access/report.html")
+    public String accessReport(Model model) {
+        List<FixedCarManager> fixedCars = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
+        model.addAttribute("fixedCars", fixedCars);
+        List<ResponseAccessType> accessTypes = accessTypeService.listNoPage();
+        model.addAttribute("accessTypes", accessTypes);
+        return "/backend/access-report";
+    }
     @GetMapping("/tempcarinfo-payment.html")
     public String tempcarinfo(Long id, Model model) {
         CarNumVo carNumVo = carNumService.findById(id);
@@ -122,5 +137,16 @@ public class CarNumController {
             return Response.build(Status.ERROR, "系统错误", null);
         }
         return Response.build(Status.NORMAL, "", vos);
+    }
+
+    @RequestMapping("/list")
+    @ResponseBody
+    public PageResponse query(CarNumQueryVo queryVo, String isEnter) {
+        if (StringUtils.isEmpty(isEnter)) {
+            queryVo.setLeaveStartTime(null);
+            queryVo.setLeaveEndTime(null);
+        }
+        Page<CarNumVo> page = carNumService.query(queryVo);
+        return PageResponse.build(page);
     }
 }

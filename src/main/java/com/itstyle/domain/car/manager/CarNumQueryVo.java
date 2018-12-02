@@ -11,4 +11,7 @@ public class CarNumQueryVo {
     private CarType carType;
     private Long startTime;
     private Long endTime;
+    private Long leaveStartTime;
+    private Long leaveEndTime;
+    private String leavePass;
 }
