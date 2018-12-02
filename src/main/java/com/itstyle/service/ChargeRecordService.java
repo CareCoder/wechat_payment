@@ -63,4 +63,8 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
         Page<ChargeRecord> all = chargeRecordMapper.findAll(sp, pageRequest);
         return PageResponse.build(all);
     }
+
+    public List<Object> statisticsTemp(Integer carType, Integer count) {
+        return chargeRecordMapper.statisticsTemp(carType, count);
+    }
 }

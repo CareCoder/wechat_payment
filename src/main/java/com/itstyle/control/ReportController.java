@@ -4,6 +4,7 @@ import com.itstyle.common.PageResponse;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
+import com.itstyle.service.CarNumService;
 import com.itstyle.service.ChargeRecordService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,12 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Controller
 @RequestMapping("/report")
 public class ReportController {
     @Resource
     private ChargeRecordService chargeRecordService;
+    @Resource
+    private CarNumService carNumService;
 
     @RequestMapping("/list.html")
     public String reportList() {
@@ -40,5 +44,23 @@ public class ReportController {
                                            String chargePersonnel, Long startTime, Long endTime) {
         return chargeRecordService.query(page, limit, chargeType, carType,
                 chargePersonnel, startTime, endTime);
+    }
+
+    @RequestMapping("/statistics/temp")
+    @ResponseBody
+    public List<Object> statisticsTemp(Integer count) {
+        return chargeRecordService.statisticsTemp(CarType.TEMP_CAR_A.ordinal(), count);
+    }
+
+    @RequestMapping("/statistics/month")
+    @ResponseBody
+    public List<Object> statisticsMonth(Integer count) {
+        return chargeRecordService.statisticsTemp(CarType.MONTH_CAR_A.ordinal(),count);
+    }
+
+    @RequestMapping("/statistics/access")
+    @ResponseBody
+    public List<Object> statisticsAccess(Integer count) {
+        return carNumService.statisticsAccess(count);
     }
 }

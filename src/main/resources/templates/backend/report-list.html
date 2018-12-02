@@ -42,7 +42,7 @@
         var myChart2 = echarts.init(document.getElementById('main2'));
         var myChart3 = echarts.init(document.getElementById('main3'));
         // var myChart4 = echarts.init(document.getElementById('main4'));
-
+        var count = 7;
         // 指定图表的配置项和数据
         var option = {
             title: {
@@ -53,7 +53,7 @@
                 data:['收入']
             },
             xAxis: {
-                data: ["1","2","3","4","5","6","7"]
+                data: ["","2","3","4","5","6","7"]
             },
             yAxis: {},
             series: [{
@@ -63,14 +63,45 @@
             }]
         };
 
-        // 使用刚指定的配置项和数据显示图表。
-        myChart1.setOption(option);
 
+        $.ajax({
+            url: "/report/statistics/temp",
+            data : {
+                count: count
+            },
+            success : function (data) {
+                option.series[0].data = data;
+                option.series[0].name = "收入";
+                option.legend.data[0] = "收入";
+                myChart1.setOption(option);
+            }
+        });
 
+        $.ajax({
+            url: "/report/statistics/month",
+            data : {
+                count: count
+            },
+            success : function (data) {
+                option.series[0].data = data;
+                option.series[0].name = "收入";
+                option.legend.data[0] = "收入";
+                myChart2.setOption(option);
+            }
+        });
 
-        myChart2.setOption(option);
-        myChart3.setOption(option);
-        // myChart4.setOption(option);
+        $.ajax({
+            url: "/report/statistics/access",
+            data : {
+                count: count
+            },
+            success : function (data) {
+                option.series[0].data = data;
+                option.series[0].name = "出入次数";
+                option.legend.data[0] = "出入次数";
+                myChart3.setOption(option);
+            }
+        });
     })
 </script>
 </body>

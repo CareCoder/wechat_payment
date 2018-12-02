@@ -148,4 +148,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         chargeRecord.setChargePersonnel(account.getUsername());
         chargeRecordService.upload(chargeRecord);
     }
+
+    public List<Object> statisticsAccess(Integer count) {
+        return carNumMapper.statisticsAccess(count);
+    }
 }
