@@ -14,6 +14,9 @@ public class SystemLoggerHelper {
 
     public static void log(String action, String tDescribe) {
         Account account = CustomContext.getAccount();
+        if (account == null) {
+            return;
+        }
         SysLogger log = new SysLogger(account.getUsername(), account.getRoleId(), action, tDescribe, new Date());
         SystemLogQueue.SYSTEM_LOG_QUEUE.add(log);
     }
