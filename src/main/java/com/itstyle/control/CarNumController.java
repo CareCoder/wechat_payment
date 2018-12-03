@@ -1,6 +1,7 @@
 package com.itstyle.control;
 
 import com.itstyle.common.PageResponse;
+import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
@@ -101,6 +102,7 @@ public class CarNumController {
         } catch (Exception e) {
             return Response.build(status, "系统错误", null);
         }
+        SystemLoggerHelper.log("上传", "上传临时车辆信息");
         return Response.build(status, "", null);
     }
 

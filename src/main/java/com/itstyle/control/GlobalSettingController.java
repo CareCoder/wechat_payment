@@ -1,6 +1,7 @@
 package com.itstyle.control;
 
 import com.itstyle.common.PageResponse;
+import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.car.manager.BanListManager;
 import com.itstyle.domain.car.manager.Fastigium;
@@ -34,6 +35,7 @@ public class GlobalSettingController {
     @ResponseBody
     public void fastigiumSet(Fastigium param) {
         globalSettingService.set(YstCommon.FASTIGIUM_KEY, param);
+        SystemLoggerHelper.log("配置", "配置高峰期管理");
     }
 
     @GetMapping("/get/banlist")
@@ -46,6 +48,7 @@ public class GlobalSettingController {
     @ResponseBody
     public void banlistGet(BanListManager param) {
         globalSettingService.set(YstCommon.BANLISTMANAGER_KEY, param);
+        SystemLoggerHelper.log("配置", "配置禁入车辆");
     }
 
 
@@ -79,6 +82,7 @@ public class GlobalSettingController {
             }
         }
         globalSettingService.set(YstCommon.FIXEDCARMANAGER_KEY, f);
+        SystemLoggerHelper.log("更新", "更新固定车辆名称");
     }
 
     @GetMapping("/get/fixedcar/data")
@@ -104,5 +108,6 @@ public class GlobalSettingController {
     @ResponseBody
     public void specialcarSet(String keyWords) {
         globalSettingService.set(YstCommon.SPECAL_CAR, keyWords);
+        SystemLoggerHelper.log("更新", "更新特殊车辆");
     }
 }
