@@ -1,6 +1,7 @@
 package com.itstyle.control;
 
 import com.itstyle.common.PageResponse;
+import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.FixedCarManager;
@@ -60,6 +61,7 @@ public class MonthCarInfoController {
     @ResponseBody
     public void delete(@PathVariable("id") Long id) {
         monthCarInfoService.delete(id);
+        SystemLoggerHelper.log("删除", "删除月租车"+id);
     }
 
     @GetMapping("/find/{id}")
@@ -77,6 +79,7 @@ public class MonthCarInfoController {
     @ResponseBody
     public void edit(MonthCarInfo monthCarInfo) {
         monthCarInfoService.edit(monthCarInfo);
+        SystemLoggerHelper.log("更新", "更新月租车");
     }
 
     /**
@@ -90,5 +93,6 @@ public class MonthCarInfoController {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
         monthCarInfoService.payment(month, id, account);
+        SystemLoggerHelper.log("续费", "续费月租车"+id);
     }
 }
