@@ -100,6 +100,9 @@ public class AccountServiceImpl implements AccountService {
             BeanUtilIgnore.copyPropertiesIgnoreNull(account, oldAccount);
         } else {
             oldAccount.setRoleId(account.getRoleId());
+            if (account.getRemark() != null) {
+                oldAccount.setRemark(account.getRemark());
+            }
         }
         Account save = accountMapper.save(oldAccount);
         if (save == null) {
