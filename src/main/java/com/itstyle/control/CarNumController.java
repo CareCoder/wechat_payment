@@ -1,5 +1,6 @@
 package com.itstyle.control;
 
+import com.itstyle.common.CustomContext;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
@@ -81,10 +82,15 @@ public class CarNumController {
                 leaveTime = e.getTime();
             }
         }
+
+        String userName = "";
+        if (CustomContext.getAccount() != null) {
+            userName = CustomContext.getAccount().getUsername();
+        }
         model.addAttribute("enterTime", enterTime);
         model.addAttribute("leaveTime", leaveTime);
         model.addAttribute("stopTime", FeeUtil.secondToTime(leaveTime - enterTime));
-        model.addAttribute("userName", "");
+        model.addAttribute("userName", userName);
         model.addAttribute("fee", FeeUtil.convert(carNumVo.getFee()));
         model.addAttribute("vo", carNumVo);
         for (int i = 0; i < carNumVo.getCarNumExtVos().size(); i++) {
