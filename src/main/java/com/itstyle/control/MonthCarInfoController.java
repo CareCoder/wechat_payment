@@ -37,9 +37,9 @@ public class MonthCarInfoController {
         if (id != null) {
             MonthCarInfo monthCarInfo = monthCarInfoService.findById(id);
             model.addAttribute("monthCarInfo", monthCarInfo);
-            List<FixedCarManager> fixedCars = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
-            model.addAttribute("fixedCars", fixedCars);
         }
+        List<FixedCarManager> fixedCars = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
+        model.addAttribute("fixedCars", fixedCars);
         return "/backend/monthcarinfo-edit";
     }
 
