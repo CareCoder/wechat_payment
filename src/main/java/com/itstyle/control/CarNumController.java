@@ -70,7 +70,7 @@ public class CarNumController {
         return "/backend/access-report";
     }
     @GetMapping("/tempcarinfo-payment.html")
-    public String tempcarinfo(Long id, Model model) {
+    public String tempcarinfo(Long id, Model model, HttpSession session) {
         CarNumVo carNumVo = carNumService.findById(id);
         carNumVo.getCarNumExtVos().sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
         long enterTime = 0;
@@ -82,10 +82,10 @@ public class CarNumController {
                 leaveTime = e.getTime();
             }
         }
-
+        Account account = (Account)session.getAttribute(YstCommon.LOGIN_ACCOUNT);
         String userName = "";
-        if (CustomContext.getAccount() != null) {
-            userName = CustomContext.getAccount().getUsername();
+        if (account != null) {
+            userName = account.getUsername();
         }
         model.addAttribute("enterTime", enterTime);
         model.addAttribute("leaveTime", leaveTime);
