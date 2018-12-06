@@ -37,14 +37,14 @@
             <div class="layui-row">
                 <!--第一张图-->
                 <div class="layui-col-md12">
-                    <img th:src="'/file/'+${vo?.carNumExtVos?.get(0)?.uuid}+'.jpg'">
+                    <img th:src="'/file/'+${img0}+'.jpg'">
                 </div>
             </div>
             <br>
             <div class="layui-row">
                 <!--第二张图-->
                 <div class="layui-col-md12">
-                    <img th:src="'/file/'+${vo?.carNumExtVos?.get(1)?.uuid}+'.jpg'">
+                    <img th:src="'/file/'+${img1}+'.jpg'">
                 </div>
             </div>
         </div>
@@ -52,14 +52,14 @@
             <div class="layui-row">
                 <!--第三张图-->
                 <div class="layui-col-md12">
-                    <img th:src="'/file/'+${vo?.carNumExtVos?.get(2)?.uuid}+'.jpg'">
+                    <img th:src="'/file/'+${img2}+'.jpg'">
                 </div>
             </div>
             <br>
             <div class="layui-row">
                 <!--第四张图-->
                 <div class="layui-col-md12">
-                    <img th:src="'/file/'+${vo?.carNumExtVos?.get(3)?.uuid}+'.jpg'">
+                    <img th:src="'/file/'+${img3}+'.jpg'">
                 </div>
             </div>
         </div>
@@ -147,7 +147,7 @@
                 carTypeMap.set("MONTH_CAR_A", fixedcarData.get("MONTH_CAR_A"));
                 carTypeMap.set("MONTH_CAR_B", fixedcarData.get("MONTH_CAR_B"));
                 carTypeMap.set("MONTH_CAR_C", fixedcarData.get("MONTH_CAR_C"));
-                carTypeMap.set("TEMP_CAR_A", fixedcarData.get("TEMP_CAR_A"));
+                carTypeMap.set("VIP_CAR", fixedcarData.get("VIP_CAR"));
                 $("input[name='carType']").val(carTypeMap.get(carType));
             }
         });

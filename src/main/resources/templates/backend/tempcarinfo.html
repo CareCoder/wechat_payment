@@ -85,7 +85,7 @@
             <br>
             <div class="layui-row">
                 <div class="layui-col-md6 layui-col-md-offset3 center">
-                    <button class="layui-btn layui-btn-radius" id="payment_btn" th:attr="data-id=${vo?.id}">去缴费</button>
+                    <button class="layui-btn layui-btn-radius payment_btn" th:attr="data-id=${vo?.id}">去缴费</button>
                 </div>
             </div>
         </div>
@@ -195,7 +195,7 @@
             return false;
         });
 
-        $("#payment_btn").click(function () {
+        $(".payment_btn").click(function () {
             var t_id = $(this).attr("data-id");
             layer.open({
                 title: '临时收费界面',

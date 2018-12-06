@@ -87,6 +87,9 @@ public class CarNumController {
         model.addAttribute("userName", "");
         model.addAttribute("fee", FeeUtil.convert(carNumVo.getFee()));
         model.addAttribute("vo", carNumVo);
+        for (int i = 0; i < carNumVo.getCarNumExtVos().size(); i++) {
+            model.addAttribute("img"+i, carNumVo.getCarNumExtVos().get(i).getUuid());
+        }
         return "/backend/tempcarinfo-payment";
     }
 
