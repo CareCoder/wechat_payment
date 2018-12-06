@@ -86,8 +86,12 @@
 
         form.on('submit(search)', function (data) {
             layer.msg('正在查询，请稍后...');
-            data.field.startTime = new Date(data.field.startTime).getTime();
-            data.field.endTime = new Date(data.field.endTime).getTime();
+            if (data.field.startTime != "") {
+                data.field.startTime = new Date(data.field.startTime).getTime();
+            }
+            if (data.field.endTime != "") {
+                data.field.endTime = new Date(data.field.endTime).getTime();
+            }
             table.reload('tableId', {
                 url: '/report/charge/list?carType=' + carType,
                 where: data.field,
