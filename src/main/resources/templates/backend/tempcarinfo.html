@@ -43,6 +43,7 @@
         <form class="layui-form layui-col-md12 ok-search">
             <div class="layui-form-item">
                 <select name="carType">
+                    <option value="">暂无选择</option>
                     <option th:each="vo,it : ${fixedCars}" th:value="${vo.carType}" th:text="${vo.customName}"></option>
                     <option value="TEMP_CAR_A">蓝牌</option>
                     <option value="TEMP_CAR_B">黄牌</option>
@@ -52,18 +53,24 @@
                 <input name="startTime" class="layui-input" placeholder="入场时间" autocomplete="off" id="startTime">
                 <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
             </div>
-        </form>
-    </div>
-    <div class="layui-row">
-        <form class="layui-form layui-col-md12 ok-search">
             <div class="layui-form-item">
-                <input name="query" class="layui-input" placeholder="车牌" autocomplete="off">
+                <input name="carNum" class="layui-input" placeholder="车牌" autocomplete="off">
                 <button class="layui-btn" lay-submit="" lay-filter="search">
                     <i class="layui-icon layui-icon-search"></i>
                 </button>
             </div>
         </form>
     </div>
+    <!--<div class="layui-row">-->
+        <!--<form class="layui-form layui-col-md12 ok-search">-->
+            <!--<div class="layui-form-item">-->
+                <!--<input name="query" class="layui-input" placeholder="车牌" autocomplete="off">-->
+                <!--<button class="layui-btn" lay-submit="" lay-filter="search">-->
+                    <!--<i class="layui-icon layui-icon-search"></i>-->
+                <!--</button>-->
+            <!--</div>-->
+        <!--</form>-->
+    <!--</div>-->
 
     <div class="layui-row main-body layui-col-space30">
         <div class="layui-col-md3" th:each="vo,it : ${carNumVos}" >
@@ -181,12 +188,16 @@
             value: new Date(parseInt(endTime))
         });
 
-        form.on('submit(search)', function () {
+        form.on('submit(search)', function (data) {
+            if (data.field.startTime != "" && data.field.endTime != "") {
+                data.field.startTime = new Date(data.field.startTime).getTime();
+                data.field.endTime = new Date(data.field.endTime).getTime();
+            }
             var map = new Map();
-            map.set("carNum",carNum);
-            map.set("carType",carType);
-            map.set("startTime",startTime);
-            map.set("endTime",endTime);
+            map.set("carNum",data.field.carNum);
+            map.set("carType",data.field.carType);
+            map.set("startTime",data.field.startTime);
+            map.set("endTime",data.field.endTime);
             var param = "?";
             map.forEach(function(value, key){
                 param = param + key + "=" + value + "&";
@@ -211,6 +222,7 @@
                 }
             });
         });
+        form.render();
     })
 
 </script>
