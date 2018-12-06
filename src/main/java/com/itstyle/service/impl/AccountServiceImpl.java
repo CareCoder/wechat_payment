@@ -82,7 +82,7 @@ public class AccountServiceImpl implements AccountService {
                 md5OldPassword = Md5Util.getMD5(oldPassword);
             } catch (Exception e) {
                 log.error("encryption error", e);
-                throw new BusinessException("加密出错");
+                throw new BusinessException("加密出错.");
             }
             if (oldAccount.getPassword().equals(md5OldPassword)) {
                 String md5NewPassword;
@@ -92,7 +92,7 @@ public class AccountServiceImpl implements AccountService {
                     log.error("encryption error", e);
                     throw new BusinessException("加密出错");
                 }
-                account.setNewPassword(md5NewPassword);
+                oldAccount.setPassword(md5NewPassword);
             } else {
                 throw new BusinessException("旧密码错误");
             }
