@@ -157,12 +157,15 @@
 </script>
 <!--模板-->
 <script type="text/html" id="timeTemp">
+    {{#
+        console.log(d.time);
+    }}
     {{#  if(d.time == "" || d.time == null){ }}
     {{#
     return "";
     }}
     {{#  } }}
-    {{#  if(d.time != "" && d.time == null){ }}
+    {{#  if(d.time != "" && d.time != null){ }}
     {{#
     var date = new Date();
     date.setTime(d.time);
@@ -176,7 +179,7 @@
             return "";
         }}
     {{#  } }}
-    {{#  if(d.ltime != "" && d.ltime == null){ }}
+    {{#  if(d.ltime != "" && d.ltime != null){ }}
         {{#
         var date = new Date();
         date.setTime(d.ltime);
