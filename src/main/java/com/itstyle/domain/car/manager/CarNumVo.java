@@ -25,7 +25,7 @@ public class CarNumVo{
     private String carNum;
     private CarType carType;
     private CarColor carColor;
-    private int fee;
+    private Integer fee;
     private Long time;
     private String enterPass;
     private String leavePass;
@@ -42,11 +42,9 @@ public class CarNumVo{
 
     public CarNumVo buildQueryVo() {
         CarNumVo vo = new CarNumVo();
-        BeanUtils.copyProperties(this, vo);
-        vo.setEnterPass(null);
-        vo.setLeavePass(null);
-        vo.setEnterWay(null);
-        vo.setLTime(null);
+        vo.setCarNum(this.carNum);
+        vo.setCarType(this.carType);
+        vo.setTime(this.time);
         return vo;
     }
 
