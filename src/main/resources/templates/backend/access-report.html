@@ -157,18 +157,32 @@
 </script>
 <!--模板-->
 <script type="text/html" id="timeTemp">
+    {{#  if(d.time == "" || d.time == null){ }}
+    {{#
+    return "";
+    }}
+    {{#  } }}
+    {{#  if(d.time != "" && d.time == null){ }}
     {{#
     var date = new Date();
     date.setTime(d.time);
     return date.toLocaleString();
     }}
+    {{#  } }}
 </script>
 <script type="text/html" id="lTimeTemp">
-    {{#
-    var date = new Date();
-    date.setTime(d.ltime);
-    return date.toLocaleString();
-    }}
+    {{#  if(d.ltime == "" || d.ltime == null){ }}
+        {{#
+            return "";
+        }}
+    {{#  } }}
+    {{#  if(d.ltime != "" && d.ltime == null){ }}
+        {{#
+        var date = new Date();
+        date.setTime(d.ltime);
+        return date.toLocaleString();
+        }}
+    {{#  } }}
 </script>
 </body>
 </html>
