@@ -74,7 +74,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             //上传收费记录
             chargeRecord(saveVo, carNumExtVo, account);
         } catch (Exception e) {
-            status = Status.WARN_ALREAD_EXIST;
+            log.error("upload error",e);
+            status = Status.ERROR;
         }
         return status;
     }
