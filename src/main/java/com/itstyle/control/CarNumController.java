@@ -155,8 +155,8 @@ public class CarNumController {
     @ResponseBody
     public PageResponse query(CarNumQueryVo queryVo, String isEnter) {
         if (StringUtils.isEmpty(isEnter)) {
-            queryVo.setLeaveStartTime(null);
-            queryVo.setLeaveEndTime(null);
+            queryVo.setStartTime(null);
+            queryVo.setEndTime(null);
         }
         Page<CarNumVo> page = carNumService.query(queryVo);
         return PageResponse.build(page);

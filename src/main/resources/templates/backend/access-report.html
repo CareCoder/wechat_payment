@@ -38,11 +38,11 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">出场时间</label>
                     <div class="layui-input-inline">
-                        <input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
+                        <input name="leaveStartTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
                     </div>
                     <div class="layui-form-mid">至</div>
                     <div class="layui-input-inline">
-                        <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
+                        <input name="leaveEndTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
                     </div>
                 </div>
             </div>
@@ -63,11 +63,11 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">入场时间</label>
                     <div class="layui-input-inline">
-                        <input name="leaveStartTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="leaveStartTime">
+                        <input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="leaveStartTime">
                     </div>
                     <div class="layui-form-mid">至</div>
                     <div class="layui-input-inline">
-                        <input name="leaveEndTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="leaveEndTime">
+                        <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="leaveEndTime">
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
-        table.render({
+        var tableIns = table.render({
             elem: '#tableId',
             url: '/carnum/list',
             limit: 5,
@@ -135,16 +135,19 @@
 
         form.on('submit(search)', function (data) {
             layer.msg('正在查询，请稍后...');
-            if (data.field.startTime != "" && data.field.endTime != "") {
+            if (data.field.startTime != "") {
                 data.field.startTime = new Date(data.field.startTime).getTime();
+            }
+            if (data.field.endTime != "") {
                 data.field.endTime = new Date(data.field.endTime).getTime();
             }
-            if (data.field.leaveStartTime != "" && data.field.leaveEndTime != "") {
+            if (data.field.leaveStartTime != "") {
                 data.field.leaveStartTime = new Date(data.field.leaveStartTime).getTime();
+            }
+            if (data.field.leaveEndTime != "") {
                 data.field.leaveEndTime = new Date(data.field.leaveEndTime).getTime();
             }
-            table.reload('tableId', {
-                url: '/carnum/list',
+            tableIns.reload({
                 where: data.field,
                 page: {
                     curr: 1
