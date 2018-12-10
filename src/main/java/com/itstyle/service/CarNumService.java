@@ -11,6 +11,7 @@ import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.mapper.CarNumExtMapper;
 import com.itstyle.mapper.CarNumMapper;
+import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.utils.enums.Status;
 import com.itstyle.utils.hibernate.BaseDaoService;
 import lombok.extern.slf4j.Slf4j;
@@ -52,8 +53,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         int status = Status.NORMAL;
         String uuid = UUID.randomUUID().toString();
         carNumExtVo.setUuid(uuid);
-        CarNumVo queryVo = carNumVo.buildQueryVo();
-        List<CarNumVo> find = carNumMapper.findAll(Example.of(queryVo));
+        List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo.buildQueryVo()));
+        CarNumVo saveVo = new CarNumVo();
         if (find != null && !find.isEmpty()) {
             Optional<CarNumExtVo> any = find.stream().flatMap(e -> e.getCarNumExtVos().stream())
                     .filter(e -> e.getCarNumType() == carNumExtVo.getCarNumType()).findAny();
@@ -61,20 +62,17 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 return Status.WARN_ALREAD_EXIST;
             }
             if (find.size() == 1) {
-                queryVo = find.get(0);
-                queryVo.setEnterWay(carNumVo.getEnterWay());
-                queryVo.setLeavePass(carNumVo.getLeavePass());
-                queryVo.setEnterPass(carNumVo.getEnterPass());
-                queryVo.setLTime(carNumExtVo.getTime());
+                saveVo = find.get(0);
             }
         }
-
-        queryVo.getCarNumExtVos().add(carNumExtVo);
+        carNumVo.setCarNumExtVos(null);//为下一个copy属性准备
+        BeanUtilIgnore.copyPropertiesIgnoreNull(carNumVo, saveVo);
+        saveVo.getCarNumExtVos().add(carNumExtVo);
         try {
-            carNumMapper.save(queryVo);
+            carNumMapper.save(saveVo);
             fileResourceService.upload(file, uuid);
             //上传收费记录
-            chargeRecord(queryVo, carNumExtVo, account);
+            chargeRecord(saveVo, carNumExtVo, account);
         } catch (Exception e) {
             status = Status.WARN_ALREAD_EXIST;
         }
@@ -140,6 +138,10 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         if (carNumExtVo.getCarNumType() != CarNumType.LEAVE_BIG) {
             return;
         }
+        String username = "";
+        if (account != null) {
+            username = account.getUsername();
+        }
         ChargeRecord chargeRecord = new ChargeRecord();
         chargeRecord.setCarNum(carNumVo.getCarNum());
         chargeRecord.setCarType(CarType.TEMP_CAR_A);
@@ -147,7 +149,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         chargeRecord.setEnterTime(carNumVo.getTime());
         chargeRecord.setLeaveTime(carNumExtVo.getTime());
         chargeRecord.setFee(carNumVo.getFee());
-        chargeRecord.setChargePersonnel(account.getUsername());
+        chargeRecord.setChargePersonnel(username);
         chargeRecordService.upload(chargeRecord);
     }
 

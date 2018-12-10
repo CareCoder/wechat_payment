@@ -104,6 +104,7 @@ public class CarNumController {
     public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo, Long leaveTime, HttpServletRequest request) {
         int status = Status.NORMAL;
         try {
+            carNumVo.setLTime(leaveTime);
             carNumExtVo.setTime(leaveTime);//这里不要mvc自动注入 是因为两个注入对象的param相同了
             HttpSession session = request.getSession();
             Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
