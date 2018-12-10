@@ -7,10 +7,11 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Data
 @Entity
-@Table(name = "car_info")
+@Table(name = "car_info", uniqueConstraints = {@UniqueConstraint(columnNames="carNum")})
 @DynamicUpdate
 public class CarInfo extends BaseEntity {
     private String name;
