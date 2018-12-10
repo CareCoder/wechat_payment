@@ -85,7 +85,7 @@
                 <div class="layui-col-md6 grid" th:text="${vo.carNum}">
 
                 </div>
-                <div class="layui-col-md6 grid" th:text="${vo.carNumExtVos?.get(0)?.time}">
+                <div class="layui-col-md6 grid time_div" th:text="${vo.carNumExtVos?.get(0)?.time}">
 
                 </div>
             </div>
@@ -221,6 +221,12 @@
                     $(".layui-laypage-btn")[0].click();
                 }
             });
+        });
+        $(".time_div").each(function () {
+            var time = $(this).html();
+            if (time !== "" && time != null) {
+                $(this).html(new Date(parseInt(time)).toLocaleDateString());
+            }
         });
         form.render();
     })
