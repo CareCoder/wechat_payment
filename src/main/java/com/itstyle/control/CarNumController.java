@@ -73,15 +73,8 @@ public class CarNumController {
     public String tempcarinfo(Long id, Model model, HttpSession session) {
         CarNumVo carNumVo = carNumService.findById(id);
         carNumVo.getCarNumExtVos().sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
-        long enterTime = 0;
-        long leaveTime = 0;
-        for (CarNumExtVo e : carNumVo.getCarNumExtVos()) {
-            if (e.getCarNumType() == CarNumType.ENTER_BIG) {
-                enterTime = e.getTime();
-            } else if (e.getCarNumType() == CarNumType.LEAVE_BIG) {
-                leaveTime = e.getTime();
-            }
-        }
+        Long enterTime = carNumVo.getTime();
+        Long leaveTime = carNumVo.getLTime();
         Account account = (Account)session.getAttribute(YstCommon.LOGIN_ACCOUNT);
         String userName = "";
         if (account != null) {
