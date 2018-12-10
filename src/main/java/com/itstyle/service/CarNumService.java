@@ -123,7 +123,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 predicate.add(cb.le(root.get("time").as(Long.class), queryVo.getEndTime()));
             }
             if (StringUtils.isNotEmpty(queryVo.getLeavePass())) {
-                predicate.add(cb.equal(root.get("leavePass").as(String.class), queryVo.getLeavePass()));
+                Predicate p1 = cb.equal(root.get("leavePass").as(String.class), queryVo.getLeavePass());
+                Predicate p2 = cb.equal(root.get("enterPass").as(String.class), queryVo.getLeavePass());
+                predicate.add(cb.or(p1,p2));
             }
             if (queryVo.getLeaveEndTime() != null && queryVo.getLeaveStartTime() != null) {
                 predicate.add(cb.between(root.get("lTime").as(Long.class), queryVo.getLeaveStartTime(), queryVo.getLeaveEndTime()));
