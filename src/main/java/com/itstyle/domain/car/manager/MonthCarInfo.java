@@ -7,6 +7,7 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 
 /**
@@ -14,7 +15,7 @@ import javax.persistence.Table;
  */
 @Data
 @Entity
-@Table(name = "month_car_info")
+@Table(name = "month_car_info", uniqueConstraints = {@UniqueConstraint(columnNames="carNum")})
 @DynamicUpdate
 public class MonthCarInfo extends BaseEntity {
     private String name;
