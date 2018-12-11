@@ -16,6 +16,7 @@ import com.itstyle.utils.enums.Status;
 import com.itstyle.utils.hibernate.BaseDaoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.jpa.criteria.OrderImpl;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,7 +119,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             }
             if (queryVo.getStartTime() != null && queryVo.getEndTime() != null) {
                 Predicate p1 = cb.between(root.get("time").as(Long.class), queryVo.getStartTime(), queryVo.getEndTime());
-                Predicate p2 = cb.isNull(root.get("time").as(Long.class));
+                Predicate p2 = cb.isNull(root.get("lTime").as(Long.class));
                 predicate.add(cb.and(p1,p2));
             }
             if (StringUtils.isNotEmpty(queryVo.getLeavePass())) {
@@ -128,6 +130,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             if (queryVo.getLeaveEndTime() != null && queryVo.getLeaveStartTime() != null) {
                 predicate.add(cb.between(root.get("lTime").as(Long.class), queryVo.getLeaveStartTime(), queryVo.getLeaveEndTime()));
             }
+            query.groupBy(root.get("carNum"));
+            query.orderBy(cb.desc(root.get("lTime")));
             query.where(predicate.toArray(new Predicate[0]));
             return query.getRestriction();
         };
