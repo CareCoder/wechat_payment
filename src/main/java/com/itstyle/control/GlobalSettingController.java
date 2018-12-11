@@ -108,6 +108,6 @@ public class GlobalSettingController {
     @ResponseBody
     public void specialcarSet(String keyWords) {
         globalSettingService.set(YstCommon.SPECAL_CAR, keyWords);
-        SystemLoggerHelper.log("更新", "更新特殊车辆");
+        SystemLoggerHelper.log("更新", "更新特殊车辆关键字");
     }
 }

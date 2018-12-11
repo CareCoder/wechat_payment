@@ -43,7 +43,7 @@ public class AccessTypeController {
         AssertUtil.assertNotNull(accessType.getChannelTypeId(), () -> new BusinessException("通道类型不能为空"));
         AssertUtil.assertNotNull(accessType.getIp(), () -> new BusinessException("IP地址不能为空"));
         accessTypeService.save(accessType);
-        SystemLoggerHelper.log("保存", "创建出入通道");
+        SystemLoggerHelper.log("保存", "创建出入通道:" + accessType.getChannelName());
         return Response.build(Status.NORMAL, null, null);
     }
 
@@ -55,7 +55,7 @@ public class AccessTypeController {
         AssertUtil.assertNotNull(accessType.getChannelTypeId(), () -> new BusinessException("通道类型不能为空"));
         AssertUtil.assertNotNull(accessType.getIp(), () -> new BusinessException("IP地址不能为空"));
         accessTypeService.edit(accessType);
-        SystemLoggerHelper.log("修改", "修改出入通道");
+        SystemLoggerHelper.log("修改", "修改出入通道:" + accessType.getChannelName());
         return Response.build(Status.NORMAL, null, null);
     }
 
@@ -63,8 +63,8 @@ public class AccessTypeController {
     @ResponseBody
     public Response delete(@PathVariable("id") Long id) {
         AssertUtil.assertNotNull(id, () -> new BusinessException("删除的id不能为空"));
-        accessTypeService.delete(id);
-        SystemLoggerHelper.log("删除", "删除出入通道");
+        AccessType accessType = accessTypeService.delete(id);
+        SystemLoggerHelper.log("删除", "删除出入通道:" + accessType.getChannelName());
         return Response.build(Status.NORMAL, null, null);
     }
 

@@ -63,8 +63,9 @@ public class MonthCarInfoController {
     @GetMapping("/delete/{id}")
     @ResponseBody
     public void delete(@PathVariable("id") Long id) {
+        MonthCarInfo carInfo = monthCarInfoService.findById(id);
         monthCarInfoService.delete(id);
-        SystemLoggerHelper.log("删除", "删除月租车"+id);
+        SystemLoggerHelper.log("删除", "删除月租车:"+carInfo.getCarNum());
     }
 
     @GetMapping("/find/{id}")
@@ -86,7 +87,7 @@ public class MonthCarInfoController {
         } catch (DataIntegrityViolationException exception) {
             httpResponse.setStatus(503);
         }
-        SystemLoggerHelper.log("更新", "更新月租车");
+        SystemLoggerHelper.log("更新", "更新月租车:" + monthCarInfo.getCarNum());
     }
 
     /**
@@ -100,6 +101,7 @@ public class MonthCarInfoController {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
         monthCarInfoService.payment(month, id, account);
-        SystemLoggerHelper.log("续费", "续费月租车"+id);
+        MonthCarInfo byId = monthCarInfoService.findById(id);
+        SystemLoggerHelper.log("续费", "续费月租车:"+ byId.getCarNum() + "续费"+ month +"月");
     }
 }

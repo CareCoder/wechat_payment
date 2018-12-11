@@ -69,8 +69,10 @@ public class AccessTypeServiceImpl implements AccessTypeService {
     }
 
     @Override
-    public void delete(Long id) {
+    public AccessType delete(Long id) {
+        AccessType one = accessTypeMapper.getOne(id);
         accessTypeMapper.delete(id);
+        return one;
     }
 
     @Override

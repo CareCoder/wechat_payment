@@ -67,7 +67,7 @@ public class AccountController {
         AssertUtil.assertNotNull(requestAccount.getRoleId(), () -> new BusinessException("类型不能为空"));
         RequestAccount account = accountService.edit(requestAccount);
         log.info("[AccountController] edit success [{}]", account);
-        SystemLoggerHelper.log("修改", "修改管理员");
+        SystemLoggerHelper.log("修改", "修改管理员密码:");
         return Response.build(Status.NORMAL, null, null);
     }
 

@@ -47,21 +47,22 @@ public class CarInfoController {
         } catch (DataIntegrityViolationException exception) {
             httpResponse.setStatus(503);
         }
-        SystemLoggerHelper.log("添加", "添加车辆信息");
+        SystemLoggerHelper.log("添加", "添加车辆管理信息:" + carInfo.getCarNum());
     }
 
     @RequestMapping("/delete/{id}")
     @ResponseBody
     public void delete(@PathVariable ("id") Long id) {
+        CarInfo byId = carInfoService.getById(id);
         carInfoService.delete(id);
-        SystemLoggerHelper.log("删除", "删除车辆信息"+id);
+        SystemLoggerHelper.log("删除", "删除车辆管理信息:" + byId.getCarNum());
     }
 
     @RequestMapping("/update")
     @ResponseBody
     public void update(CarInfo carInfo) {
         carInfoService.update(carInfo);
-        SystemLoggerHelper.log("更新", "更新车辆信息"+carInfo.getId());
+        SystemLoggerHelper.log("更新", "更新车辆信息"+carInfo.getCarNum());
     }
 
     @RequestMapping("/carinfo/{type}")

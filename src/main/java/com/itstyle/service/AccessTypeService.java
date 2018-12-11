@@ -16,7 +16,7 @@ public interface AccessTypeService {
 
     void edit(AccessType accessType);
 
-    void delete(Long id);
+    AccessType delete(Long id);
 
     AccessType getById(Long id);
 

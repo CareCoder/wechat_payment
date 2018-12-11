@@ -50,7 +50,7 @@ public class VersionController {
         versionInfo.setVersionCode(versionCode);
         versionInfo.setUuid(uuid);
         redisDao.set(YstCommon.VERSION_INFO, gson.toJson(versionInfo));
-        SystemLoggerHelper.log("文件上传", "版本发布");
+        SystemLoggerHelper.log("文件上传", "版本发布:" + versionCode);
         return Response.build(Status.NORMAL, null, null);
     }
 
