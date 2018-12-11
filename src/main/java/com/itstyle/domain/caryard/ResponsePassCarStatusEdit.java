@@ -6,11 +6,13 @@ import lombok.Data;
 public class ResponsePassCarStatusEdit {
     private Long id;
     private Long accessTypeId;
-    private Integer entrance_tempCar_1;
-    private Integer entrance_monlyCar_1;
-    private Integer entrance_specialCar_1;
-    private Integer entrance_tempCar_2;
-    private Integer entrance_monlyCar_2;
-    private Integer entrance_specialCar_2;
+    private Integer blueCar;
+    private Integer yellowCar;
+    private Integer greenCar;
+    private Integer blackCar;
+    private Integer monlyCar_A;
+    private Integer monlyCar_B;
+    private Integer monlyCar_C;
+    private Integer specialCar;
     private Long channelTypeId;
 }

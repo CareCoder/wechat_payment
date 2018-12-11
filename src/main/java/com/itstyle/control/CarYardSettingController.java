@@ -1,8 +1,10 @@
 package com.itstyle.control;
 
+import com.google.gson.Gson;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
+import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.caryard.*;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.exception.AssertUtil;
@@ -16,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -48,7 +52,13 @@ public class CarYardSettingController {
     }
 
     @GetMapping("/permission/page")
-    public String getCarPassPermissionPage() {
+    public String getCarPassPermissionPage(Model model) {
+        List<FixedCarManager> f = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
+        if (f != null && f.size() > 3) {
+            model.addAttribute("MONTH_CAR_A", f.get(0));
+            model.addAttribute("MONTH_CAR_B", f.get(1));
+            model.addAttribute("MONTH_CAR_C", f.get(2));
+        }
         return "/backend/pass-permission";
     }
 
