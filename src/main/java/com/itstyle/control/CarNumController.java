@@ -58,6 +58,9 @@ public class CarNumController {
         model.addAttribute("queryVo", queryVo);
         List<FixedCarManager> fixedCars = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
         model.addAttribute("fixedCars", fixedCars);
+
+        long totleCount = carNumService.getCount();
+        model.addAttribute("maxPage", Math.ceil(totleCount / 4));
         return "/backend/tempcarinfo";
     }
 

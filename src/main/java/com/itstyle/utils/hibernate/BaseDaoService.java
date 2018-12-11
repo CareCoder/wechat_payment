@@ -40,4 +40,8 @@ public class BaseDaoService<BEAN, ID extends Serializable> {
     public void setJpaRepository(JpaRepository<BEAN, ID> jpaRepository) {
         this.jpaRepository = jpaRepository;
     }
+
+    public long getCount() {
+        return jpaRepository.count();
+    }
 }
