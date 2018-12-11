@@ -142,38 +142,38 @@
         form.on('submit(add)', function (data) {
             if (data.field.accessTypeId == "0") {
                 layer.msg("请选择通道名称", {icon: 2, time: 2000});
-                return;
-            }
-            var edit_form = data.form;
-            var json = {};
-            for (var i = 0; i < edit_form.length - 4; i++) {
-                if (edit_form[i].name == "accessTypeId") {
-                    json[edit_form[i].name] = edit_form[i].value.split(",")[0];
-                    continue;
+            } else {
+                var edit_form = data.form;
+                var json = {};
+                for (var i = 0; i < edit_form.length - 4; i++) {
+                    if (edit_form[i].name == "accessTypeId") {
+                        json[edit_form[i].name] = edit_form[i].value.split(",")[0];
+                        continue;
+                    }
+                    json[edit_form[i].name] = edit_form[i].checked ? 1 : 0;
                 }
-                json[edit_form[i].name] = edit_form[i].checked ? 1 : 0;
-            }
-            $.ajax({
-                url : "/set/permission/add",
-                type : "POST",
-                data : json,
-                success : function(resp){
-                    if (resp.status == 200) {
-                        layer.msg("添加成功！", {icon: 6, time: 1000, anim: 4}, function () {
-                            window.parent.location.reload();
+                $.ajax({
+                    url : "/set/permission/add",
+                    type : "POST",
+                    data : json,
+                    success : function(resp){
+                        if (resp.status == 200) {
+                            layer.msg("添加成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                                window.parent.location.reload();
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        }
+                        if (resp.status == 500) {
+                            layer.msg(resp.msg, {icon: 2, time: 2000});
+                        }
+                    },
+                    error : function(){
+                        layer.msg("添加失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     }
-                    if (resp.status == 500) {
-                        layer.msg(resp.msg, {icon: 2, time: 2000});
-                    }
-                },
-                error : function(){
-                    layer.msg("添加失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
-                        parent.layer.close(parent.layer.getFrameIndex(window.name));
-                    });
-                }
-            });
+                });
+            }
             return false;
         });
     })
