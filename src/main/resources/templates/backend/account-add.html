@@ -96,27 +96,32 @@
         });
 
         form.on('submit(add)', function (data) {
-            $.ajax({
-                url : "/account/save",
-                type : "POST",
-                data : data.field,
-                success : function(resp){
-                    if (resp.status == 200) {
-                        layer.msg("添加成功！", {icon: 6, time: 1000, anim: 4}, function () {
-                            window.parent.location.reload();
+            var roleId = '[[${session?.login_account?.roleId}]]';
+            if (data.field.roleId == "1" && roleId != "1") {
+                layer.msg("普通用户不能创建管理员账户", {icon: 2, time: 2000});
+            } else {
+                $.ajax({
+                    url : "/account/save",
+                    type : "POST",
+                    data : data.field,
+                    success : function(resp){
+                        if (resp.status == 200) {
+                            layer.msg("添加成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                                window.parent.location.reload();
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        }
+                        if (resp.status == 500) {
+                            layer.msg(resp.msg, {icon: 2, time: 2000});
+                        }
+                    },
+                    error : function(){
+                        layer.msg("添加失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         });
                     }
-                    if (resp.status == 500) {
-                        layer.msg(resp.msg, {icon: 2, time: 2000});
-                    }
-                },
-                error : function(){
-                    layer.msg("添加失败！请联系管理员", {icon: 2, time: 1000, anim: 4}, function () {
-                        parent.layer.close(parent.layer.getFrameIndex(window.name));
-                    });
-                }
-            });
+                });
+            }
             return false;
         });
     })
