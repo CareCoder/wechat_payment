@@ -1,7 +1,6 @@
 package com.itstyle.service;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.CarInfo;
@@ -9,13 +8,13 @@ import com.itstyle.domain.car.manager.Fastigium;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
-import com.itstyle.domain.feesettings.response.SZChargesResponse;
-import com.itstyle.utils.BeanUtilIgnore;
-import com.itstyle.vo.charges.reponse.ChargeRuleVo;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.incrementmonly.response.MonlyCarAddInfo;
 import com.itstyle.vo.incrementmonly.response.MonlyCarRenewInfo;
-import com.itstyle.vo.inition.response.*;
+import com.itstyle.vo.inition.response.AccessAuthoritySetup;
+import com.itstyle.vo.inition.response.ForbidenVehicle;
+import com.itstyle.vo.inition.response.Inition;
+import com.itstyle.vo.inition.response.VehicleManagement;
 import com.itstyle.vo.syncarinfo.response.BlackListVehicle;
 import com.itstyle.vo.syncarinfo.response.FreeVehicle;
 import com.itstyle.vo.syncarinfo.response.MonlyCarInfo;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -93,12 +91,14 @@ public class ExternalInterfaceService {
                 accessAuthoritySetup.setCameraIp(responsePassCarStatus.getCamera());
                 accessAuthoritySetup.setName(responsePassCarStatus.getChannelName());
                 accessAuthoritySetup.setType(responsePassCarStatus.getChannelTypeName());
-                accessAuthoritySetup.setTempCar_1(isAllow(responsePassCarStatus.getEntrance_tempCar_1()));
-                accessAuthoritySetup.setTempCar_2(isAllow(responsePassCarStatus.getEntrance_tempCar_2()));
-                accessAuthoritySetup.setMonlyCar_1(isAllow(responsePassCarStatus.getEntrance_monlyCar_1()));
-                accessAuthoritySetup.setMonlyCar_2(isAllow(responsePassCarStatus.getEntrance_monlyCar_2()));
-                accessAuthoritySetup.setSpecialCar_1(isAllow(responsePassCarStatus.getEntrance_specialCar_1()));
-                accessAuthoritySetup.setSpecialCar_2(isAllow(responsePassCarStatus.getEntrance_specialCar_2()));
+                accessAuthoritySetup.setBlueCar(isAllow(responsePassCarStatus.getBlueCar()));
+                accessAuthoritySetup.setYellowCar(isAllow(responsePassCarStatus.getYellowCar()));
+                accessAuthoritySetup.setGreenCar(isAllow(responsePassCarStatus.getGreenCar()));
+                accessAuthoritySetup.setBlackCar(isAllow(responsePassCarStatus.getBlackCar()));
+                accessAuthoritySetup.setMonlyCar_A(isAllow(responsePassCarStatus.getMonlyCar_A()));
+                accessAuthoritySetup.setMonlyCar_B(isAllow(responsePassCarStatus.getMonlyCar_B()));
+                accessAuthoritySetup.setMonlyCar_C(isAllow(responsePassCarStatus.getMonlyCar_C()));
+                accessAuthoritySetup.setSpecialCar(isAllow(responsePassCarStatus.getSpecialCar()));
                 return accessAuthoritySetup;
             }).collect(Collectors.toList());
         }

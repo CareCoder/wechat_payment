@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>添加用户</title>
@@ -34,16 +34,18 @@
                 <th lay-data="{field:'id', width:80, align:'center'}" rowspan="2">ID</th>
                 <th lay-data="{field:'channelName', width:160, align:'center'}" rowspan="2">通道名称</th>
                 <th lay-data="{field:'channelTypeName', width:160, align:'center'}" rowspan="2">通道类型</th>
-                <th lay-data="{align:'center'}" colspan="7">可通过的车辆类型</th>
+                <th lay-data="{align:'center'}" colspan="8">可通过的车辆类型</th>
                 <th lay-data="{fixed:'right', width: 160, align: 'center', templet:'#operationTpl'}" rowspan="2">操作</th>
             </tr>
             <tr>
-                <th lay-data="{field:'entrance_tempCar_1', width:150, align:'center', templet:'#entrance_tempCar_1Icon'}">临时车_1</th>
-                <th lay-data="{field:'entrance_monlyCar_1', width:150, align:'center', templet:'#entrance_monlyCar_1Icon'}">月卡车_1</th>
-                <th lay-data="{field:'entrance_specialCar_1', width:150, align:'center', templet:'#entrance_specialCar_1Icon'}">特种车_1</th>
-                <th lay-data="{field:'entrance_tempCar_2', width:150, align:'center', templet:'#entrance_tempCar_2Icon'}">临时车_2</th>
-                <th lay-data="{field:'entrance_monlyCar_2', width:150, align:'center', templet:'#entrance_monlyCar_2Icon'}">月卡车_2</th>
-                <th lay-data="{field:'entrance_specialCar_2', width:150, align:'center', templet:'#entrance_specialCar_2Icon'}">特种车_2</th>
+                <th lay-data="{field:'blueCar', width:130, align:'center', templet:'#blueCarIcon'}">蓝牌</th>
+                <th lay-data="{field:'yellowCar', width:130, align:'center', templet:'#yellowCarIcon'}">黄牌</th>
+                <th lay-data="{field:'blackCar', width:130, align:'center', templet:'#blackCarIcon'}">黑牌</th>
+                <th lay-data="{field:'greenCar', width:130, align:'center', templet:'#greenCarIcon'}" id="hello">绿牌</th>
+                <th lay-data="{field:'monlyCar_A', width:130, align:'center', templet:'#monlyCar_AIcon'}" th:text="${MONTH_CAR_A?.typeName}"></th>
+                <th lay-data="{field:'monlyCar_B', width:130, align:'center', templet:'#monlyCar_BIcon'}" th:text="${MONTH_CAR_B?.typeName}"></th>
+                <th lay-data="{field:'monlyCar_C', width:130, align:'center', templet:'#monlyCar_CIcon'}" th:text="${MONTH_CAR_C?.typeName}"></th>
+                <th lay-data="{field:'specialCar', width:130, align:'center', templet:'#specialCarIcon'}">贵宾车</th>
             </tr>
         </thead>
     </table>
@@ -58,7 +60,6 @@
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
-
         form.on('submit(search)', function () {
             layer.msg('正在查询，请稍后...');
             return false;
@@ -122,43 +123,57 @@
         })
     })
 </script>
-<script type="text/html" id="entrance_tempCar_1Icon">
-    {{# if(d.entrance_tempCar_1 == '1'){ }}
+<script type="text/html" id="blueCarIcon">
+    {{# if(d.blueCar == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
     {{# } }}
 </script>
-<script type="text/html" id="entrance_monlyCar_1Icon">
-    {{# if(d.entrance_monlyCar_1 == '1'){ }}
+<script type="text/html" id="yellowCarIcon">
+    {{# if(d.yellowCar == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
     {{# } }}
 </script>
-<script type="text/html" id="entrance_specialCar_1Icon">
-    {{# if(d.entrance_specialCar_1 == '1'){ }}
+<script type="text/html" id="blackCarIcon">
+    {{# if(d.blackCar == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
     {{# } }}
 </script>
-<script type="text/html" id="entrance_tempCar_2Icon">
-    {{# if(d.entrance_tempCar_2 == '1'){ }}
+<script type="text/html" id="greenCarIcon">
+    {{# if(d.greenCar == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
     {{# } }}
 </script>
-<script type="text/html" id="entrance_monlyCar_2Icon">
-    {{# if(d.entrance_monlyCar_2 == '1'){ }}
+<script type="text/html" id="monlyCar_AIcon">
+    {{# if(d.monlyCar_A == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
     {{# } }}
 </script>
-<script type="text/html" id="entrance_specialCar_2Icon">
-    {{# if(d.entrance_specialCar_2 == '1'){ }}
+<script type="text/html" id="monlyCar_BIcon">
+    {{# if(d.monlyCar_B == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="monlyCar_CIcon">
+    {{# if(d.monlyCar_C == '1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else{ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>
+<script type="text/html" id="specialCarIcon">
+    {{# if(d.specialCar == '1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
