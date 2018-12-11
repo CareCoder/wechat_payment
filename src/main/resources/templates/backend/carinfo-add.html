@@ -33,7 +33,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">车牌号码</label>
             <div class="layui-input-block">
-                <input type="text" name="carNum" placeholder="请输入车牌号码" autocomplete="off" class="layui-input" lay-verify="required">
+                <input type="text" name="carNum" placeholder="请输入车牌号码" autocomplete="off" class="layui-input" lay-verify="required|carNum">
             </div>
         </div>
         <div class="layui-form-item">
@@ -84,7 +84,11 @@
         });
 
         form.verify({
-            birthdayVerify: [/^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))(\s(([01]\d{1})|(2[0123])):([0-5]\d):([0-5]\d))?$/, '日期格式不正确']
+            birthdayVerify: [/^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))(\s(([01]\d{1})|(2[0123])):([0-5]\d):([0-5]\d))?$/, '日期格式不正确'],
+            carNum: [
+                /^[\S]{7,8}$/
+                ,'车牌只支持7,8位'
+            ]
         });
 
         form.on('submit(add)', function (data) {
@@ -105,7 +109,7 @@
                     });
                 },
                 error:function(){
-                    layer.msg("添加失败！", {icon: 6, time: 1000, anim: 4}, function () {
+                    layer.msg("添加失败！重复添加", {icon: 6, time: 1000, anim: 4}, function () {
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                     });
                 }

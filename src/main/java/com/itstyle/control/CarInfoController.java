@@ -4,6 +4,7 @@ import com.itstyle.common.PageResponse;
 import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.service.CarInfoService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/carinfo")
@@ -39,8 +41,12 @@ public class CarInfoController {
 
     @PostMapping("/save")
     @ResponseBody
-    public void save(CarInfo carInfo) {
-        carInfoService.save(carInfo);
+    public void save(CarInfo carInfo, HttpServletResponse httpResponse) {
+        try {
+            carInfoService.save(carInfo);
+        } catch (DataIntegrityViolationException exception) {
+            httpResponse.setStatus(503);
+        }
         SystemLoggerHelper.log("添加", "添加车辆信息");
     }
 

@@ -8,7 +8,9 @@ import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.service.MonthCarInfoService;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -77,8 +80,12 @@ public class MonthCarInfoController {
      */
     @PostMapping("/edit")
     @ResponseBody
-    public void edit(MonthCarInfo monthCarInfo) {
-        monthCarInfoService.edit(monthCarInfo);
+    public void edit(MonthCarInfo monthCarInfo, HttpServletResponse httpResponse) {
+        try {
+            monthCarInfoService.edit(monthCarInfo);
+        } catch (DataIntegrityViolationException exception) {
+            httpResponse.setStatus(503);
+        }
         SystemLoggerHelper.log("更新", "更新月租车");
     }
 

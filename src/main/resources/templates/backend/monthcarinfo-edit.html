@@ -35,7 +35,7 @@
                 </select>
             </div>
             <div class="layui-input-inline">
-                <input type="text" name="carNum" placeholder="请输入车牌号码" autocomplete="off" class="layui-input" lay-verify="required">
+                <input type="text" name="carNum" placeholder="请输入车牌号码" autocomplete="off" class="layui-input" lay-verify="required|carNum" maxlength="7" minlength="6">
             </div>
         </div>
         <div class="layui-form-item">
@@ -171,6 +171,13 @@
             value: new Date(parseInt(startTime))
         });
 
+        form.verify({
+            carNum: [
+                /^[\S]{6,7}$/
+                ,'车牌只支持7,8位'
+            ]
+        });
+
         form.on('submit(add)', function (data) {
             data.field.endTime = new Date(data.field.endTime).getTime();
             data.field.startTime = new Date(data.field.startTime).getTime();
@@ -187,7 +194,7 @@
                     });
                 },
                 error:function(){
-                    layer.msg("添加失败！", {icon: 6, time: 1000, anim: 4}, function () {
+                    layer.msg("添加失败,重复添加", {icon: 6, time: 1000, anim: 4}, function () {
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                     });
                 }

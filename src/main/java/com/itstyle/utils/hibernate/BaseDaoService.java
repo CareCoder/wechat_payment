@@ -15,8 +15,8 @@ public class BaseDaoService<BEAN, ID extends Serializable> {
         return jpaRepository.findAll();
     }
 
-    public void add(BEAN bean) {
-        jpaRepository.save(bean);
+    public BEAN add(BEAN bean) {
+        return jpaRepository.save(bean);
     }
 
     public void delete(ID id) {
