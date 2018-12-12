@@ -79,7 +79,7 @@ public class CarYardSettingController {
     public Response addCarPassPermission(PassCarStatus passCarStatus) {
         AssertUtil.assertNotNull(passCarStatus, () -> new BusinessException("pass cat status is null"));
         passPermissionService.save(passCarStatus);
-        SystemLoggerHelper.log("保存", "创建出入权限,id=" + passCarStatus.getId());
+        SystemLoggerHelper.log("保存", "创建出入权限");
         return Response.build(Status.NORMAL, null, null);
     }
 
@@ -98,7 +98,7 @@ public class CarYardSettingController {
     @ResponseBody
     public Response editCarPassPermission(PassCarStatus passCarStatus) {
         passPermissionService.update(passCarStatus);
-        SystemLoggerHelper.log("修改", "修改出入权限,id=" + passCarStatus.getId());
+        SystemLoggerHelper.log("修改", "修改出入权限");
         return Response.build(Status.NORMAL, null, null);
     }
 
@@ -106,7 +106,7 @@ public class CarYardSettingController {
     @ResponseBody
     public Response deleteCarPassPermission(@PathVariable("id") Long id) {
         passPermissionService.delete(id);
-        SystemLoggerHelper.log("删除", "删除出入权限,id=" + id);
+        SystemLoggerHelper.log("删除", "删除出入权限");
         return Response.build(Status.NORMAL, null, null);
     }
 
