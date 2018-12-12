@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -58,17 +59,24 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo.buildQueryVo()));
         CarNumVo saveVo = new CarNumVo();
         if (find != null && !find.isEmpty()) {
-            Optional<CarNumExtVo> any = find.stream().flatMap(e -> e.getCarNumExtVos().stream())
-                    .filter(e -> e.getCarNumType() == carNumExtVo.getCarNumType()).findAny();
-            if (any.isPresent()) {
-                return Status.WARN_ALREAD_EXIST;
-            }
+//            Optional<CarNumExtVo> any = find.stream().flatMap(e -> e.getCarNumExtVos().stream())
+//                    .filter(e -> e.getCarNumType() == carNumExtVo.getCarNumType()).findAny();
+//            if (any.isPresent()) {
+//                return Status.WARN_ALREAD_EXIST;
+//            }
             if (find.size() == 1) {
                 saveVo = find.get(0);
             }
         }
         carNumVo.setCarNumExtVos(null);//为下一个copy属性准备
         BeanUtilIgnore.copyPropertiesIgnoreNull(carNumVo, saveVo);
+        //现在可以重复上传了，所以如果上传的type相同，则把之前的删除了。
+        Optional<CarNumExtVo> any = saveVo.getCarNumExtVos().stream().filter(e -> e.getCarNumType() == carNumExtVo.getCarNumType()).findAny();
+        if (any.isPresent()) {
+            CarNumExtVo getVo = any.get();
+            saveVo.getCarNumExtVos().remove(getVo);
+            carNumExtMapper.delete(getVo.getId());
+        }
         saveVo.getCarNumExtVos().add(carNumExtVo);
         try {
             carNumMapper.save(saveVo);
