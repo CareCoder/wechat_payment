@@ -63,7 +63,8 @@
                 [
                     {field: 'id', title: 'ID', width: 80},
                     {field: 'carNum', title: '车牌号', width: 150},
-                    {field: 'time', title: '续费时间', width: 250, templet: '#timeTemp'},
+                    {field: 'enterTime', title: '入场时间', width: 250, templet: '#enterTimeTemp'},
+                    {field: 'leaveTime', title: '出场时间', width: 250, templet: '#leaveTimeTemp'},
                     {field: 'fee', title: '收费金额', width: 100},
                     {field: 'chargeType', title: '收费类型', width: 100, templet: '#chargeTypeTemp'},
                     {field: 'discountAmount', title: '优惠金额', width: 100},
@@ -105,10 +106,17 @@
 
 </script>
 <!--模板-->
-<script type="text/html" id="timeTemp">
+<script type="text/html" id="enterTimeTemp">
     {{#
     var date = new Date();
-    date.setTime(d.time);
+    date.setTime(d.enterTime);
+    return date.toLocaleString();
+    }}
+</script>
+<script type="text/html" id="leaveTimeTemp">
+    {{#
+    var date = new Date();
+    date.setTime(d.leaveTime);
     return date.toLocaleString();
     }}
 </script>
