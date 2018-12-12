@@ -46,7 +46,7 @@ public class CarNumController {
         if (queryVo.getPage() <= 0) {
             queryVo.setPage(1);
         }
-        List<CarNumVo> carNumVos = carNumService.query(queryVo).getContent();
+        List<CarNumVo> carNumVos = carNumService.query(queryVo, null).getContent();
 //                .stream()
 //                .filter(e -> e.getCarNumExtVos() != null && e.getCarNumExtVos().size() > 1)
 //                .collect(Collectors.toList());
@@ -152,8 +152,11 @@ public class CarNumController {
         if (StringUtils.isEmpty(isEnter)) {
             queryVo.setStartTime(null);
             queryVo.setEndTime(null);
+        }else{
+            queryVo.setLeaveStartTime(null);
+            queryVo.setLeaveEndTime(null);
         }
-        Page<CarNumVo> page = carNumService.query(queryVo);
+        Page<CarNumVo> page = carNumService.query(queryVo, isEnter);
         return PageResponse.build(page);
     }
 }
