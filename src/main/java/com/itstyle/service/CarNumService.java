@@ -125,7 +125,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         return carNumMapper.findAll(Example.of(carNumVo));
     }
 
-    public Page<CarNumVo> query(CarNumQueryVo queryVo, String isEnter) {
+    public Page<CarNumVo> query(CarNumQueryVo queryVo) {
         PageRequest pageRequest = PageResponse.getPageRequest(queryVo.getPage(), queryVo.getLimit());
         Specification<CarNumVo> sp = (root, query, cb) -> {
             List<Predicate> predicate = new ArrayList<>();
@@ -144,9 +144,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             if (queryVo.getEndTime() != null) {
                 predicate.add(cb.le(root.get("time").as(Long.class), queryVo.getEndTime()));
             }
-            if (StringUtils.isNotEmpty(isEnter)) {
-                predicate.add(cb.isNull(root.get("lTime").as(Long.class)));
-            }
+//            if (StringUtils.isNotEmpty(isEnter)) {
+//                predicate.add(cb.isNull(root.get("lTime").as(Long.class)));
+//            }
             if (StringUtils.isNotEmpty(queryVo.getLeavePass())) {
                 Predicate p1 = cb.equal(root.get("leavePass").as(String.class), queryVo.getLeavePass());
                 Predicate p2 = cb.equal(root.get("enterPass").as(String.class), queryVo.getLeavePass());
@@ -175,6 +175,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         return carNumMapper.findAll(sp, pageRequest);
     }
 
+
     public List<Object> statisticsAccess(Integer count) {
         return carNumMapper.statisticsAccess(count);
     }
@@ -196,6 +197,27 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 carNumVo.setRecord(true);
                 carNumMapper.save(carNumVo);
             }
+
+    public PageResponse<CarNumVo> queryComplex(CarNumQueryVo queryVo) {
+        if (StringUtils.isEmpty(queryVo.getIsEnter())) {
+            queryVo.setStartTime(null);
+            queryVo.setEndTime(null);
+        }else{
+            queryVo.setLeaveStartTime(null);
+            queryVo.setLeaveEndTime(null);
+        }
+        if (queryVo.getLeaveStartTime() == null || queryVo.getLeaveEndTime() == null) {
+
+        }
+        CarType carType = queryVo.getCarType();
+        List<CarNumVo> carNumVos = carNumMapper.queryComplex(carType == null ? null : carType.ordinal());
+        long count = carNumMapper.distincCount();
+        return new PageResponse(0, "", count, carNumVos);
+    }
+
+    private void chargeRecord(CarNumVo carNumVo, CarNumExtVo carNumExtVo,Account account) {
+        if (carNumExtVo.getCarNumType() != CarNumType.LEAVE_BIG) {
+            return;
         }
         log.info("info = {} id = {}", info, id);
         return info;
