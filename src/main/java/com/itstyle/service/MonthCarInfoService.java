@@ -56,10 +56,10 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
     public void payment(Integer month, Long id, Account account) {
         MonthCarInfo one = findById(id);
         Long endTime = one.getEndTime();
-        Long now = System.currentTimeMillis();
-        if (endTime < now) {
-            endTime = now;
-        }
+//        Long now = System.currentTimeMillis();
+//        if (endTime < now) {
+//            endTime = now;
+//        }
         endTime = endTime + (new Long(month) * 30 * 24 * 60 * 60 * 1000);
         one.setEndTime(endTime);
         one.setModifyTime(new Date());
