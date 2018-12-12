@@ -140,7 +140,6 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 predicate.add(cb.between(root.get("lTime").as(Long.class), queryVo.getLeaveStartTime(), queryVo.getLeaveEndTime()));
             }
             query.orderBy(cb.desc(root.get("time")));
-            query.groupBy(root.get("carNum"));
             query.where(predicate.toArray(new Predicate[0]));
             return query.getRestriction();
         };
