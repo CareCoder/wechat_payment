@@ -41,13 +41,18 @@ public class CarInfoController {
 
     @PostMapping("/save")
     @ResponseBody
-    public void save(CarInfo carInfo, HttpServletResponse httpResponse) {
-        try {
-            carInfoService.save(carInfo);
-        } catch (DataIntegrityViolationException exception) {
-            httpResponse.setStatus(503);
+    public String save(CarInfo carInfo, HttpServletResponse httpResponse) {
+        CarInfo byCarNum = carInfoService.getByCarNum(carInfo.getCarNum());
+        if (byCarNum != null) {
+            if (byCarNum.getIsBlackList()) {
+                return "已是黑名单车辆";
+            }else{
+                return "已是免费车辆";
+            }
         }
+        carInfoService.save(carInfo);
         SystemLoggerHelper.log("添加", "添加车辆管理信息:" + carInfo.getCarNum());
+        return "添加成功";
     }
 
     @RequestMapping("/delete/{id}")

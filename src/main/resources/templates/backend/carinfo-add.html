@@ -105,12 +105,12 @@
                 data:data.field,
                 success:function(resp){
                     console.log(resp);
-                    layer.msg("添加成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                    layer.msg(resp, {time: 1000, anim: 4}, function () {
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                     });
                 },
                 error:function(){
-                    layer.msg("添加失败！重复添加", {icon: 6, time: 1000, anim: 4}, function () {
+                    layer.msg("添加失败！上传参数异常", {time: 1000, anim: 4}, function () {
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                     });
                 }
