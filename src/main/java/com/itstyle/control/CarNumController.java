@@ -46,7 +46,8 @@ public class CarNumController {
         if (queryVo.getPage() <= 0) {
             queryVo.setPage(1);
         }
-        List<CarNumVo> carNumVos = carNumService.query(queryVo, null).getContent();
+        Page<CarNumVo> page = carNumService.query(queryVo, null);
+        List<CarNumVo> carNumVos = page.getContent();
 //                .stream()
 //                .filter(e -> e.getCarNumExtVos() != null && e.getCarNumExtVos().size() > 1)
 //                .collect(Collectors.toList());
@@ -59,8 +60,7 @@ public class CarNumController {
         List<FixedCarManager> fixedCars = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
         model.addAttribute("fixedCars", fixedCars);
 
-        long totleCount = carNumService.getCount();
-        model.addAttribute("maxPage", Math.ceil(totleCount / 4));
+        model.addAttribute("maxPage", Math.ceil(page.getTotalElements() / 4));
         return "/backend/tempcarinfo";
     }
 
