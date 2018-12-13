@@ -53,12 +53,7 @@ public class CarYardSettingController {
 
     @GetMapping("/permission/page")
     public String getCarPassPermissionPage(Model model) {
-        List<FixedCarManager> f = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
-        if (f != null && f.size() > 3) {
-            model.addAttribute("MONTH_CAR_A", f.get(0));
-            model.addAttribute("MONTH_CAR_B", f.get(1));
-            model.addAttribute("MONTH_CAR_C", f.get(2));
-        }
+        wrapModel(model);
         return "/backend/pass-permission";
     }
 
@@ -70,7 +65,8 @@ public class CarYardSettingController {
     }
 
     @GetMapping("/pass-permission-add.html")
-    public String addCarPassPermissionPage() {
+    public String addCarPassPermissionPage(Model model) {
+        wrapModel(model);
         return "/backend/pass-permission-add";
     }
 
@@ -91,6 +87,7 @@ public class CarYardSettingController {
         BeanUtilIgnore.copyPropertiesIgnoreNull(passCarStatus, responsePassCarStatusEdit);
         responsePassCarStatusEdit.setChannelTypeId(accessType.getChannelTypeId());
         model.addAttribute("pass_car_status", responsePassCarStatusEdit);
+        wrapModel(model);
         return "/backend/pass-permission-edit";
     }
 
@@ -108,6 +105,16 @@ public class CarYardSettingController {
         passPermissionService.delete(id);
         SystemLoggerHelper.log("删除", "删除出入权限");
         return Response.build(Status.NORMAL, null, null);
+    }
+
+    private void wrapModel(Model model) {
+        List<FixedCarManager> f = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
+        if (f != null && f.size() > 3) {
+            model.addAttribute("MONTH_CAR_A", f.get(0));
+            model.addAttribute("MONTH_CAR_B", f.get(1));
+            model.addAttribute("MONTH_CAR_C", f.get(2));
+            model.addAttribute("VIP_CAR", f.get(3));
+        }
     }
 
 }

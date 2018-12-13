@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>添加用户</title>
@@ -48,25 +48,25 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">月租车A：</label>
+            <label class="layui-form-label" th:text="${MONTH_CAR_A?.customName}+'：'"></label>
             <div class="layui-input-block">
                 <input type="checkbox" name="monlyCar_A" lay-skin="switch" checked lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">月租车B：</label>
+            <label class="layui-form-label" th:text="${MONTH_CAR_B?.customName}+'：'"></label>
             <div class="layui-input-block">
                 <input type="checkbox" name="monlyCar_B" lay-skin="switch" checked lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">月租车C：</label>
+            <label class="layui-form-label" th:text="${MONTH_CAR_C?.customName}+'：'"></label>
             <div class="layui-input-block">
                 <input type="checkbox" name="monlyCar_C" lay-skin="switch" checked lay-text="允许|禁止">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">贵宾车：</label>
+            <label class="layui-form-label" th:text="${VIP_CAR?.customName}+'：'"></label>
             <div class="layui-input-block">
                 <input type="checkbox" name="specialCar" lay-skin="switch" checked lay-text="允许|禁止">
             </div>
