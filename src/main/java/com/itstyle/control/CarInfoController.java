@@ -44,7 +44,7 @@ public class CarInfoController {
     public String save(CarInfo carInfo, HttpServletResponse httpResponse) {
         CarInfo byCarNum = carInfoService.getByCarNum(carInfo.getCarNum());
         if (byCarNum != null) {
-            if (byCarNum.getIsBlackList()) {
+            if (byCarNum.getIsBlackList() !=null && byCarNum.getIsBlackList()) {
                 return "已是黑名单车辆";
             }else{
                 return "已是免费车辆";
