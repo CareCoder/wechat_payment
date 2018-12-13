@@ -125,8 +125,11 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             if (queryVo.getCarType() != null) {
                 predicate.add(cb.equal(root.get("carType").as(Integer.class), queryVo.getCarType().ordinal()));
             }
-            if (queryVo.getStartTime() != null && queryVo.getEndTime() != null) {
-                predicate.add(cb.between(root.get("time").as(Long.class), queryVo.getStartTime(), queryVo.getEndTime()));
+            if (queryVo.getStartTime() != null) {
+                predicate.add(cb.ge(root.get("time").as(Long.class), queryVo.getStartTime()));
+            }
+            if (queryVo.getEndTime() != null) {
+                predicate.add(cb.le(root.get("time").as(Long.class), queryVo.getEndTime()));
             }
             if (StringUtils.isNotEmpty(isEnter)) {
                 predicate.add(cb.isNull(root.get("lTime").as(Long.class)));
@@ -136,8 +139,11 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 Predicate p2 = cb.equal(root.get("enterPass").as(String.class), queryVo.getLeavePass());
                 predicate.add(cb.or(p1,p2));
             }
-            if (queryVo.getLeaveEndTime() != null && queryVo.getLeaveStartTime() != null) {
-                predicate.add(cb.between(root.get("lTime").as(Long.class), queryVo.getLeaveStartTime(), queryVo.getLeaveEndTime()));
+            if (queryVo.getLeaveStartTime() != null) {
+                predicate.add(cb.ge(root.get("lTime").as(Long.class), queryVo.getLeaveStartTime()));
+            }
+            if (queryVo.getLeaveEndTime() != null) {
+                predicate.add(cb.le(root.get("lTime").as(Long.class), queryVo.getLeaveEndTime()));
             }
             query.orderBy(cb.desc(root.get("time")));
             query.where(predicate.toArray(new Predicate[0]));

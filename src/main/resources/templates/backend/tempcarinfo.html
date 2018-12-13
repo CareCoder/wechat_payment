@@ -199,8 +199,10 @@
         });
 
         form.on('submit(search)', function (data) {
-            if (data.field.startTime != "" && data.field.endTime != "") {
+            if (data.field.startTime != "") {
                 data.field.startTime = new Date(data.field.startTime).getTime();
+            }
+            if (data.field.endTime != "") {
                 data.field.endTime = new Date(data.field.endTime).getTime();
             }
             var map = new Map();
