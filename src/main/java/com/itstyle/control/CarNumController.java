@@ -85,7 +85,7 @@ public class CarNumController {
         }
         model.addAttribute("enterTime", enterTime);
         model.addAttribute("leaveTime", leaveTime);
-        model.addAttribute("stopTime", FeeUtil.secondToTime(leaveTime - enterTime));
+        model.addAttribute("stopTime", leaveTime == null ? "" : FeeUtil.secondToTime(leaveTime - enterTime));
         model.addAttribute("userName", userName);
         model.addAttribute("fee", FeeUtil.convert(carNumVo.getFee()));
         model.addAttribute("vo", carNumVo);
