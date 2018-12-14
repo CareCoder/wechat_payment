@@ -126,7 +126,7 @@
         var carType = '[[${queryVo?.carType}]]';
         var startTime = '[[${queryVo?.startTime}]]';
         var endTime = '[[${queryVo?.endTime}]]';
-        var maxPage = '[[${maxPage}]]';
+        var maxPage = parseInt('[[${maxPage}]]');
         var form_data = new Map();
         if (page != '') {
             form_data.set("page", page);
