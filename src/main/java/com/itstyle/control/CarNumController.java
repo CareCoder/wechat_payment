@@ -1,15 +1,12 @@
 package com.itstyle.control;
 
-import com.itstyle.common.CustomContext;
 import com.itstyle.common.PageResponse;
-import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
-import com.itstyle.domain.car.manager.enums.CarNumType;
 import com.itstyle.domain.caryard.ResponseAccessType;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.AccessTypeService;
@@ -17,6 +14,7 @@ import com.itstyle.service.CarNumService;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.utils.FeeUtil;
 import com.itstyle.utils.enums.Status;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +29,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/carnum")
 public class CarNumController {
@@ -83,6 +82,7 @@ public class CarNumController {
         if (account != null) {
             userName = account.getUsername();
         }
+        model.addAttribute("id", id);
         model.addAttribute("enterTime", enterTime);
         model.addAttribute("leaveTime", leaveTime);
         model.addAttribute("stopTime", leaveTime == null ? "" : FeeUtil.secondToTime(leaveTime - enterTime));
@@ -95,6 +95,14 @@ public class CarNumController {
         return "/backend/tempcarinfo-payment";
     }
 
+    @PostMapping("/tempcarinfo-payment/confirm")
+    @ResponseBody
+    public String tempcarinfoPaymentConfirm(Long id, HttpSession session) {
+        log.info("收费放行 id = {}", id);
+        Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
+        return carNumService.tempcarinfoPaymentConfirm(id, account);
+    }
+
     @RequestMapping("/upload")
     @ResponseBody
     public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo, Long leaveTime, HttpServletRequest request) {
@@ -102,9 +110,7 @@ public class CarNumController {
         try {
             carNumVo.setLTime(leaveTime);
             carNumExtVo.setTime(leaveTime);//这里不要mvc自动注入 是因为两个注入对象的param相同了
-            HttpSession session = request.getSession();
-            Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
-            status = carNumService.upload(file, carNumVo, carNumExtVo, account);
+            status = carNumService.upload(file, carNumVo, carNumExtVo);
         } catch (Exception e) {
             return Response.build(status, "系统错误", null);
         }

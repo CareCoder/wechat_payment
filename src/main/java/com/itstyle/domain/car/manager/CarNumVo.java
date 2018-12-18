@@ -1,13 +1,11 @@
 package com.itstyle.domain.car.manager;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.itstyle.domain.car.manager.enums.CarColor;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
 import com.itstyle.domain.car.manager.enums.CarNumType;
 import com.itstyle.domain.car.manager.enums.CarType;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,6 +29,7 @@ public class CarNumVo{
     private String leavePass;
     private String enterWay;
     private Long lTime;//算是扩展字段,离开时间,为了提高性能添加这个字段,和扩展字段重复
+    private Boolean record;//这次临时停车是否已经生成明细
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_num_id")

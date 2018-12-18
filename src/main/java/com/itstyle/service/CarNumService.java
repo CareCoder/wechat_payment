@@ -52,7 +52,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         jpaRepository = carNumMapper;
     }
 
-    public int upload(MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo, Account account) {
+    public int upload(MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
         int status = Status.NORMAL;
         String uuid = UUID.randomUUID().toString();
         carNumExtVo.setUuid(uuid);
@@ -81,8 +81,6 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         try {
             carNumMapper.save(saveVo);
             fileResourceService.upload(file, uuid);
-            //上传收费记录
-            chargeRecord(saveVo, carNumExtVo, account);
         } catch (Exception e) {
             log.error("upload error",e);
             status = Status.ERROR;
@@ -152,10 +150,33 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         return carNumMapper.findAll(sp, pageRequest);
     }
 
-    private void chargeRecord(CarNumVo carNumVo, CarNumExtVo carNumExtVo,Account account) {
-        if (carNumExtVo.getCarNumType() != CarNumType.LEAVE_BIG) {
-            return;
+    public List<Object> statisticsAccess(Integer count) {
+        return carNumMapper.statisticsAccess(count);
+    }
+
+    /**
+     * 上传收费记录
+     * @param id 需要确认的id
+     */
+    public String tempcarinfoPaymentConfirm(Long id, Account account) {
+        String info = "放行成功";
+        CarNumVo carNumVo = carNumMapper.getOne(id);
+        if (carNumVo.getRecord() != null && carNumVo.getRecord()) {
+            info = "收费放行失败 重复放行";
+        }else{
+            if (carNumVo.getLTime() == null) {
+                info = "收费放行失败 车辆还未离场";
+            }else{
+                chargeRecord(carNumVo, account);
+                carNumVo.setRecord(true);
+                carNumMapper.save(carNumVo);
+            }
         }
+        log.info("info = {} id = {}", info, id);
+        return info;
+    }
+
+    private void chargeRecord(CarNumVo carNumVo, Account account) {
         String username = "";
         if (account != null) {
             username = account.getUsername();
@@ -165,13 +186,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         chargeRecord.setCarType(CarType.TEMP_CAR_A);
         chargeRecord.setChargeType(ChargeType.CASH_PAYMENT);
         chargeRecord.setEnterTime(carNumVo.getTime());
-        chargeRecord.setLeaveTime(carNumExtVo.getTime());
+        chargeRecord.setLeaveTime(carNumVo.getLTime());
         chargeRecord.setFee(carNumVo.getFee());
         chargeRecord.setChargePersonnel(username);
         chargeRecordService.upload(chargeRecord);
-    }
-
-    public List<Object> statisticsAccess(Integer count) {
-        return carNumMapper.statisticsAccess(count);
     }
 }

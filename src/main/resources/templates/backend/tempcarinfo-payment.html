@@ -144,6 +144,7 @@
         var enterTime = parseInt("[[${enterTime}]]");
         var leaveTime = parseInt("[[${leaveTime}]]");
         var carType = "[[${vo?.carType}]]";
+        var id = "[[${vo?.id}]]";
         if (carType == '') {
             carType = "TEMP_CAR_A";
         }
@@ -175,8 +176,22 @@
         }
 
         form.on('submit(add)', function (data) {
-            layer.msg("操作成功！", {icon: 6, time: 1000, anim: 4}, function () {
-                parent.layer.close(parent.layer.getFrameIndex(window.name));
+            $.ajax({
+                url:"/carnum/tempcarinfo-payment/confirm",
+                type:"POST",
+                data:{
+                    id: id
+                },
+                success:function(resp){
+                    layer.msg(resp, {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                },
+                error:function(){
+                    layer.msg("修改失败！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }
             });
             return false;
         });
