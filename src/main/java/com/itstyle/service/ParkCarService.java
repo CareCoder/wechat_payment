@@ -220,7 +220,7 @@ public class ParkCarService {
         chargeRecord.setChargeType(ChargeType.ONLINE_PAYMENT);
         chargeRecord.setEnterTime(order.enterTime);
         chargeRecord.setFee(order.fee);
-        chargeRecord.setLeaveTime(order.operTime);
+        chargeRecord.setLeaveTime(System.currentTimeMillis());
         chargeRecord.setChargePersonnel(null);
         chargeRecordService.upload(chargeRecord);
     }
