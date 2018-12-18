@@ -79,6 +79,11 @@ public class ExternalInterfaceService {
 
     public CarYardName carYardName() {
         CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
+        //获取剩余车位数,如果未获取到则默认为车场总数
+        Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
+        if (remainingParkingNum != null && carYardName != null) {
+            carYardName.setParkingNum(remainingParkingNum);
+        }
         return carYardName;
     }
 
@@ -118,6 +123,9 @@ public class ExternalInterfaceService {
     }
 
     private boolean isAllow(Integer index) {
-        return index == 1 ? true : false;
+        if (index == null) {
+            return false;
+        }
+        return index == 1;
     }
 }

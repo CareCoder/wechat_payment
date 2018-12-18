@@ -105,9 +105,15 @@ public class CarNumController {
 
     @RequestMapping("/upload")
     @ResponseBody
-    public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo, Long leaveTime, HttpServletRequest request) {
+    public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo,
+                           CarNumExtVo carNumExtVo,
+                           Long leaveTime,
+                           Integer remainingParkingNum,//剩余的车位数
+                           HttpServletRequest request) {
         int status = Status.NORMAL;
         try {
+            //先更新剩余车位数
+            globalSettingService.set(YstCommon.REMAINING_PARKING_NUM, remainingParkingNum);
             carNumVo.setLTime(leaveTime);
             carNumExtVo.setTime(leaveTime);//这里不要mvc自动注入 是因为两个注入对象的param相同了
             status = carNumService.upload(file, carNumVo, carNumExtVo);
