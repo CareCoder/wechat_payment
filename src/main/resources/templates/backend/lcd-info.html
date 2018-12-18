@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>版本控制</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+</head>
+<style>
+    .layui-upload {
+        width: 300px;
+        display: inline;
+        float: left;
+    }
+</style>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>车场设置</cite></a>
+                <a><cite>LCD信息发布</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <div class="layui-upload">
+        <button type="button" class="layui-btn" id="file1">图片一</button>
+        <div class="layui-upload-list">
+            <img class="layui-upload-img" id="img1" style="width: 200px; height: 200px">
+            <p id="demoText1"></p>
+        </div>
+    </div>
+    <div class="layui-upload">
+        <button type="button" class="layui-btn" id="file2">图片二</button>
+        <div class="layui-upload-list">
+            <img class="layui-upload-img" id="img2" style="width: 200px; height: 200px">
+            <p id="demoText2"></p>
+        </div>
+    </div>
+    <div class="layui-upload">
+        <button type="button" class="layui-btn" id="file3">图片三</button>
+        <div class="layui-upload-list">
+            <img class="layui-upload-img" id="img3" style="width: 200px; height: 200px">
+            <p id="demoText3"></p>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片自动切换时间(秒)</label>
+        <div class="layui-input-block" style="width: 400px;">
+            <input type="number" name="switchingtTime" autocomplete="off" class="layui-input" lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="upload">立即提交</button>
+        </div>
+    </div>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script>
+    layui.use(['element', 'jquery','upload', 'layer'], function () {
+        var $ = layui.jquery
+            ,upload = layui.upload;
+        $.ajax({
+            url: "/gs/get/lcd-info/data",
+            type: "POST",
+            success: function (resp) {
+                debugger;
+                resp.urlList.forEach(function(item, index){
+                    index = index + 1;
+                    var imgElem = "#img" + index;
+                    $(imgElem).attr('src', item.imageDownloadUrl);
+                });
+                $("input[name='switchingtTime']").val(resp.switchingtTime);
+            }
+        });
+        $("#upload").click(function(){
+            $.ajax({
+                url: "/gs/set/lcd-info",
+                type: "POST",
+                data: {
+                    switchingtTime: $("input[name='switchingtTime']").val()
+                },
+                success: function (resp) {
+                    layer.msg("修改成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                },
+                error: function () {
+                    layer.msg("修改失败！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }
+            });
+        });
+        //普通图片上传1
+        var uploadInst1 = upload.render({
+            elem: '#file1'
+            ,url: '/gs/set/lcd-info'
+            // ,bindAction: '#upload'
+            // ,auto: false
+            ,acceptMime: 'image/jpg'
+            ,choose: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#img1').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,before: function(obj){
+                this.data={
+                    "index" : 0
+                    ,"switchingtTime" : $("input[name='switchingtTime']").val()
+                };
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#img1').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,done: function(res){
+                return layer.msg('上传成功');
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText1');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs" id="demo-reload1">重试</a>');
+                demoText.find('#demo-reload1').on('click', function(){
+                    uploadInst1.upload();
+                });
+            }
+        });
+
+        //普通图片上传2
+        var uploadInst2 = upload.render({
+            elem: '#file2'
+            ,url: '/gs/set/lcd-info'
+            // ,bindAction: '#upload'
+            // ,auto: false
+            ,acceptMime: 'image/jpg'
+            ,choose: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#img2').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,before: function(obj){
+                this.data={
+                    "index" : 1
+                    ,"switchingtTime" : $("input[name='switchingtTime']").val()
+                };
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#img2').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,done: function(res){
+                return layer.msg('上传成功');
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText2');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs" id="demo-reload">重试</a>');
+                demoText.find('#demo-reload2').on('click', function(){
+                    uploadInst2.upload();
+                });
+            }
+        });
+
+        //普通图片上传3
+        var uploadInst3 = upload.render({
+            elem: '#file3'
+            ,url: '/gs/set/lcd-info'
+            // ,bindAction: '#upload'
+            // ,auto: false
+            ,acceptMime: 'image/jpg'
+            ,choose: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#img3').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,before: function(obj){
+                this.data={
+                    "index" : 2
+                    ,"switchingtTime" : $("input[name='switchingtTime']").val()
+                };
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#img3').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,done: function(res){
+                return layer.msg('上传成功');
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText3');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs" id="demo-reload">重试</a>');
+                demoText.find('#demo-reload3').on('click', function(){
+                    uploadInst3.upload();
+                });
+            }
+        });
+    })
+</script>
+</body>
+</html>
