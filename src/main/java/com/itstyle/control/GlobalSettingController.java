@@ -8,6 +8,7 @@ import com.itstyle.domain.car.manager.Fastigium;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.service.GlobalSettingService;
+import com.itstyle.vo.inition.response.TextDisplay;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -109,5 +110,18 @@ public class GlobalSettingController {
     public void specialcarSet(String keyWords) {
         globalSettingService.set(YstCommon.SPECAL_CAR, keyWords);
         SystemLoggerHelper.log("更新", "更新特殊车辆关键字");
+    }
+
+    @RequestMapping("/get/led-info")
+    public String ledInfoGet(Model model) {
+        TextDisplay textDisplay = (TextDisplay) globalSettingService.get(YstCommon.LED_INFO, TextDisplay.class);
+        model.addAttribute("textDisplay", textDisplay);
+        return "/backend/led-info";
+    }
+
+    @PostMapping("/set/led-info")
+    @ResponseBody
+    public void ledInfoSet(TextDisplay textDisplay) {
+        globalSettingService.set(YstCommon.LED_INFO, textDisplay);
     }
 }

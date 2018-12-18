@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>高峰期管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>远程控制</cite></a>
+                <a><cite>LED信息发布</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form id="fastigium_form" class="layui-form layui-col-md12 ok-search">
+            <div class="layui-form-item">
+                <label class="layui-form-label">入口:
+                </label>
+                <div class="layui-input-block">
+                    <input name="entranceText" th:value="${textDisplay?.entranceText}" class="layui-input" placeholder="" autocomplete="off">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">出口:
+                </label>
+                <div class="layui-input-block">
+                    <input name="exitText" th:value="${textDisplay?.exitText}" class="layui-input" placeholder="" autocomplete="off">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    }
+    layui.use(['element', 'form', 'jquery'], function () {
+        var form = layui.form;
+        var $ = layui.jquery;
+        form.on('submit(add)', function (data) {
+            $.ajax({
+                url: "/gs/set/led-info",
+                type: "POST",
+                data: data.field,
+                success: function (resp) {
+                    console.log(resp);
+                    layer.msg("修改成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                },
+                error: function () {
+                    layer.msg("修改失败！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }
+            });
+            return false;
+        });
+
+        form.render();
+    });
+</script>
+</body>
+</html>
