@@ -57,6 +57,7 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
                 Predicate p1 = cb.between(root.get("time").as(Long.class), startTime, endTime);
                 predicate.add(p1);
             }
+            query.orderBy(cb.desc(root.get("id")));
             query.where(predicate.toArray(new Predicate[0]));
             return query.getRestriction();
         };
