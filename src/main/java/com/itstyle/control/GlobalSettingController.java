@@ -143,11 +143,10 @@ public class GlobalSettingController {
     @RequestMapping("/get/lcd-info/data")
     @ResponseBody
     public ImageDisplay lcdInfoGetData(Model model) {
-        ImageDisplay imageDisplay = (ImageDisplay) globalSettingService.get(YstCommon.LCD_INFO, ImageDisplay.class);
-        return imageDisplay;
+        return (ImageDisplay) globalSettingService.get(YstCommon.LCD_INFO, ImageDisplay.class);
     }
-
-    private static final int lcdInfoSize = 3;
+    
+    private static final int lcdInfoSize = 5;
 
     @PostMapping("/set/lcd-info")
     @ResponseBody
