@@ -72,7 +72,9 @@ public class ExternalInterfaceService {
      * 获取针对LCD广告图片发布，界面参考新增功能文档
      */
     private ImageDisplay getImageDisplay() {
-        return (ImageDisplay) globalSettingService.get(YstCommon.LCD_INFO, ImageDisplay.class);
+        ImageDisplay imageDisplay = (ImageDisplay) globalSettingService.get(YstCommon.LCD_INFO, ImageDisplay.class);
+        imageDisplay.urlList = imageDisplay.urlList.stream().filter(e -> e != null && e.imageDownloadUrl != null).collect(Collectors.toList());
+        return imageDisplay;
     }
 
     private VehicleManagement getVehicleManagement() {
