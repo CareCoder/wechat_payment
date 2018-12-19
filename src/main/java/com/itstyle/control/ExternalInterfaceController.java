@@ -101,6 +101,15 @@ public class ExternalInterfaceController {
     }
 
     /**
+     * 获取剩余车位数,这里独立一个接口出来,方便获取数据
+     */
+    @GetMapping("/restParkNum")
+    @ResponseBody
+    public Integer restParkNum(){
+        return externalInterfaceService.restParkNum();
+    }
+
+    /**
      * apk版本更新
      * */
     @PostMapping("/version/update")
