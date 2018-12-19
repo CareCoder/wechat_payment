@@ -63,4 +63,13 @@ public class YstCommon {
 
 	/**特殊车辆*/
 	public static final String SPECAL_CAR = "SPECAL_CAR";
+
+	/**剩余车位数*/
+	public static final String REMAINING_PARKING_NUM = "REMAINING_PARKING_NUM";
+
+	/**LED信息发布*/
+	public static final String LED_INFO = "LED_INFO";
+
+	/**LCD信息发布*/
+	public static final String LCD_INFO = "LCD_INFO";
 }

@@ -3,20 +3,27 @@ package com.itstyle.control;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
+import com.itstyle.domain.FileResource.FileResourceBo;
 import com.itstyle.domain.car.manager.BanListManager;
 import com.itstyle.domain.car.manager.Fastigium;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.park.resp.Response;
+import com.itstyle.service.FileResourceService;
 import com.itstyle.service.GlobalSettingService;
+import com.itstyle.utils.enums.Status;
+import com.itstyle.vo.inition.response.ImageDisplay;
+import com.itstyle.vo.inition.response.ImageDownloadUrl;
+import com.itstyle.vo.inition.response.TextDisplay;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Controller
@@ -24,6 +31,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class GlobalSettingController {
     @Resource
     private GlobalSettingService globalSettingService;
+    @Resource
+    private FileResourceService fileResourceService;
 
     @GetMapping("/get/fastigium")
     public String fastigiumGet(Model model) {
@@ -109,5 +118,64 @@ public class GlobalSettingController {
     public void specialcarSet(String keyWords) {
         globalSettingService.set(YstCommon.SPECAL_CAR, keyWords);
         SystemLoggerHelper.log("更新", "更新特殊车辆关键字");
+    }
+
+    @RequestMapping("/get/led-info")
+    public String ledInfoGet(Model model) {
+        TextDisplay textDisplay = (TextDisplay) globalSettingService.get(YstCommon.LED_INFO, TextDisplay.class);
+        model.addAttribute("textDisplay", textDisplay);
+        return "/backend/led-info";
+    }
+
+    @PostMapping("/set/led-info")
+    @ResponseBody
+    public void ledInfoSet(TextDisplay textDisplay) {
+        globalSettingService.set(YstCommon.LED_INFO, textDisplay);
+    }
+
+    @RequestMapping("/get/lcd-info")
+    public String lcdInfoGet(Model model) {
+        ImageDisplay imageDisplay = (ImageDisplay) globalSettingService.get(YstCommon.LCD_INFO, ImageDisplay.class);
+        model.addAttribute("imageDisplay", imageDisplay);
+        return "/backend/lcd-info";
+    }
+
+    @RequestMapping("/get/lcd-info/data")
+    @ResponseBody
+    public ImageDisplay lcdInfoGetData(Model model) {
+        ImageDisplay imageDisplay = (ImageDisplay) globalSettingService.get(YstCommon.LCD_INFO, ImageDisplay.class);
+        return imageDisplay;
+    }
+
+    private static final int lcdInfoSize = 3;
+
+    @PostMapping("/set/lcd-info")
+    @ResponseBody
+    public Response lcdInfoSet(MultipartFile file, Integer index, Integer switchingtTime) {
+        ImageDisplay imageDisplay = (ImageDisplay) globalSettingService.get(YstCommon.LCD_INFO, ImageDisplay.class);
+        if (imageDisplay == null) {
+            imageDisplay = new ImageDisplay();
+        }
+        imageDisplay.switchingtTime = switchingtTime;
+        if (file != null) {
+            if (imageDisplay.urlList == null) {
+                imageDisplay.urlList = new ArrayList<>(lcdInfoSize);
+            }
+            List<ImageDownloadUrl> urlList = imageDisplay.urlList;
+            for (int i = 0; i < lcdInfoSize; i++) {
+                if (urlList.size() < i + 1) {
+                    urlList.add(i, new ImageDownloadUrl());
+                }else if (urlList.get(i) == null) {
+                    urlList.add(i, new ImageDownloadUrl());
+                }
+            }
+            String uuid = UUID.randomUUID().toString();
+            fileResourceService.upload(file, uuid);
+            FileResourceBo fileResourceBo = fileResourceService.getByUuid(uuid);
+            urlList.remove(index.intValue());
+            urlList.add(index, new ImageDownloadUrl(fileResourceBo.getUrl()));
+        }
+        globalSettingService.set(YstCommon.LCD_INFO, imageDisplay);
+        return Response.build(Status.NORMAL, null, null);
     }
 }

@@ -11,10 +11,7 @@ import com.itstyle.domain.caryard.ResponsePassCarStatus;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.incrementmonly.response.MonlyCarAddInfo;
 import com.itstyle.vo.incrementmonly.response.MonlyCarRenewInfo;
-import com.itstyle.vo.inition.response.AccessAuthoritySetup;
-import com.itstyle.vo.inition.response.ForbidenVehicle;
-import com.itstyle.vo.inition.response.Inition;
-import com.itstyle.vo.inition.response.VehicleManagement;
+import com.itstyle.vo.inition.response.*;
 import com.itstyle.vo.syncarinfo.response.BlackListVehicle;
 import com.itstyle.vo.syncarinfo.response.FreeVehicle;
 import com.itstyle.vo.syncarinfo.response.MonlyCarInfo;
@@ -59,7 +56,23 @@ public class ExternalInterfaceService {
         inition.vehicleManagement = getVehicleManagement();
         inition.carYardName = carYardName();
         inition.accessAuthoritySetup = getAccessAuthoritySetup();
+        inition.imageDisplay = getImageDisplay();
+        inition.textDisplay = getTextDisplay();
         return inition;
+    }
+
+    /**
+     * 获取针对LED文字信息发布，界面参数新增功能文档
+     */
+    private TextDisplay getTextDisplay() {
+        return (TextDisplay) globalSettingService.get(YstCommon.LED_INFO, TextDisplay.class);
+    }
+
+    /**
+     * 获取针对LCD广告图片发布，界面参考新增功能文档
+     */
+    private ImageDisplay getImageDisplay() {
+        return (ImageDisplay) globalSettingService.get(YstCommon.LCD_INFO, ImageDisplay.class);
     }
 
     private VehicleManagement getVehicleManagement() {
@@ -79,6 +92,11 @@ public class ExternalInterfaceService {
 
     public CarYardName carYardName() {
         CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
+        //获取剩余车位数,如果未获取到则默认为车场总数
+        Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
+        if (remainingParkingNum != null && carYardName != null) {
+            carYardName.setParkingNum(remainingParkingNum);
+        }
         return carYardName;
     }
 
@@ -118,6 +136,9 @@ public class ExternalInterfaceService {
     }
 
     private boolean isAllow(Integer index) {
-        return index == 1 ? true : false;
+        if (index == null) {
+            return false;
+        }
+        return index == 1;
     }
 }

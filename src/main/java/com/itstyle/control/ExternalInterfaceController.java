@@ -158,6 +158,9 @@ public class ExternalInterfaceController {
 
     private Object charges() {
         String currentCharges = redisDao.get(YstCommon.CURRENT_CHARGES);
+        if (currentCharges == null) {
+            return null;
+        }
         Map<Object, Object> map = redisDao.hgetAll(currentCharges);
         if (YstCommon.SZ_CHARGES.equals(currentCharges)) {
             ChargesResponse<SZChargesResponseVo> c = new ChargesResponse<>();
