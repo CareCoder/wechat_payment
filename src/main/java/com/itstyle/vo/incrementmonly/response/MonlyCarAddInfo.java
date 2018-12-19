@@ -16,6 +16,8 @@ public class MonlyCarAddInfo {
 
     public Integer monlyCarPlateColor;//	月卡车辆车牌颜色(蓝/黄/黑)
 
+    public Integer vehicleType; //月租车里面的哪一种车辆类型
+
     public static MonlyCarAddInfo convert(MonthCarInfo monthCarInfo) {
         MonlyCarAddInfo mcai = new MonlyCarAddInfo();
         mcai.plateID = monthCarInfo.getCarNum();
@@ -24,6 +26,7 @@ public class MonlyCarAddInfo {
         mcai.monlyCardTimeStart = DateUtil.format(monthCarInfo.getStartTime());
         mcai.monlyCardTimeEnd = DateUtil.format(monthCarInfo.getEndTime());
         mcai.monlyCarPlateColor = monthCarInfo.getCarColor() != null ? monthCarInfo.getCarColor().ordinal() : null;
+        mcai.vehicleType = monthCarInfo.getCarType() != null ? monthCarInfo.getCarType().ordinal() : null;
         return mcai;
     }
 }
