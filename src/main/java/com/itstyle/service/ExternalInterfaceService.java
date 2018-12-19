@@ -73,7 +73,9 @@ public class ExternalInterfaceService {
      */
     private ImageDisplay getImageDisplay() {
         ImageDisplay imageDisplay = (ImageDisplay) globalSettingService.get(YstCommon.LCD_INFO, ImageDisplay.class);
-        imageDisplay.urlList = imageDisplay.urlList.stream().filter(e -> e != null && e.imageDownloadUrl != null).collect(Collectors.toList());
+        if (imageDisplay != null && imageDisplay.urlList != null) {
+            imageDisplay.urlList = imageDisplay.urlList.stream().filter(e -> e != null && e.imageDownloadUrl != null).collect(Collectors.toList());
+        }
         return imageDisplay;
     }
 
