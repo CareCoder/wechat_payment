@@ -153,4 +153,15 @@ public class ExternalInterfaceService {
     public PhoneNumberList fetchPhoneNumber() {
         return (PhoneNumberList) globalSettingService.get(YstCommon.PHONE_NUMBER, PhoneNumberList.class);
     }
+
+    /**
+     * 获取剩余车位数
+     */
+    public Integer restParkNum() {
+        CarYardName carYardName = carYardName();
+        if (carYardName != null) {
+            return carYardName.getParkingNum();
+        }
+        return 0;
+    }
 }

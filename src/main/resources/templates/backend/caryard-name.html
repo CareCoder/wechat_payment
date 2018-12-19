@@ -37,6 +37,12 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 140px;">剩余车位数</label>
+            <div class="layui-input-inline">
+                <input id="restParkNum" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label" style="width: 140px;">预制车牌收费</label>
             <div class="layui-input-block">
                 <input type="checkbox" name="isPrefabricationCharge" lay-skin="switch" lay-text="是|否" checked>
@@ -129,6 +135,16 @@
             });
             return false;
         });
+
+        window.setInterval(function(){
+            $.ajax({
+                url:"/external/restParkNum",
+                type:"GET",
+                success:function(resp){
+                    $("#restParkNum").val(resp);
+                }
+            });
+        }, 1000);
     })
 </script>
 </body>
