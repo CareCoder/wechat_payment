@@ -72,4 +72,7 @@ public class YstCommon {
 
 	/**LCD信息发布*/
 	public static final String LCD_INFO = "LCD_INFO";
+
+	/**人工呼叫号码*/
+	public static final String PHONE_NUMBER = "PHONE_NUMBER";
 }

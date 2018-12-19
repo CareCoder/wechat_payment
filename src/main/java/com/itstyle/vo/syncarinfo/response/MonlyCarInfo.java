@@ -18,6 +18,8 @@ public class MonlyCarInfo {
 
     private Integer monlyCarPlateColor;//月卡车辆车牌颜色(蓝/黄/黑)
 
+    private Integer vehicleType; //月租车里面的哪一种车辆类型
+
     public static MonlyCarInfo convert(MonthCarInfo mc) {
         MonlyCarInfo ml = new MonlyCarInfo();
         ml.monlyCardTimeEnd = DateUtil.format(mc.getEndTime());
@@ -26,6 +28,7 @@ public class MonlyCarInfo {
         ml.name = mc.getName();
         ml.phoneNumber = mc.getPhone();
         ml.plateID = mc.getCarNum();
+        ml.vehicleType = mc.getCarType() != null ? mc.getCarType().ordinal() : null;
         return ml;
     }
 

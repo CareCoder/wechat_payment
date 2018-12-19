@@ -12,6 +12,7 @@ import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.incrementmonly.response.MonlyCarAddInfo;
 import com.itstyle.vo.incrementmonly.response.MonlyCarRenewInfo;
 import com.itstyle.vo.inition.response.*;
+import com.itstyle.vo.phonenumber.response.PhoneNumberList;
 import com.itstyle.vo.syncarinfo.response.BlackListVehicle;
 import com.itstyle.vo.syncarinfo.response.FreeVehicle;
 import com.itstyle.vo.syncarinfo.response.MonlyCarInfo;
@@ -144,5 +145,12 @@ public class ExternalInterfaceService {
             return false;
         }
         return index == 1;
+    }
+
+    /**
+     * 网络呼叫号码获取
+     */
+    public PhoneNumberList fetchPhoneNumber() {
+        return (PhoneNumberList) globalSettingService.get(YstCommon.PHONE_NUMBER, PhoneNumberList.class);
     }
 }

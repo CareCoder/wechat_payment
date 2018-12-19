@@ -15,14 +15,19 @@ import com.itstyle.utils.enums.Status;
 import com.itstyle.vo.inition.response.ImageDisplay;
 import com.itstyle.vo.inition.response.ImageDownloadUrl;
 import com.itstyle.vo.inition.response.TextDisplay;
+import com.itstyle.vo.phonenumber.response.PhoneNumber;
+import com.itstyle.vo.phonenumber.response.PhoneNumberList;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -176,5 +181,38 @@ public class GlobalSettingController {
         }
         globalSettingService.set(YstCommon.LCD_INFO, imageDisplay);
         return Response.build(Status.NORMAL, null, null);
+    }
+
+    @RequestMapping("/get/phone-num")
+    public String phoneNumGet() {
+        return "/backend/phone-num";
+    }
+
+    @RequestMapping("/get/phone-num/data")
+    @ResponseBody
+    public PhoneNumberList phoneNumGetData() {
+        return (PhoneNumberList) globalSettingService.get(YstCommon.PHONE_NUMBER, PhoneNumberList.class);
+    }
+
+    private static final int PHONE_NUM_SIZE = 3;
+
+    @RequestMapping("/set/phone-num")
+    @ResponseBody
+    public void phoneNumSet(HttpServletRequest request) {
+        PhoneNumberList phoneNumberList = new PhoneNumberList();
+        for (int i = 0; i < PHONE_NUM_SIZE; i++) {
+            String timeStart = request.getParameter("timeStart[" + i + "]");
+            String timeEnd = request.getParameter("timeEnd[" + i + "]");
+            String phoneNumber = request.getParameter("phoneNumber[" + i + "]");
+
+            PhoneNumber p = new PhoneNumber();
+            p.setTimeStart(timeStart);
+            p.setTimeEnd(timeEnd);
+            p.setPhoneNumber(phoneNumber);
+
+            phoneNumberList.getPhoneNumberList().add(p);
+        }
+
+        globalSettingService.set(YstCommon.PHONE_NUMBER, phoneNumberList);
     }
 }

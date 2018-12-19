@@ -22,6 +22,7 @@ import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.inition.response.Inition;
 import com.itstyle.vo.login.reponse.LoginResponse;
 import com.itstyle.vo.login.request.LoginRequest;
+import com.itstyle.vo.phonenumber.response.PhoneNumberList;
 import com.itstyle.vo.syncarinfo.response.SynCarInfo;
 import com.itstyle.vo.version.request.VersionRequest;
 import com.itstyle.vo.version.response.VersionResponse;
@@ -205,6 +206,12 @@ public class ExternalInterfaceController {
             return c;
         }
         return "查询无数据";
+    }
+
+    @RequestMapping("/getPhoneNumber")
+    @ResponseBody
+    public PhoneNumberList fetchPhoneNumber() {
+        return externalInterfaceService.fetchPhoneNumber();
     }
 
 }
