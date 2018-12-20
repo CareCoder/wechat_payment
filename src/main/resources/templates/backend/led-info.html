@@ -25,18 +25,111 @@
     <!--模糊搜索区域-->
     <div class="layui-row">
         <form id="fastigium_form" class="layui-form layui-col-md12 ok-search">
-            <div class="layui-form-item">
-                <label class="layui-form-label">入口:
-                </label>
-                <div class="layui-input-block">
-                    <input name="entranceText" th:value="${textDisplay?.entranceText}" class="layui-input" placeholder="" autocomplete="off">
+            <div class="layui-row">
+                <div class="layui-col-md3">
+                    <blockquote class="layui-elem-quote">入口语句</blockquote>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">入口语句:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="tempCarEntrance" th:value="${textDisplay?.tempCarEntrance}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">停车位已满语句:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="parkingFull" th:value="${textDisplay?.parkingFull}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">临时车不让进场语句:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="tempCarForbiddenEntrance" th:value="${textDisplay?.tempCarForbiddenEntrance}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">黑名单车辆禁止入场语句:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="blackListForbidden" th:value="${textDisplay?.blackListForbidden}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+
+
+
+
+                    <blockquote class="layui-elem-quote">无入场记录车牌出场异常语句</blockquote>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">首段计费提示语:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="exceptionExit1" th:value="${textDisplay?.exceptionExit1}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">联系管理员:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="exceptionExit2" th:value="${textDisplay?.exceptionExit2}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">出口:
-                </label>
-                <div class="layui-input-block">
-                    <input name="exitText" th:value="${textDisplay?.exitText}" class="layui-input" placeholder="" autocomplete="off">
+                <div class="layui-col-md3 layui-col-md-offset3">
+                    <blockquote class="layui-elem-quote">出口语句</blockquote>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">出口语句:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="tempCarExit" th:value="${textDisplay?.tempCarExit}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">场内已完成付费的提示语句:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="alreadyPayment" th:value="${textDisplay?.alreadyPayment}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">缴费超时提示语句:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="paymentOverTime" th:value="${textDisplay?.paymentOverTime}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+
+
+                    <blockquote class="layui-elem-quote">公共语句</blockquote>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">正常期限月租车语句:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="normalMonlyCar" th:value="${textDisplay?.normalMonlyCar}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">超过期限月租车语句:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="delayMonlyCar" th:value="${textDisplay?.delayMonlyCar}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">特殊车辆通行语句:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="specialCar" th:value="${textDisplay?.specialCar}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">VIP车辆语句:
+                        </label>
+                        <div class="layui-input-block">
+                            <input name="VIP" th:value="${textDisplay?.VIP}" class="layui-input" placeholder="" autocomplete="off">
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="layui-form-item">
