@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.caryard.EquipmentStatus;
 import com.itstyle.domain.feesettings.response.ByChargesResponse;
 import com.itstyle.domain.feesettings.response.SZChargesResponse;
 import com.itstyle.domain.feesettings.response.StandardChargesResponse;
@@ -230,4 +231,9 @@ public class ExternalInterfaceController {
         return externalInterfaceService.fetchDeleteVehicleInfo(startTime, endTime);
     }
 
+    @RequestMapping("/uploadEquipmentStatus")
+    @ResponseBody
+    public void uploadEquipmentStatus(EquipmentStatus equipmentStatus) {
+        externalInterfaceService.uploadEquipmentStatus(equipmentStatus);
+    }
 }
