@@ -194,7 +194,7 @@ public class GlobalSettingController {
         return (PhoneNumberList) globalSettingService.get(YstCommon.PHONE_NUMBER, PhoneNumberList.class);
     }
 
-    private static final int PHONE_NUM_SIZE = 3;
+    private static final int PHONE_NUM_SIZE = 5;
 
     @RequestMapping("/set/phone-num")
     @ResponseBody
