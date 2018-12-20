@@ -12,11 +12,13 @@ import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.incrementmonly.response.MonlyCarAddInfo;
 import com.itstyle.vo.incrementmonly.response.MonlyCarRenewInfo;
 import com.itstyle.vo.inition.response.*;
+import com.itstyle.vo.phonenumber.response.PhoneNumber;
 import com.itstyle.vo.phonenumber.response.PhoneNumberList;
 import com.itstyle.vo.syncarinfo.response.BlackListVehicle;
 import com.itstyle.vo.syncarinfo.response.FreeVehicle;
 import com.itstyle.vo.syncarinfo.response.MonlyCarInfo;
 import com.itstyle.vo.syncarinfo.response.SynCarInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -151,7 +153,15 @@ public class ExternalInterfaceService {
      * 网络呼叫号码获取
      */
     public PhoneNumberList fetchPhoneNumber() {
-        return (PhoneNumberList) globalSettingService.get(YstCommon.PHONE_NUMBER, PhoneNumberList.class);
+        PhoneNumberList phoneNumberList = (PhoneNumberList) globalSettingService.get(YstCommon.PHONE_NUMBER, PhoneNumberList.class);
+        if (phoneNumberList != null) {
+            List<PhoneNumber> tempList = phoneNumberList.getPhoneNumberList();
+            if (tempList != null) {
+                List<PhoneNumber> collect = tempList.stream().filter(e -> StringUtils.isNotEmpty(e.getPhoneNumber())).collect(Collectors.toList());
+                phoneNumberList.setPhoneNumberList(collect);
+            }
+        }
+        return phoneNumberList;
     }
 
     /**

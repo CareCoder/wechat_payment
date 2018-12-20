@@ -88,6 +88,42 @@
             </div>
 
             <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">客服#4 :</label>
+                    <div class="layui-input-inline">
+                        <input name="phoneNumber[3]" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <input name="timeStart[3]" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime3">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline">
+                        <input name="timeEnd[3]" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime3">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">客服#5 :</label>
+                    <div class="layui-input-inline">
+                        <input name="phoneNumber[4]" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <input name="timeStart[4]" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime4">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline">
+                        <input name="timeEnd[4]" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime4">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
                 </div>
@@ -137,6 +173,28 @@
         });
         laydate.render({
             elem: '#endTime2',
+            type: "time",
+            format:'HH:mm'//显示格式：小时：分钟
+        });
+
+        laydate.render({
+            elem: '#startTime3',
+            type: "time",
+            format:'HH:mm'//显示格式：小时：分钟
+        });
+        laydate.render({
+            elem: '#endTime3',
+            type: "time",
+            format:'HH:mm'//显示格式：小时：分钟
+        });
+
+        laydate.render({
+            elem: '#startTime4',
+            type: "time",
+            format:'HH:mm'//显示格式：小时：分钟
+        });
+        laydate.render({
+            elem: '#endTime4',
             type: "time",
             format:'HH:mm'//显示格式：小时：分钟
         });
