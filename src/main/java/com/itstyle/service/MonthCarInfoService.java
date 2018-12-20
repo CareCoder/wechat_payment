@@ -6,6 +6,7 @@ import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.CarType2;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.mapper.MonthCarInfoMapper;
@@ -33,6 +34,8 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
     private ChargeRecordService chargeRecordService;
     @Resource
     private GlobalSettingService globalSettingService;
+    @Resource
+    private DeleteRecordService deleteRecordService;
 
     @PostConstruct
     private void init() {
@@ -82,6 +85,15 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
             monthCarInfo.setEndTime(null);
             update(monthCarInfo.getId(), monthCarInfo);
         }
+    }
+
+    @Override
+    public void delete(Long id) {
+        MonthCarInfo one = monthCarInfoMapper.getOne(id);
+
+        monthCarInfoMapper.delete(id);
+
+        deleteRecordService.upload(one.getCarNum(), CarType2.MONTH_CAR);
     }
 
     /**
