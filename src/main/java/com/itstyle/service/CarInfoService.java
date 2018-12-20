@@ -2,6 +2,8 @@ package com.itstyle.service;
 
 import com.itstyle.common.PageResponse;
 import com.itstyle.domain.car.manager.CarInfo;
+import com.itstyle.domain.car.manager.enums.CarType2;
+import com.itstyle.domain.report.DeleteRecord;
 import com.itstyle.mapper.CarInfoMapper;
 import com.itstyle.utils.BeanUtilIgnore;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +23,9 @@ import java.util.List;
 public class CarInfoService {
     @Resource
     private CarInfoMapper carInfoMapper;
+
+    @Resource
+    private DeleteRecordService deleteRecordService;
 
     public PageResponse<CarInfo> list(int page, int limit, String type, String queryStr) {
         PageRequest pageRequest = PageResponse.getPageRequest(page, limit);
@@ -59,7 +64,16 @@ public class CarInfoService {
     }
 
     public void delete(Long id) {
+        CarInfo one = carInfoMapper.getOne(id);
+
         carInfoMapper.delete(id);
+        CarType2 carType2;
+        if (one.getIsBlackList() != null && one.getIsBlackList()) {
+            carType2 = CarType2.BLACK_LIST_CAR;
+        }else{
+            carType2 = CarType2.FREE_CAR;
+        }
+        deleteRecordService.upload(one.getCarNum(), carType2);
     }
 
     public void update(CarInfo carInfo) {

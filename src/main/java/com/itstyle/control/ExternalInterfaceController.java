@@ -18,6 +18,7 @@ import com.itstyle.vo.charges.reponse.ByChargesResponseVo;
 import com.itstyle.vo.charges.reponse.ChargesResponse;
 import com.itstyle.vo.charges.reponse.SZChargesResponseVo;
 import com.itstyle.vo.charges.reponse.StandardChargesResponseVo;
+import com.itstyle.vo.deletevehicleinfo.response.DeleteVehicleInfo;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.inition.response.Inition;
 import com.itstyle.vo.login.reponse.LoginResponse;
@@ -221,6 +222,12 @@ public class ExternalInterfaceController {
     @ResponseBody
     public PhoneNumberList fetchPhoneNumber() {
         return externalInterfaceService.fetchPhoneNumber();
+    }
+
+    @RequestMapping("/deleteVehicleInfo")
+    @ResponseBody
+    public DeleteVehicleInfo fetchDeleteVehicleInfo(Long startTime, Long endTime) {
+        return externalInterfaceService.fetchDeleteVehicleInfo(startTime, endTime);
     }
 
 }

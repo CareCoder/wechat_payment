@@ -1,13 +1,15 @@
 package com.itstyle.service;
 
-import com.google.gson.Gson;
 import com.itstyle.common.YstCommon;
-import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.Fastigium;
 import com.itstyle.domain.car.manager.MonthCarInfo;
+import com.itstyle.domain.car.manager.enums.CarType2;
 import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
+import com.itstyle.domain.report.DeleteRecord;
+import com.itstyle.vo.deletevehicleinfo.response.DeleteInfo;
+import com.itstyle.vo.deletevehicleinfo.response.DeleteVehicleInfo;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
 import com.itstyle.vo.incrementmonly.response.MonlyCarAddInfo;
 import com.itstyle.vo.incrementmonly.response.MonlyCarRenewInfo;
@@ -29,10 +31,7 @@ import java.util.stream.Collectors;
 public class ExternalInterfaceService {
     @Resource
     private MonthCarInfoService monthCarInfoService;
-    @Resource
-    private RedisDao redisDao;
-    @Resource
-    private Gson gson;
+
     @Resource
     private GlobalSettingService globalSettingService;
 
@@ -41,6 +40,9 @@ public class ExternalInterfaceService {
 
     @Resource
     private PassPermissionService passPermissionService;
+
+    @Resource
+    private DeleteRecordService deleteRecordService;
 
     public SynCarInfo synCarInfo() {
         SynCarInfo synCarInfo = new SynCarInfo();
@@ -97,7 +99,7 @@ public class ExternalInterfaceService {
         return vehicleManagement;
     }
 
-    public CarYardName carYardName() {
+    private CarYardName carYardName() {
         CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
         //获取剩余车位数,如果未获取到则默认为车场总数
         Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
@@ -107,7 +109,7 @@ public class ExternalInterfaceService {
         return carYardName;
     }
 
-    public List<AccessAuthoritySetup> getAccessAuthoritySetup() {
+    private List<AccessAuthoritySetup> getAccessAuthoritySetup() {
         List<ResponsePassCarStatus> list = passPermissionService.list();
         if (list != null) {
             return list.stream().map(responsePassCarStatus -> {
@@ -173,5 +175,27 @@ public class ExternalInterfaceService {
             return carYardName.getParkingNum();
         }
         return 0;
+    }
+
+    /**
+     * 获取删除的月租车和黑名单车辆信息
+     */
+    public DeleteVehicleInfo fetchDeleteVehicleInfo(Long startTime, Long endTime) {
+        DeleteVehicleInfo deleteVehicleInfo = new DeleteVehicleInfo();
+
+        List<DeleteRecord> deleteRecords = deleteRecordService.query(startTime, endTime);
+
+        List<DeleteInfo> blackListDeleteInfos = deleteRecords.stream()
+                .filter(e -> e.getCarType2() == CarType2.BLACK_LIST_CAR)
+                .map(e -> new DeleteInfo(e.getCarNum()))
+                .collect(Collectors.toList());
+        List<DeleteInfo> monlyCarDeleteInfos = deleteRecords.stream()
+                .filter(e -> e.getCarType2() == CarType2.MONTH_CAR)
+                .map(e -> new DeleteInfo(e.getCarNum()))
+                .collect(Collectors.toList());
+        deleteVehicleInfo.blackListDeleteInfos = blackListDeleteInfos;
+        deleteVehicleInfo.monlyCarDeleteInfos = monlyCarDeleteInfos;
+
+        return deleteVehicleInfo;
     }
 }
