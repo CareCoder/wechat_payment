@@ -83,6 +83,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
             //update 这个接口不得修改 startTime 和 endTime ，如果需要修改需要去续费接口
             monthCarInfo.setStartTime(null);
             monthCarInfo.setEndTime(null);
+            monthCarInfo.setModifyTime(new Date());
             update(monthCarInfo.getId(), monthCarInfo);
         }
     }
