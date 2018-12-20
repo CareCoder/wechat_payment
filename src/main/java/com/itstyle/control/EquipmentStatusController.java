@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,17 +43,10 @@ public class EquipmentStatusController {
     @ResponseBody
     public PageResponse<EquipmentStatus> equipmentList() {
         Map<Object, Object> objectObjectMap = redisDao.hgetAll(YstCommon.EQUIPMENT_STATUS);
-        List<EquipmentStatus> collect = objectObjectMap.values().stream().map(o -> gson.fromJson(o.toString(), EquipmentStatus.class)).collect(Collectors.toList());
+        List<EquipmentStatus> collect = objectObjectMap.values().stream()
+                .map(o -> gson.fromJson(o.toString(), EquipmentStatus.class))
+                .sorted(Comparator.comparing(EquipmentStatus::getPassWayName))
+                .collect(Collectors.toList());
         return new PageResponse<>(0L, collect);
     }
-
-    @PostMapping("/save")
-    @ResponseBody
-    public Response save(EquipmentStatus equipmentStatus) {
-        AssertUtil.assertNotNull(equipmentStatus, () -> new BusinessException("equipment status is null"));
-        AssertUtil.assertNotEmpty(equipmentStatus.getKey(), () -> new BusinessException("key is null"));
-        redisDao.hset(YstCommon.EQUIPMENT_STATUS, equipmentStatus.getKey(), gson.toJson(equipmentStatus));
-        return Response.build(Status.NORMAL, null, null);
-    }
-
 }

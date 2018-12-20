@@ -1,11 +1,14 @@
 package com.itstyle.service;
 
+import com.google.gson.Gson;
 import com.itstyle.common.YstCommon;
+import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.Fastigium;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType2;
 import com.itstyle.domain.caryard.CarYardName;
+import com.itstyle.domain.caryard.EquipmentStatus;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
 import com.itstyle.domain.report.DeleteRecord;
 import com.itstyle.vo.deletevehicleinfo.response.DeleteInfo;
@@ -29,6 +32,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class ExternalInterfaceService {
+    @Resource
+    private RedisDao redisDao;
+
+    @Resource
+    private Gson gson;
+
     @Resource
     private MonthCarInfoService monthCarInfoService;
 
@@ -197,5 +206,12 @@ public class ExternalInterfaceService {
         deleteVehicleInfo.monlyCarDeleteInfos = monlyCarDeleteInfos;
 
         return deleteVehicleInfo;
+    }
+
+    /**
+     * 定时把外设的信息上传给服务器做更新
+     */
+    public void uploadEquipmentStatus(EquipmentStatus equipmentStatus) {
+        redisDao.hset(YstCommon.EQUIPMENT_STATUS, equipmentStatus.getPassWayName(), gson.toJson(equipmentStatus));
     }
 }
