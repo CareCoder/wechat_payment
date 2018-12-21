@@ -147,9 +147,12 @@ public class ExternalInterfaceService {
     public IncrementMonly incrementMonly(Long startTime, Long endTime) {
         List<MonthCarInfo> carAddInfo = monthCarInfoService.getCarAddInfo(startTime, endTime);
         List<MonthCarInfo> carRenewInfo = monthCarInfoService.getCarRenewInfo(startTime, endTime);
+        List<CarInfo> carInfos = carInfoService.createTimeQuery(startTime, endTime);
         IncrementMonly icm = new IncrementMonly();
         icm.monlyCarAddInfos = carAddInfo.stream().map(MonlyCarAddInfo::convert).collect(Collectors.toList());
         icm.monlyCarRenewInfos = carRenewInfo.stream().map(MonlyCarRenewInfo::convert).collect(Collectors.toList());
+        icm.blackVehicleAdd = carInfos.stream().filter(e -> e.getIsBlackList() != null && e.getIsBlackList()).map(BlackListVehicle::convert).collect(Collectors.toList());
+        icm.freeVehicleAdd = carInfos.stream().filter(e -> e.getIsFree() != null && e.getIsFree()).map(FreeVehicle::convert).collect(Collectors.toList());
         return icm;
     }
 
