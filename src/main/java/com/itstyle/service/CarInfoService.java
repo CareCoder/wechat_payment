@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -48,6 +49,20 @@ public class CarInfoService {
         };
         Page<CarInfo> all = carInfoMapper.findAll(sp, pageRequest);
         return PageResponse.build(all);
+    }
+
+    public List<CarInfo> createTimeQuery(Long startTime, Long endTime) {
+        Assert.notNull(startTime, "startTime is null");
+        Assert.notNull(endTime, "endTime is null");
+        Specification<CarInfo> sp = (root, query, cb) -> {
+            List<Predicate> predicate = new ArrayList<>();
+            Predicate p1 = cb.between(root.get("createTime").as(Date.class), new Date(startTime), new Date(endTime));
+            predicate.add(p1);
+            query.orderBy(cb.desc(root.get("id")));
+            query.where(predicate.toArray(new Predicate[0]));
+            return query.getRestriction();
+        };
+        return carInfoMapper.findAll(sp);
     }
 
     public CarInfo getById(Long id) {
