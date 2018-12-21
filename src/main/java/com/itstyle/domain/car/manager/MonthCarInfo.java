@@ -39,5 +39,7 @@ public class MonthCarInfo extends BaseEntity {
      */
     private String idCardNum;
 
+    private Boolean isMonth;
+
     private CarColor carColor;
 }
