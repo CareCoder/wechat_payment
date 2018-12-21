@@ -4,8 +4,10 @@ import com.itstyle.common.PageResponse;
 import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
+import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.MonthCarInfo;
+import com.itstyle.service.CarInfoService;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.service.MonthCarInfoService;
 import org.apache.http.HttpResponse;
@@ -27,6 +29,8 @@ import java.util.List;
 public class MonthCarInfoController {
     @Resource
     private MonthCarInfoService monthCarInfoService;
+    @Resource
+    private CarInfoService carInfoService;
     @Resource
     private GlobalSettingService globalSettingService;
 
@@ -81,13 +85,28 @@ public class MonthCarInfoController {
      */
     @PostMapping("/edit")
     @ResponseBody
-    public void edit(MonthCarInfo monthCarInfo, HttpServletResponse httpResponse) {
-        try {
+    public String edit(MonthCarInfo monthCarInfo, HttpServletResponse httpResponse) {
+            CarInfo byCarNum1 = carInfoService.getByCarNum(monthCarInfo.getCarNum());
+            MonthCarInfo byCarNum2 = monthCarInfoService.getByCarNum(monthCarInfo.getCarNum());
+            try {
+                if(byCarNum1!=null){
+                    if (byCarNum1.getIsBlackList() !=null && byCarNum1.getIsBlackList()){
+                        return "已是黑名单车辆";
+                    }else if(byCarNum1.getIsFree() !=null && byCarNum1.getIsFree()){
+                        return "已是免费车辆";
+                    }
+                }
+                if (byCarNum2!=null){
+                    if (byCarNum2.getIsMonth()!=null&&byCarNum2.getIsMonth()){
+                        return "已是月租车";
+                    }
+                }
             monthCarInfoService.edit(monthCarInfo);
         } catch (DataIntegrityViolationException exception) {
             httpResponse.setStatus(503);
         }
         SystemLoggerHelper.log("更新", "更新月租车:" + monthCarInfo.getCarNum());
+        return "添加成功";
     }
 
     /**
