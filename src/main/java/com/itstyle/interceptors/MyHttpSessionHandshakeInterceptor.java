@@ -21,7 +21,7 @@ public class MyHttpSessionHandshakeInterceptor extends HttpSessionHandshakeInter
             ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
             String username = servletRequest.getServletRequest().getParameter("username");
             //必须提供 username,action 请求参数，否则不允许连接
-            if (StringUtils.isNotEmpty(username)){
+            if (StringUtils.isEmpty(username)){
                 return false;
             }
             attributes.put(MyTextWebSocketHandler.WEB_SOCKET_USERNAME, username);
