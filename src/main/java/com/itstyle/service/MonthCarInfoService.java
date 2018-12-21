@@ -158,4 +158,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         }
         return 0;
     }
+    public MonthCarInfo getByCarNum(String carNum){return monthCarInfoMapper.findByCarNum(carNum);}
+
+    public List<MonthCarInfo> getMonth(){return  monthCarInfoMapper.findByIsMonth(true);}
 }
