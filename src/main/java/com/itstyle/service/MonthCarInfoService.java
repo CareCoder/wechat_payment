@@ -80,40 +80,25 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
      * @return
      */
     public String edit(MonthCarInfo monthCarInfo) {
-        CarInfo byCarNum1 = carInfoService.getByCarNum(monthCarInfo.getCarNum());
-        MonthCarInfo byCarNum2 =this.getByCarNum(monthCarInfo.getCarNum());
+        String result = carInfoService.verification(monthCarInfo.getCarNum());
         if (monthCarInfo.getId() == null) {
             //add
             if (monthCarInfo.getStartTime() == null) {
                 monthCarInfo.setStartTime(System.currentTimeMillis());
             }
             monthCarInfo.setCreateTime(new Date());
-                if(byCarNum1!=null){
-                    if (byCarNum1.getIsBlackList() !=null && byCarNum1.getIsBlackList()){
-                        return "已是黑名单车辆！";
-                    }else if(byCarNum1.getIsFree() !=null && byCarNum1.getIsFree()){
-                        return "已是免费车辆！";
-                    }
-                }
-                if (byCarNum2!=null){
-                        return "已是月租车！";
-                }
-                add(monthCarInfo);
-                return "添加成功！";
+            if(result!=""){
+                return result;
+            }
+            add(monthCarInfo);
+            return "添加成功！";
         }else{
             //update 这个接口不得修改 startTime 和 endTime ，如果需要修改需要去续费接口
             monthCarInfo.setStartTime(null);
             monthCarInfo.setEndTime(null);
             monthCarInfo.setModifyTime(new Date());
-            if(byCarNum1!=null){
-                if (byCarNum1.getIsBlackList() !=null && byCarNum1.getIsBlackList()){
-                    return "已是黑名单车辆！";
-                }else{
-                    return "已是免费车辆！";
-                }
-            }
-            if (byCarNum2!=null){
-                return "已是月租车！";
+            if(result!=""){
+                return result;
             }
             update(monthCarInfo.getId(), monthCarInfo);
             return "修改成功！";

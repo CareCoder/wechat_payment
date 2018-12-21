@@ -83,8 +83,23 @@ public class CarInfoService {
      * @return
      */
     public String save(CarInfo carInfo) {
-        CarInfo byCarNum1 = this.getByCarNum(carInfo.getCarNum());
-        MonthCarInfo byCarNum2 = monthCarInfoService.getByCarNum(carInfo.getCarNum());
+        String result = this.verification(carInfo.getCarNum());
+        if(result!=""){
+            return result;
+        }
+        carInfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        carInfoMapper.save(carInfo);
+        return "添加成功！";
+    }
+
+    /**
+     * 验证方法
+     * @param carNum
+     * @return
+     */
+    public String verification(String carNum){
+        CarInfo byCarNum1 = this.getByCarNum(carNum);
+        MonthCarInfo byCarNum2 = monthCarInfoService.getByCarNum(carNum);
         if(byCarNum1!=null){
             if (byCarNum1.getIsBlackList() !=null && byCarNum1.getIsBlackList()){
                 return "已是黑名单车辆！";
@@ -93,13 +108,10 @@ public class CarInfoService {
             }
         }
         if (byCarNum2!=null){
-                return "已是月租车辆！";
+            return "已是月租车辆！";
         }
-        carInfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        carInfoMapper.save(carInfo);
-        return "添加成功！";
+        return "";
     }
-
     public void delete(Long id) {
         CarInfo one = carInfoMapper.getOne(id);
 
@@ -124,17 +136,9 @@ public class CarInfoService {
         BeanUtilIgnore.copyPropertiesIgnoreNull(carInfo, one);
         one.setModifyTime(new Timestamp(System.currentTimeMillis()));
 
-        CarInfo byCarNum1 = this.getByCarNum(one.getCarNum());
-        MonthCarInfo byCarNum2 = monthCarInfoService.getByCarNum(one.getCarNum());
-        if(byCarNum1!=null){
-            if (byCarNum1.getIsBlackList() !=null && byCarNum1.getIsBlackList()){
-                return "已是黑名单车辆！";
-            }else{
-                return "已是免费车辆！";
-            }
-        }
-        if (byCarNum2!=null){
-            return "已是月租车辆！";
+        String result = this.verification(carInfo.getCarNum());
+        if(result!=""){
+            return result;
         }
         carInfoMapper.save(one);
         return "修改成功！";
