@@ -3,6 +3,7 @@ package com.itstyle.service;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
+import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType;
@@ -32,6 +33,8 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
     private MonthCarInfoMapper monthCarInfoMapper;
     @Resource
     private ChargeRecordService chargeRecordService;
+    @Resource
+    private CarInfoService carInfoService;
     @Resource
     private GlobalSettingService globalSettingService;
     @Resource
@@ -71,20 +74,49 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         chargeRecord(one, month, account);
     }
 
-    public void edit(MonthCarInfo monthCarInfo) {
+    /**
+     * 新增和更新车辆
+     * @param monthCarInfo
+     * @return
+     */
+    public String edit(MonthCarInfo monthCarInfo) {
+        CarInfo byCarNum1 = carInfoService.getByCarNum(monthCarInfo.getCarNum());
+        MonthCarInfo byCarNum2 =this.getByCarNum(monthCarInfo.getCarNum());
         if (monthCarInfo.getId() == null) {
             //add
             if (monthCarInfo.getStartTime() == null) {
                 monthCarInfo.setStartTime(System.currentTimeMillis());
             }
             monthCarInfo.setCreateTime(new Date());
-            add(monthCarInfo);
+                if(byCarNum1!=null){
+                    if (byCarNum1.getIsBlackList() !=null && byCarNum1.getIsBlackList()){
+                        return "已是黑名单车辆！";
+                    }else if(byCarNum1.getIsFree() !=null && byCarNum1.getIsFree()){
+                        return "已是免费车辆！";
+                    }
+                }
+                if (byCarNum2!=null){
+                        return "已是月租车！";
+                }
+                add(monthCarInfo);
+                return "添加成功！";
         }else{
             //update 这个接口不得修改 startTime 和 endTime ，如果需要修改需要去续费接口
             monthCarInfo.setStartTime(null);
             monthCarInfo.setEndTime(null);
             monthCarInfo.setModifyTime(new Date());
+            if(byCarNum1!=null){
+                if (byCarNum1.getIsBlackList() !=null && byCarNum1.getIsBlackList()){
+                    return "已是黑名单车辆！";
+                }else{
+                    return "已是免费车辆！";
+                }
+            }
+            if (byCarNum2!=null){
+                return "已是月租车！";
+            }
             update(monthCarInfo.getId(), monthCarInfo);
+            return "修改成功！";
         }
     }
 
@@ -158,4 +190,6 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         }
         return 0;
     }
+
+    public MonthCarInfo getByCarNum(String carNum){return monthCarInfoMapper.findByCarNum(carNum);}
 }
