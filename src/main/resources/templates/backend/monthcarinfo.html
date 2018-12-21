@@ -36,6 +36,12 @@
         <button class="layui-btn" id="addCarInfo">
             <i class="layui-icon">&#xe61f;</i>添加车辆
         </button>
+        <button type="button" class="layui-btn" id="importExcel">
+            <i class="layui-icon">&#xe681;</i>导入EXCEL
+        </button>
+        <button class="layui-btn" id="exportExcel">
+            <i class="layui-icon">&#xe601;</i>导出EXCEL
+        </button>
     </okToolbar>
     <!--数据表格-->
     <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
@@ -49,11 +55,12 @@
     window.onload = function () {
         NProgress.done();
     };
-    layui.use(['table', 'form', 'jquery', 'laydate'], function () {
+    layui.use(['table', 'form', 'jquery', 'laydate','upload'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
+        var upload = layui.upload;
         $.ajax({
             url: "/gs/get/fixedcar/data",
             type: "GET",
@@ -178,6 +185,24 @@
                     $(".layui-btn")[0].click();
                 }
             });
+        });
+        $("#exportExcel").click(function(){
+            window.location.href = "/monthcarinfo/exportExcel";
+        });
+        upload.render({
+            elem: '#importExcel' //绑定元素
+            ,url: '/monthcarinfo/importExcel' //上传接口
+            ,accept: 'file' //允许上传的文件类型
+            ,done: function(res){
+                layer.msg("上传成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                });
+            }
+            ,error: function(){
+                layer.msg("上传失败！", {icon: 6, time: 1000, anim: 4}, function () {
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                });
+            }
         });
     })
 

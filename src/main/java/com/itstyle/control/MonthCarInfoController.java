@@ -8,18 +8,18 @@ import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.service.MonthCarInfoService;
-import org.apache.http.HttpResponse;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -105,5 +105,24 @@ public class MonthCarInfoController {
         monthCarInfoService.payment(month, id, account);
         MonthCarInfo byId = monthCarInfoService.findById(id);
         SystemLoggerHelper.log("续费", "续费月租车:"+ byId.getCarNum() + "续费"+ month +"月");
+    }
+
+    /**
+     * 导出excel
+     */
+    @RequestMapping("/exportExcel")
+    public ResponseEntity<byte[]> exportExcel() {
+        return monthCarInfoService.exportExcel();
+    }
+
+    /**
+     * 导入
+     * @param file
+     * @return
+     */
+    @RequestMapping("/importExcel")
+    @ResponseBody
+    public void importExcel(MultipartFile file) {
+        monthCarInfoService.importExcel(file);
     }
 }
