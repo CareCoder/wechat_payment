@@ -183,6 +183,7 @@
             data.field.endTime = new Date(data.field.endTime).getTime();
             data.field.startTime = new Date(data.field.startTime).getTime();
             data.field.carNum = data.field.carNumHead + data.field.carNum;
+            data.field.isMonth = true;
             console.log(data.field);
             $.ajax({
                 url:"/monthcarinfo/edit",
@@ -190,7 +191,7 @@
                 data:data.field,
                 success:function(resp){
                     console.log(resp);
-                    layer.msg("添加成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                    layer.msg(resp, {icon: 6, time: 1000, anim: 4}, function () {
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                     });
                 },
