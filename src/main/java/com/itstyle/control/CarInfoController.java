@@ -42,17 +42,9 @@ public class CarInfoController {
     @PostMapping("/save")
     @ResponseBody
     public String save(CarInfo carInfo, HttpServletResponse httpResponse) {
-        CarInfo byCarNum = carInfoService.getByCarNum(carInfo.getCarNum());
-        if (byCarNum != null) {
-            if (byCarNum.getIsBlackList() !=null && byCarNum.getIsBlackList()) {
-                return "已是黑名单车辆";
-            }else{
-                return "已是免费车辆";
-            }
-        }
-        carInfoService.save(carInfo);
+        String result = carInfoService.save(carInfo);
         SystemLoggerHelper.log("添加", "添加车辆管理信息:" + carInfo.getCarNum());
-        return "添加成功";
+        return result;
     }
 
     @RequestMapping("/delete/{id}")
@@ -65,9 +57,10 @@ public class CarInfoController {
 
     @RequestMapping("/update")
     @ResponseBody
-    public void update(CarInfo carInfo) {
-        carInfoService.update(carInfo);
+    public String update(CarInfo carInfo) {
+        String result = carInfoService.update(carInfo);
         SystemLoggerHelper.log("更新", "更新车辆信息"+carInfo.getCarNum());
+        return result;
     }
 
     @RequestMapping("/carinfo/{type}")
