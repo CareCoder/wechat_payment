@@ -38,9 +38,15 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">相机IP</label>
+            <div class="layui-input-block">
+                <input type="text" name="camera" placeholder="请输入相机ip" autocomplete="off" class="layui-input" lay-verify="cameraIp">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">辅助相机IP</label>
             <div class="layui-input-block">
-                <input type="text" name="camera" placeholder="请输入辅助相机ip" autocomplete="off" class="layui-input" lay-verify="cameraIp">
+                <input type="text" name="camera2" placeholder="请输入辅助相机ip" autocomplete="off" class="layui-input" lay-verify="cameraIp">
             </div>
         </div>
         <div class="layui-form-item">
@@ -77,6 +83,7 @@
         $("input[name='channelName']").val('[[${access_type_info.channelName}]]');
         $("input[name='ip']").val('[[${access_type_info.ip}]]');
         $("input[name='camera']").val('[[${access_type_info.camera}]]');
+        $("input[name='camera2']").val('[[${access_type_info.camera2}]]');
 
         form.verify({
             ip: [

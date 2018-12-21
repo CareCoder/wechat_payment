@@ -21,4 +21,5 @@ public class AccessType {
     private Long channelTypeId;
     private String ip;
     private String camera;
+    private String camera2;
 }
