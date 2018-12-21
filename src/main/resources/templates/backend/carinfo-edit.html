@@ -71,6 +71,7 @@
 <script src="/lib/layui/layui.js"></script>
 <script src="/js/extended.js"></script>
 <script>
+    var type = '[[${type}]]';
     layui.use(['element', 'form', 'jquery', 'laydate'], function () {
         var element = layui.element;
         var table = layui.table;
@@ -103,6 +104,11 @@
         });
 
         form.on('submit(add)', function (data) {
+            if (type == 'free') {
+                data.field.isFree = true;
+            }else{
+                data.field.isBlackList = true;
+            }
             console.log(data.field);
             $.ajax({
                 url:"/carinfo/update",
@@ -110,7 +116,7 @@
                 data:data.field,
                 success:function(resp){
                     console.log(resp);
-                    layer.msg("添加成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                    layer.msg(resp, {icon: 6, time: 1000, anim: 4}, function () {
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                     });
                 },
