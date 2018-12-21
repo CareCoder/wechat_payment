@@ -1,9 +1,13 @@
 package com.itstyle.service;
 
+import com.alibaba.excel.ExcelReader;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.metadata.Sheet;
+import com.alibaba.excel.support.ExcelTypeEnum;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
-import com.itstyle.domain.car.manager.CarInfo;
+import com.itstyle.domain.car.manager.CarInfoExcelModel;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType;
@@ -11,20 +15,29 @@ import com.itstyle.domain.car.manager.enums.CarType2;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.mapper.MonthCarInfoMapper;
+import com.itstyle.service.listener.MonthCarExcelListener;
 import com.itstyle.utils.hibernate.BaseDaoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -49,7 +62,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         PageRequest pageRequest = PageResponse.getPageRequest(page, limit);
         Specification<MonthCarInfo> sp = (root, query, cb) -> {
             if (StringUtils.isNotEmpty(queryStr)) {
-                Predicate p1 = cb.equal(root.get("carNum").as(String.class), queryStr);
+                Predicate p1 = cb.like(root.get("carNum").as(String.class), "%" + queryStr + "%");
                 Predicate p2 = cb.equal(root.get("phone").as(String.class), queryStr);
                 query.where(cb.or(p1, p2));
             }
@@ -176,5 +189,61 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         return 0;
     }
 
-    public MonthCarInfo getByCarNum(String carNum){return monthCarInfoMapper.findByCarNum(carNum);}
+	public MonthCarInfo getByCarNum(String carNum){return monthCarInfoMapper.findByCarNum(carNum);}
+
+    /**
+     * 导出所有数据到EXCEL
+     */
+    public ResponseEntity<byte[]> exportExcel() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ResponseEntity<byte[]> entity = null;
+        try {
+            List<MonthCarInfo> carInfos = monthCarInfoMapper.findAll();
+            List<CarInfoExcelModel> data = carInfos.stream().map(CarInfoExcelModel::convert).collect(Collectors.toList());
+            ExcelWriter excelWriter = new ExcelWriter(out, ExcelTypeEnum.XLSX);
+            Sheet sheet = new Sheet(1, 0, CarInfoExcelModel.class);
+            excelWriter.write(data, sheet);
+            excelWriter.finish();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "application/octet-stream");
+            headers.add("Connection", "close");
+            headers.add("Accept-Ranges", "bytes");
+            headers.add("Content-Disposition", "attachment;filename=" + new String("月租车数据.xlsx".getBytes("GB2312"), "ISO8859-1"));
+            entity = new ResponseEntity<>(out.toByteArray(), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("exportExcel error", e);
+        }finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                log.error("exportExcel error2", e);
+            }
+        }
+        return entity;
+    }
+
+    public void importExcel(MultipartFile excel) {
+        InputStream inputStream = null;
+        try {
+            inputStream = excel.getInputStream();
+            // 解析每行结果在listener中处理
+            MonthCarExcelListener listener = new MonthCarExcelListener(this);
+
+            ExcelReader excelReader = new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, listener);
+
+            excelReader.read(new Sheet(1, 1, CarInfoExcelModel.class));
+        } catch (Exception e) {
+            log.error("importExcel error1",e);
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                log.error("importExcel error2",e);
+            }
+        }
+
+    }
 }
