@@ -3,7 +3,9 @@ package com.itstyle.control;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.domain.car.manager.CarInfo;
+import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.service.CarInfoService;
+import com.itstyle.service.MonthCarInfoService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 public class CarInfoController {
     @Resource
     private CarInfoService carInfoService;
-
+    @Resource
+    private MonthCarInfoService monthCarInfoService;
     @RequestMapping("/list")
     @ResponseBody
     public PageResponse<CarInfo> list(Integer page, Integer limit, String type, String query) {
@@ -42,12 +45,18 @@ public class CarInfoController {
     @PostMapping("/save")
     @ResponseBody
     public String save(CarInfo carInfo, HttpServletResponse httpResponse) {
-        CarInfo byCarNum = carInfoService.getByCarNum(carInfo.getCarNum());
-        if (byCarNum != null) {
-            if (byCarNum.getIsBlackList() !=null && byCarNum.getIsBlackList()) {
+        CarInfo byCarNum1 = carInfoService.getByCarNum(carInfo.getCarNum());
+        MonthCarInfo byCarNum2 = monthCarInfoService.getByCarNum(carInfo.getCarNum());
+        if(byCarNum1!=null){
+            if (byCarNum1.getIsBlackList() !=null && byCarNum1.getIsBlackList()){
                 return "已是黑名单车辆";
             }else{
                 return "已是免费车辆";
+            }
+        }
+        if (byCarNum2!=null){
+            if (byCarNum2.getIsMonth()!=null&&byCarNum2.getIsMonth()){
+                return "已是月租车";
             }
         }
         carInfoService.save(carInfo);
@@ -65,9 +74,24 @@ public class CarInfoController {
 
     @RequestMapping("/update")
     @ResponseBody
-    public void update(CarInfo carInfo) {
+    public String update(CarInfo carInfo) {
+        CarInfo byCarNum1 = carInfoService.getByCarNum(carInfo.getCarNum());
+        MonthCarInfo byCarNum2 = monthCarInfoService.getByCarNum(carInfo.getCarNum());
+        if(byCarNum1!=null){
+            if (byCarNum1.getIsBlackList() !=null && byCarNum1.getIsBlackList()){
+                return "已是黑名单车辆";
+            }else{
+                return "已是免费车辆";
+            }
+        }
+        if (byCarNum2!=null){
+            if (byCarNum2.getIsMonth()!=null&&byCarNum2.getIsMonth()){
+                return "已是月租车";
+            }
+        }
         carInfoService.update(carInfo);
         SystemLoggerHelper.log("更新", "更新车辆信息"+carInfo.getCarNum());
+        return "修改成功";
     }
 
     @RequestMapping("/carinfo/{type}")
