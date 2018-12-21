@@ -81,13 +81,15 @@ public class MonthCarInfoController {
      */
     @PostMapping("/edit")
     @ResponseBody
-    public void edit(MonthCarInfo monthCarInfo, HttpServletResponse httpResponse) {
+    public String edit(MonthCarInfo monthCarInfo, HttpServletResponse httpResponse) {
+        String result = "";
         try {
-            monthCarInfoService.edit(monthCarInfo);
+          result =  monthCarInfoService.edit(monthCarInfo);
         } catch (DataIntegrityViolationException exception) {
             httpResponse.setStatus(503);
         }
         SystemLoggerHelper.log("更新", "更新月租车:" + monthCarInfo.getCarNum());
+        return result;
     }
 
     /**

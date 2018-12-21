@@ -3,6 +3,7 @@ package com.itstyle.service;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
+import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType;
@@ -32,6 +33,8 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
     private MonthCarInfoMapper monthCarInfoMapper;
     @Resource
     private ChargeRecordService chargeRecordService;
+    @Resource
+    private CarInfoService carInfoService;
     @Resource
     private GlobalSettingService globalSettingService;
     @Resource
@@ -71,20 +74,34 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         chargeRecord(one, month, account);
     }
 
-    public void edit(MonthCarInfo monthCarInfo) {
+    /**
+     * 新增和更新车辆
+     * @param monthCarInfo
+     * @return
+     */
+    public String edit(MonthCarInfo monthCarInfo) {
+        String result = carInfoService.verification(monthCarInfo.getCarNum());
         if (monthCarInfo.getId() == null) {
             //add
             if (monthCarInfo.getStartTime() == null) {
                 monthCarInfo.setStartTime(System.currentTimeMillis());
             }
             monthCarInfo.setCreateTime(new Date());
+            if(result!=""){
+                return result;
+            }
             add(monthCarInfo);
+            return "添加成功！";
         }else{
             //update 这个接口不得修改 startTime 和 endTime ，如果需要修改需要去续费接口
             monthCarInfo.setStartTime(null);
             monthCarInfo.setEndTime(null);
             monthCarInfo.setModifyTime(new Date());
+            if(result!=""){
+                return result;
+            }
             update(monthCarInfo.getId(), monthCarInfo);
+            return "修改成功！";
         }
     }
 
@@ -158,4 +175,6 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         }
         return 0;
     }
+
+    public MonthCarInfo getByCarNum(String carNum){return monthCarInfoMapper.findByCarNum(carNum);}
 }

@@ -6,4 +6,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 
 public interface MonthCarInfoMapper extends JpaRepository<MonthCarInfo, Long>, JpaSpecificationExecutor<MonthCarInfo> {
+    /**
+     * 根据车牌号获取指定车辆信息
+     * @param carNum
+     * @return
+     */
+    MonthCarInfo findByCarNum(String carNum);
 }

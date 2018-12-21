@@ -2,6 +2,7 @@ package com.itstyle.service;
 
 import com.itstyle.common.PageResponse;
 import com.itstyle.domain.car.manager.CarInfo;
+import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType2;
 import com.itstyle.domain.report.DeleteRecord;
 import com.itstyle.mapper.CarInfoMapper;
@@ -27,6 +28,9 @@ public class CarInfoService {
 
     @Resource
     private DeleteRecordService deleteRecordService;
+
+    @Resource
+    private MonthCarInfoService monthCarInfoService;
 
     public PageResponse<CarInfo> list(int page, int limit, String type, String queryStr) {
         PageRequest pageRequest = PageResponse.getPageRequest(page, limit);
@@ -73,11 +77,41 @@ public class CarInfoService {
         return carInfoMapper.findByCarNum(carNum);
     }
 
-    public void save(CarInfo carInfo) {
+    /**
+     * 新增车辆信息
+     * @param carInfo
+     * @return
+     */
+    public String save(CarInfo carInfo) {
+        String result = this.verification(carInfo.getCarNum());
+        if(result!=""){
+            return result;
+        }
         carInfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
         carInfoMapper.save(carInfo);
+        return "添加成功！";
     }
 
+    /**
+     * 验证方法
+     * @param carNum
+     * @return
+     */
+    public String verification(String carNum){
+        CarInfo byCarNum1 = this.getByCarNum(carNum);
+        MonthCarInfo byCarNum2 = monthCarInfoService.getByCarNum(carNum);
+        if(byCarNum1!=null){
+            if (byCarNum1.getIsBlackList() !=null && byCarNum1.getIsBlackList()){
+                return "已是黑名单车辆！";
+            }else{
+                return "已是免费车辆！";
+            }
+        }
+        if (byCarNum2!=null){
+            return "已是月租车辆！";
+        }
+        return "";
+    }
     public void delete(Long id) {
         CarInfo one = carInfoMapper.getOne(id);
 
@@ -91,12 +125,23 @@ public class CarInfoService {
         deleteRecordService.upload(one.getCarNum(), carType2);
     }
 
-    public void update(CarInfo carInfo) {
+    /**
+     * 修改车辆信息
+     * @param carInfo
+     * @return
+     */
+    public String update(CarInfo carInfo) {
         Assert.notNull(carInfo.getId(), "id is null");
         CarInfo one = carInfoMapper.findOne(carInfo.getId());
         BeanUtilIgnore.copyPropertiesIgnoreNull(carInfo, one);
         one.setModifyTime(new Timestamp(System.currentTimeMillis()));
+
+        String result = this.verification(carInfo.getCarNum());
+        if(result!=""){
+            return result;
+        }
         carInfoMapper.save(one);
+        return "修改成功！";
     }
 
     public List<CarInfo> getBlackList() {
