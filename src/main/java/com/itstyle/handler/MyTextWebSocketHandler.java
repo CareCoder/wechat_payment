@@ -1,5 +1,6 @@
 package com.itstyle.handler;
 
+import com.itstyle.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -24,7 +25,7 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
         try {
             session.sendMessage(new TextMessage("received"));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("doSendMessage ",e);
         }
     }
 
@@ -66,10 +67,21 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
     /**
      * 给某个用户发送消息
      */
-    public static void sendMessageToUser(String username, TextMessage message) {
+    public static int sendMessageToUser(String username, TextMessage message) {
         WebSocketSession user = users.get(username);
+        if (user == null) {
+            return Status.USER_OFFLINE;
+        }
         doSendMessage(user, message);
         log.info("send （" + username + "）one message：" + message);
+        return Status.NORMAL;
+    }
+
+    /**
+     * 给某个用户发送消息
+     */
+    public static int sendMessageToUser(String username, String message) {
+        return sendMessageToUser(username, new TextMessage(message));
     }
 
     /**
@@ -88,8 +100,7 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
                 user.sendMessage(message);
             }
         } catch (IOException e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
+            log.error("doSendMessage ",e);
         }
     }
 }
