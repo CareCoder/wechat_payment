@@ -14,4 +14,5 @@ public class CarNumQueryVo {
     private Long leaveStartTime;
     private Long leaveEndTime;
     private String leavePass;
+    private String enterPass;
 }

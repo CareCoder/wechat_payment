@@ -123,6 +123,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             if (queryVo.getCarType() != null) {
                 predicate.add(cb.equal(root.get("carType").as(Integer.class), queryVo.getCarType().ordinal()));
             }
+            if (queryVo.getEnterPass() != null) {
+                predicate.add(cb.equal(root.get("enterPass").as(String.class), queryVo.getEnterPass()));
+            }
             if (queryVo.getStartTime() != null) {
                 predicate.add(cb.ge(root.get("time").as(Long.class), queryVo.getStartTime()));
             }
