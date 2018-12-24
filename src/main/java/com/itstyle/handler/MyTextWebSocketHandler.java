@@ -56,7 +56,7 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
         if(session.isOpen())
             session.close();
         users.remove(username);
-        log.error("Web Socket 发生异常！username = {}", username, exception);
+        log.error("Web Socket 发生异常！username = "+ username, exception);
     }
 
 

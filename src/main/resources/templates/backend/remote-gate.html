@@ -26,7 +26,7 @@
     <div class="layui-row">
         <form id="fastigium_form" class="layui-form layui-col-md12 ok-search">
             <div class="layui-form-item">
-                <label class="layui-form-label">出口</label>
+                <label class="layui-form-label">通道名称</label>
                 <div class="layui-input-block">
                     <select name="leavePass">
                         <option th:each="vo,it : ${accessTypes}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>

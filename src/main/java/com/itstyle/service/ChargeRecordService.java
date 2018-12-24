@@ -36,13 +36,17 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
         add(chargeRecord);
     }
 
-    public PageResponse<ChargeRecord> query(int page, int limit, ChargeType chargeType, CarType carType,
+    public PageResponse<ChargeRecord> query(int page, int limit, ChargeType chargeType, CarType carType,CarType carRealType,
                                             String chargePersonnel, Long startTime, Long endTime) {
         PageRequest pageRequest = PageResponse.getPageRequest(page, limit);
         Specification<ChargeRecord> sp = (root, query, cb) -> {
             List<Predicate> predicate = new ArrayList<>();
             if (chargeType != null) {
                 Predicate p1 = cb.equal(root.get("chargeType").as(Integer.class), chargeType.ordinal());
+                predicate.add(p1);
+            }
+            if (carRealType != null) {
+                Predicate p1 = cb.equal(root.get("carRealType").as(Integer.class), carRealType.ordinal());
                 predicate.add(p1);
             }
             if (carType != null) {

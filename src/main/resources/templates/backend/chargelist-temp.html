@@ -30,6 +30,12 @@
                 <option value="CASH_PAYMENT">线下支付</option>
                 <option value="ONLINE_PAYMENT">线上支付</option>
             </select>
+            <select name="carRealType">
+                <option value="TEMP_CAR_A">蓝牌</option>
+                <option value="TEMP_CAR_B">黄牌</option>
+                <option value="TEMP_CAR_C">黑牌</option>
+                <option value="TEMP_CAR_D">绿牌</option>
+            </select>
             <input name="startTime" class="layui-input" placeholder="入场时间" autocomplete="off" id="startTime">
             <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
             <button class="layui-btn" lay-submit="" lay-filter="search">
@@ -65,6 +71,7 @@
                     {field: 'carNum', title: '车牌号', width: 150},
                     {field: 'enterTime', title: '入场时间', width: 250, templet: '#enterTimeTemp'},
                     {field: 'leaveTime', title: '出场时间', width: 250, templet: '#leaveTimeTemp'},
+                    {field: 'carRealType', title: '车辆类型', width: 100, templet: '#carRealType'},
                     {field: 'fee', title: '收费金额', width: 100},
                     {field: 'chargeType', title: '收费类型', width: 100, templet: '#chargeTypeTemp'},
                     {field: 'discountAmount', title: '优惠金额', width: 100},
@@ -120,9 +127,20 @@
     return date.toLocaleString();
     }}
 </script>
-<script type="text/html" id="carType">
+<script type="text/html" id="carRealType">
     {{#
-        return fixedcarData.get(d.carType);
+        if(d.carRealType == "TEMP_CAR_A"){
+            return "蓝牌";
+        }else if(d.carRealType == "TEMP_CAR_B"){
+            return "黄牌";
+        }else if(d.carRealType == "TEMP_CAR_C"){
+            return "黑牌";
+        }else if(d.carRealType == "TEMP_CAR_D"){
+            return "绿牌";
+        }else{
+            return "";
+        }
+
     }}
 </script>
 

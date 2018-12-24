@@ -187,6 +187,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         ChargeRecord chargeRecord = new ChargeRecord();
         chargeRecord.setCarNum(carNumVo.getCarNum());
         chargeRecord.setCarType(CarType.TEMP_CAR_A);
+        chargeRecord.setCarRealType(carNumVo.getCarType());
         chargeRecord.setChargeType(ChargeType.CASH_PAYMENT);
         chargeRecord.setEnterTime(carNumVo.getTime());
         chargeRecord.setLeaveTime(carNumVo.getLTime());

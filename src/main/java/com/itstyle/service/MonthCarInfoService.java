@@ -168,6 +168,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         ChargeRecord chargeRecord = new ChargeRecord();
         chargeRecord.setCarNum(one.getCarNum());
         chargeRecord.setCarType(CarType.MONTH_CAR_A);
+        chargeRecord.setCarRealType(one.getCarType());
         chargeRecord.setChargeType(ChargeType.CASH_PAYMENT);
         chargeRecord.setEnterTime(one.getStartTime());
         chargeRecord.setLeaveTime(one.getEndTime());
