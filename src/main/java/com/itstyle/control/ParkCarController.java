@@ -36,7 +36,7 @@ public class ParkCarController {
     @RequestMapping("/uploadBill")
     @ResponseBody
     public Response uploadBill(String mcNo, String carNo, Long operTime, Integer fee, String openId, Long enterTime, CarType carType) {
-        int status = parkCarService.uploadBill(mcNo, carNo, operTime, fee, openId, enterTime);
+        int status = parkCarService.uploadBill(mcNo, carNo, operTime, fee, openId, enterTime,carType);
         return Response.build(status, null, null);
     }
 
