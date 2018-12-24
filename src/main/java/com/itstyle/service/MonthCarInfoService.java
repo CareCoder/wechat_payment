@@ -16,6 +16,8 @@ import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.mapper.MonthCarInfoMapper;
 import com.itstyle.service.listener.MonthCarExcelListener;
+import com.itstyle.utils.FileUtils;
+import com.itstyle.utils.HttpUtils;
 import com.itstyle.utils.hibernate.BaseDaoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -196,32 +198,9 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
      * 导出所有数据到EXCEL
      */
     public ResponseEntity<byte[]> exportExcel() {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ResponseEntity<byte[]> entity = null;
-        try {
-            List<MonthCarInfo> carInfos = monthCarInfoMapper.findAll();
-            List<CarInfoExcelModel> data = carInfos.stream().map(CarInfoExcelModel::convert).collect(Collectors.toList());
-            ExcelWriter excelWriter = new ExcelWriter(out, ExcelTypeEnum.XLSX);
-            Sheet sheet = new Sheet(1, 0, CarInfoExcelModel.class);
-            excelWriter.write(data, sheet);
-            excelWriter.finish();
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Type", "application/octet-stream");
-            headers.add("Connection", "close");
-            headers.add("Accept-Ranges", "bytes");
-            headers.add("Content-Disposition", "attachment;filename=" + new String("月租车数据.xlsx".getBytes("GB2312"), "ISO8859-1"));
-            entity = new ResponseEntity<>(out.toByteArray(), headers, HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("exportExcel error", e);
-        }finally {
-            try {
-                out.close();
-            } catch (IOException e) {
-                log.error("exportExcel error2", e);
-            }
-        }
-        return entity;
+        List<MonthCarInfo> carInfos = monthCarInfoMapper.findAll();
+        List<CarInfoExcelModel> data = carInfos.stream().map(CarInfoExcelModel::convert).collect(Collectors.toList());
+        return FileUtils.buildExcelResponseEntity(data, CarInfoExcelModel.class, "月租车数据.xlsx");
     }
 
     public void importExcel(MultipartFile excel) {

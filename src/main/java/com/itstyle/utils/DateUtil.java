@@ -1,5 +1,8 @@
 package com.itstyle.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.util.Calendar;
@@ -9,8 +12,10 @@ import java.util.Date;
  * @author gechaoqing
  * 日期工具类
  */
+@Slf4j
 public class DateUtil {
     private static final String format = "yyyy/MM/dd HH:mm:ss";
+    private static final SimpleDateFormat sdf = new SimpleDateFormat(format);
     /***
      * 获取某年某月的开始时间
      * @param year 年
@@ -95,7 +100,18 @@ public class DateUtil {
     }
 
     public static String format(Long time) {
-        SimpleDateFormat sd = new SimpleDateFormat(format);
-        return sd.format(new Date(time));
+        if (time == null) {
+            return "";
+        }
+        return sdf.format(new Date(time));
+    }
+
+    public static Date parse(String time) {
+        try {
+            return sdf.parse(time);
+        } catch (ParseException e) {
+            log.error("parse error ", e);
+        }
+        return null;
     }
 }

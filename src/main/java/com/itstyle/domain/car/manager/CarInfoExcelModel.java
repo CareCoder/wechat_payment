@@ -4,7 +4,11 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.itstyle.domain.car.manager.enums.CarColor;
 import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.utils.DateUtil;
 import lombok.Data;
+
+import java.util.Date;
+import java.util.Objects;
 
 @Data
 public class CarInfoExcelModel extends BaseRowModel {
@@ -20,10 +24,10 @@ public class CarInfoExcelModel extends BaseRowModel {
     @ExcelProperty(value = "车辆类型" ,index = 3)
     private String carType;
 
-    @ExcelProperty(value = "开始时间" ,index = 4, format = "@")
+    @ExcelProperty(value = "开始时间" ,index = 4)
     private String startTime;
 
-    @ExcelProperty(value = "到期时间" ,index = 5, format = "@")
+    @ExcelProperty(value = "到期时间" ,index = 5)
     private String endTime;
 
     @ExcelProperty(value = "车位组" ,index = 6)
@@ -44,8 +48,8 @@ public class CarInfoExcelModel extends BaseRowModel {
         c.setCarNum(m.getCarNum());
         c.setPhone(m.getPhone());
         c.setCarType(m.getCarType() != null ? m.getCarType().toString() : "");
-        c.setStartTime(m.getStartTime()+"");
-        c.setEndTime(m.getEndTime()+"");
+        c.setStartTime(DateUtil.format(m.getStartTime()));
+        c.setEndTime(DateUtil.format(m.getEndTime()));
         c.setCarGroup(m.getCarGroup());
         c.setRemarks(m.getRemarks());
         c.setIdCardNum(m.getIdCardNum());
@@ -61,8 +65,8 @@ public class CarInfoExcelModel extends BaseRowModel {
         if (c.carType != null) {
             m.setCarType(CarType.valueOf(c.carType));
         }
-        m.setStartTime(Long.parseLong(c.getStartTime()));
-        m.setEndTime(Long.parseLong(c.getEndTime()));
+        m.setStartTime(Objects.requireNonNull(DateUtil.parse(c.getStartTime())).getTime());
+        m.setEndTime(Objects.requireNonNull(DateUtil.parse(c.getEndTime())).getTime());
         m.setCarGroup(c.getCarGroup());
         m.setRemarks(c.getRemarks());
         m.setIdCardNum(c.getIdCardNum());

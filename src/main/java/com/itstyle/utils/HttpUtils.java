@@ -9,6 +9,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+
 public class HttpUtils {
 	private static Logger logger = LoggerFactory.getLogger(HttpUtils.class);
 
@@ -26,6 +28,15 @@ public class HttpUtils {
 			return null;
 		}
 
+	}
+
+	public static HttpHeaders getDownloadHttpHeaders(String fileName) throws Exception{
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/octet-stream");
+		headers.add("Connection", "close");
+		headers.add("Accept-Ranges", "bytes");
+		headers.add("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("GB2312"), "ISO8859-1"));
+		return headers;
 	}
 
 }

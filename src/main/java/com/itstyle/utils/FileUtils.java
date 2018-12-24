@@ -1,7 +1,18 @@
 package com.itstyle.utils;
 
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.metadata.BaseRowModel;
+import com.alibaba.excel.metadata.Sheet;
+import com.alibaba.excel.support.ExcelTypeEnum;
+import com.itstyle.domain.car.manager.CarInfoExcelModel;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -9,6 +20,7 @@ import java.util.*;
 /**
  * @author lijun
  */
+@Slf4j
 public class FileUtils {
 
     /**
@@ -132,5 +144,34 @@ public class FileUtils {
             File saveFile = new File(savePath + "/" + file.getOriginalFilename());
             file.transferTo(saveFile);
         }
+    }
+
+
+    /**
+     * 生成excel响应体
+     * @param data
+     * @return
+     */
+    public static ResponseEntity<byte[]> buildExcelResponseEntity(List<? extends BaseRowModel> data, Class<? extends BaseRowModel> clazz, String fileName) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ResponseEntity<byte[]> entity = null;
+        try {
+            ExcelWriter excelWriter = new ExcelWriter(out, ExcelTypeEnum.XLSX);
+            Sheet sheet = new Sheet(1, 0, clazz);
+            excelWriter.write(data, sheet);
+            excelWriter.finish();
+
+            HttpHeaders headers = HttpUtils.getDownloadHttpHeaders(fileName);
+            entity = new ResponseEntity<>(out.toByteArray(), headers, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("exportExcel error", e);
+        }finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                log.error("exportExcel error2", e);
+            }
+        }
+        return entity;
     }
 }
