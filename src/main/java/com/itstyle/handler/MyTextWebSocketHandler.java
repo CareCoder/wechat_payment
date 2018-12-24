@@ -35,6 +35,7 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
         super.afterConnectionEstablished(session);
         String username = (String) session.getAttributes().get(WEB_SOCKET_USERNAME);
         users.put(username, session);
+        log.info("afterConnectionEstablished username = {}", username);
         session.sendMessage(new TextMessage("connect success"));
     }
 
@@ -43,6 +44,7 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         String username = (String) session.getAttributes().get(WEB_SOCKET_USERNAME);
         users.remove(username);
+        log.info("afterConnectionClosed username = {}", username);
         super.afterConnectionClosed(session, status);
     }
 
@@ -54,7 +56,7 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
         if(session.isOpen())
             session.close();
         users.remove(username);
-        log.error("Web Socket 发生异常！");
+        log.error("Web Socket 发生异常！username = {}", username, exception);
     }
 
 
