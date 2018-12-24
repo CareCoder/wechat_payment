@@ -1,17 +1,20 @@
 package com.itstyle.service;
 
 import com.itstyle.common.PageResponse;
+import com.itstyle.domain.car.manager.ChargeRecordExcelModel;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.mapper.ChargeRecordMapper;
+import com.itstyle.utils.FileUtils;
 import com.itstyle.utils.hibernate.BaseDaoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +22,7 @@ import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -71,5 +75,11 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
 
     public List<Object> statisticsTemp(Integer carType, Integer count) {
         return chargeRecordMapper.statisticsTemp(carType, count);
+    }
+
+    public ResponseEntity<byte[]> exportExcel(CarType carType) {
+        List<ChargeRecord> chargeRecordList = chargeRecordMapper.findByCarType(carType);
+        List<ChargeRecordExcelModel> data = chargeRecordList.stream().map(ChargeRecordExcelModel::convert).collect(Collectors.toList());
+        return FileUtils.buildExcelResponseEntity(data, ChargeRecordExcelModel.class, "临时车收费明细.xlsx");
     }
 }

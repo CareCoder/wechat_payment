@@ -6,6 +6,7 @@ import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.service.CarNumService;
 import com.itstyle.service.ChargeRecordService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,5 +64,13 @@ public class ReportController {
     @ResponseBody
     public List<Object> statisticsAccess(Integer count) {
         return carNumService.statisticsAccess(count);
+    }
+
+    /**
+     * 导出收费明细的excel
+     */
+    @RequestMapping("/charge/exportExcel")
+    public ResponseEntity<byte[]> exportExcel(CarType carType) {
+        return chargeRecordService.exportExcel(carType);
     }
 }
