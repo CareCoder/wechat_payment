@@ -53,9 +53,14 @@ public class ChargeRecord {
     private String chargePersonnel;
 
     /**
-     * 车辆类型
+     * 车辆类型(TEMP_CAR_A,代表临时车,MONTH_CAR_A代表月租车.)
      */
     private CarType carType;
+
+    /**
+     * 车辆真实类型
+     */
+    private CarType carRealType;
 
     /**
      * 收费时间

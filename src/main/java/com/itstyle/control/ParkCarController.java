@@ -2,6 +2,7 @@ package com.itstyle.control;
 
 import com.google.gson.Gson;
 import com.itstyle.common.YstCommon;
+import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.park.ParkCar;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.ParkCarService;
@@ -34,7 +35,7 @@ public class ParkCarController {
 
     @RequestMapping("/uploadBill")
     @ResponseBody
-    public Response uploadBill(String mcNo, String carNo, Long operTime, Integer fee, String openId, Long enterTime) {
+    public Response uploadBill(String mcNo, String carNo, Long operTime, Integer fee, String openId, Long enterTime, CarType carType) {
         int status = parkCarService.uploadBill(mcNo, carNo, operTime, fee, openId, enterTime);
         return Response.build(status, null, null);
     }

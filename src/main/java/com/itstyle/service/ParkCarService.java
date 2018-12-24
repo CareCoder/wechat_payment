@@ -60,8 +60,9 @@ public class ParkCarService {
     /**
       上传车辆信息
      */
-    public int uploadBill(String mcNo, String carNo, Long operTime, Integer fee, String openId, Long enterTime) {
-        log.info("[ParkCarService] uploadBill mcNo = {}, carNo = {}, operTime= {}, fee = {}, openId = {}", mcNo, carNo, operTime, fee, openId);
+    public int uploadBill(String mcNo, String carNo, Long operTime, Integer fee, String openId, Long enterTime,CarType carType) {
+        log.info("[ParkCarService] uploadBill mcNo = {}, carNo = {}, operTime= {}, fee = {}, openId = {}, carType={}"
+                , mcNo, carNo, operTime, fee, openId,carType);
         try {
             ParkCarOrder order = readRedisOrder(openId);
             order.mcNo = mcNo;
@@ -69,6 +70,7 @@ public class ParkCarService {
             order.operTime = operTime;
             order.fee = fee;
             order.enterTime = enterTime;
+            order.carType = carType;
             writeRedisOrder(openId, order);
             TemplateUtils.createOrder(queryPay(openId), assessTokenTask.getAssessToken(), false);
         } catch (Exception e) {
@@ -135,7 +137,7 @@ public class ParkCarService {
 
     /**
      * @param ready 如果ready是true代表可以推送信息，如果为false代表只生成订单信息
-     *              车辆准备支付离场费用
+     *      *              车辆准备支付离场费用
      */
     public int ready(String mcNo, String openId, boolean ready) {
         log.info("[ParkCarService] ready mcNo = {}, openId = {}", mcNo, openId);
@@ -217,6 +219,7 @@ public class ParkCarService {
         ChargeRecord chargeRecord = new ChargeRecord();
         chargeRecord.setCarNum(order.carNo);
         chargeRecord.setCarType(CarType.TEMP_CAR_A);
+        chargeRecord.setCarRealType(order.carType);
         chargeRecord.setChargeType(ChargeType.ONLINE_PAYMENT);
         chargeRecord.setEnterTime(order.enterTime);
         chargeRecord.setFee(order.fee);
