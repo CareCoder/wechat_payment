@@ -58,6 +58,8 @@ public class CarNumController {
         model.addAttribute("queryVo", queryVo);
         List<FixedCarManager> fixedCars = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
         model.addAttribute("fixedCars", fixedCars);
+        List<ResponseAccessType> accessTypes = accessTypeService.listNoPage();
+        model.addAttribute("accessTypes", accessTypes);
 
         model.addAttribute("maxPage", Math.ceil(page.getTotalElements() / 4));
         return "/backend/tempcarinfo";

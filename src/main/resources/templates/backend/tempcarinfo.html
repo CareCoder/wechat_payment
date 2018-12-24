@@ -42,6 +42,7 @@
     <div class="layui-row">
         <form class="layui-form layui-col-md12 ok-search">
             <div class="layui-form-item">
+                <label class="layui-form-label">车辆类型</label>
                 <select name="carType">
                     <option value="">暂无选择</option>
                     <option th:each="vo,it : ${fixedCars}" th:value="${vo.carType}" th:text="${vo.customName}"></option>
@@ -54,6 +55,16 @@
                 <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
             </div>
             <div class="layui-form-item">
+                <label class="layui-form-label">出口通道</label>
+                <div class="layui-input-block">
+                    <select name="enterPass">
+                        <option value="">暂无选择</option>
+                        <option th:each="vo,it : ${accessTypes}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">车牌: </label>
                 <input name="carNum" class="layui-input" placeholder="车牌" autocomplete="off">
                 <button class="layui-btn" lay-submit="" lay-filter="search">
                     <i class="layui-icon layui-icon-search"></i>
@@ -124,6 +135,7 @@
         var page = '[[${queryVo?.page}]]';
         var carNum = '[[${queryVo?.carNum}]]';
         var carType = '[[${queryVo?.carType}]]';
+        var enterPass = '[[${queryVo?.enterPass}]]';
         var startTime = '[[${queryVo?.startTime}]]';
         var endTime = '[[${queryVo?.endTime}]]';
         var maxPage = parseInt('[[${maxPage}]]');
@@ -137,11 +149,17 @@
         if (carType != '') {
             form_data.set("carType", carType);
         }
+        if (enterPass != '') {
+            form_data.set("enterPass", enterPass);
+        }
+        var startTime_laydate_value,endTime_laydate_value;
         if (startTime != '') {
             form_data.set("startTime", startTime);
+            startTime_laydate_value = new Date(parseInt(startTime));
         }
         if (endTime != '') {
             form_data.set("endTime", endTime);
+            endTime_laydate_value = new Date(parseInt(startTime));
         }
         if (page == "") {
             page = 1;
@@ -154,6 +172,9 @@
         }
         if (carType != "") {
             $("select option[value=" + carType + "]").attr("selected", 'selected');
+        }
+        if (enterPass != "") {
+            $("select option[value=" + enterPass + "]").attr("selected", 'selected');
         }
         $("input[name='carNum']").val(carNum);
         if (page <= 1) {
@@ -189,13 +210,13 @@
         laydate.render({
             elem: '#startTime',
             type: "datetime",
-            value: new Date(parseInt(startTime))
+            value: startTime_laydate_value
         });
 
         laydate.render({
             elem: '#endTime',
             type: "datetime",
-            value: new Date(parseInt(endTime))
+            value: endTime_laydate_value
         });
 
         form.on('submit(search)', function (data) {
@@ -208,6 +229,7 @@
             var map = new Map();
             map.set("carNum",data.field.carNum);
             map.set("carType",data.field.carType);
+            map.set("enterPass",data.field.enterPass);
             map.set("startTime",data.field.startTime);
             map.set("endTime",data.field.endTime);
             var param = "?";
