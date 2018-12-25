@@ -3,6 +3,7 @@ package com.itstyle.service;
 import com.google.gson.Gson;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.WebSocketData;
+import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
@@ -48,6 +49,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     private FileResourceService fileResourceService;
     @Resource
     private ChargeRecordService chargeRecordService;
+    @Resource
+    private GlobalSettingService globalSettingService;
 
     @PostConstruct
     private void init() {
@@ -204,6 +207,11 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     public void deleteInner(Long[] ids) {
         for (Long id : ids) {
             delete(id);
+            Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
+            if (remainingParkingNum != null) {
+                remainingParkingNum -= 1;
+            }
+            globalSettingService.set(YstCommon.REMAINING_PARKING_NUM, remainingParkingNum);
             WebSocketData data = new WebSocketData();
             data.setAction(WebSocketAction.CLEAR_PARKING_LOT);
             MyTextWebSocketHandler.sendMessageToAllUser(gson.toJson(data));
