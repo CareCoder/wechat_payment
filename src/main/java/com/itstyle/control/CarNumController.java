@@ -65,6 +65,15 @@ public class CarNumController {
         return "/backend/tempcarinfo";
     }
 
+    @RequestMapping("/inner/car-info.html")
+    public String innerCarInfo(Model model) {
+        List<FixedCarManager> fixedCars = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
+        model.addAttribute("fixedCars", fixedCars);
+        List<ResponseAccessType> accessTypes = accessTypeService.listNoPage();
+        model.addAttribute("accessTypes", accessTypes);
+        return "/backend/inner-car-info";
+    }
+
     @RequestMapping("/access/report.html")
     public String accessReport(Model model) {
         List<FixedCarManager> fixedCars = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
@@ -73,6 +82,7 @@ public class CarNumController {
         model.addAttribute("accessTypes", accessTypes);
         return "/backend/access-report";
     }
+
     @GetMapping("/tempcarinfo-payment.html")
     public String tempcarinfo(Long id, Model model, HttpSession session) {
         CarNumVo carNumVo = carNumService.findById(id);
