@@ -17,18 +17,18 @@ public class ChargeRecordExcelModel  extends BaseRowModel{
     /**
      * 入场时间
      */
-    @ExcelProperty(value = "入场时间" ,index = 1)
+    @ExcelProperty(value = "开始时间" ,index = 1)
     private String enterTime;
 
     /**
      * 出场时间
      */
-    @ExcelProperty(value = "出场时间" ,index = 2)
+    @ExcelProperty(value = "结束时间" ,index = 2)
     private String leaveTime;
     /**
      * 车辆真实类型
      */
-    @ExcelProperty(value = "车辆真实类型" ,index = 3)
+    @ExcelProperty(value = "车辆类型" ,index = 3)
     private String carRealType;
 
     /**
