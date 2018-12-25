@@ -203,11 +203,10 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
      */
     public void deleteInner(Long[] ids) {
         for (Long id : ids) {
-            CarNumVo carNumVo = findById(id);
             delete(id);
             WebSocketData data = new WebSocketData();
             data.setAction(WebSocketAction.CLEAR_PARKING_LOT);
-            MyTextWebSocketHandler.sendMessageToUser(carNumVo.getEnterPass(), gson.toJson(data));
+            MyTextWebSocketHandler.sendMessageToAllUser(gson.toJson(data));
         }
     }
 }
