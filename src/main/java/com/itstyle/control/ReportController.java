@@ -1,11 +1,14 @@
 package com.itstyle.control;
 
 import com.itstyle.common.PageResponse;
+import com.itstyle.common.YstCommon;
+import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.service.CarNumService;
 import com.itstyle.service.ChargeRecordService;
+import com.itstyle.service.GlobalSettingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +25,8 @@ public class ReportController {
     private ChargeRecordService chargeRecordService;
     @Resource
     private CarNumService carNumService;
+    @Resource
+    private GlobalSettingService globalSettingService;
 
     @RequestMapping("/list.html")
     public String reportList() {
@@ -36,6 +41,8 @@ public class ReportController {
     @RequestMapping("/charge/month/list.html")
     public String chargeMonthList(Model model) {
         model.addAttribute("carType", CarType.MONTH_CAR_A.toString());
+        List<FixedCarManager> fixedCars = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
+        model.addAttribute("fixedCars", fixedCars);
         return "/backend/chargelist-month";
     }
 

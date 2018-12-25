@@ -80,6 +80,12 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
     public ResponseEntity<byte[]> exportExcel(CarType carType) {
         List<ChargeRecord> chargeRecordList = chargeRecordMapper.findByCarType(carType);
         List<ChargeRecordExcelModel> data = chargeRecordList.stream().map(ChargeRecordExcelModel::convert).collect(Collectors.toList());
-        return FileUtils.buildExcelResponseEntity(data, ChargeRecordExcelModel.class, "临时车收费明细.xlsx");
+        String fileName;
+        if (carType == CarType.TEMP_CAR_A) {
+            fileName = "临时车收费明细.xlsx";
+        }else{
+            fileName = "月租车明细.xlsx";
+        }
+        return FileUtils.buildExcelResponseEntity(data, ChargeRecordExcelModel.class, fileName);
     }
 }
