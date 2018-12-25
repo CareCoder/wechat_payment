@@ -1,14 +1,14 @@
 package com.itstyle.service;
 
+import com.google.gson.Gson;
 import com.itstyle.common.PageResponse;
+import com.itstyle.common.WebSocketData;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
-import com.itstyle.domain.car.manager.enums.CarNumExtVo;
-import com.itstyle.domain.car.manager.enums.CarNumType;
-import com.itstyle.domain.car.manager.enums.CarType;
-import com.itstyle.domain.car.manager.enums.ChargeType;
+import com.itstyle.domain.car.manager.enums.*;
 import com.itstyle.domain.report.ChargeRecord;
+import com.itstyle.handler.MyTextWebSocketHandler;
 import com.itstyle.mapper.CarNumExtMapper;
 import com.itstyle.mapper.CarNumMapper;
 import com.itstyle.utils.BeanUtilIgnore;
@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class CarNumService extends BaseDaoService<CarNumVo, Long> {
+    @Resource
+    private Gson gson;
     @Resource
     private CarNumMapper carNumMapper;
     @Resource
@@ -194,5 +196,18 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         chargeRecord.setFee(carNumVo.getFee());
         chargeRecord.setChargePersonnel(username);
         chargeRecordService.upload(chargeRecord);
+    }
+
+    /**
+     * 刪除场内车辆
+     */
+    public void deleteInner(Long[] ids) {
+        for (Long id : ids) {
+            CarNumVo carNumVo = findById(id);
+            delete(id);
+            WebSocketData data = new WebSocketData();
+            data.setAction(WebSocketAction.CLEAR_PARKING_LOT);
+            MyTextWebSocketHandler.sendMessageToUser(carNumVo.getEnterPass(), gson.toJson(data));
+        }
     }
 }

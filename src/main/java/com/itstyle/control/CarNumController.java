@@ -1,14 +1,19 @@
 package com.itstyle.control;
 
+import com.google.gson.Gson;
 import com.itstyle.common.PageResponse;
+import com.itstyle.common.WebSocketData;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
+import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.WebSocketAction;
 import com.itstyle.domain.caryard.ResponseAccessType;
 import com.itstyle.domain.park.resp.Response;
+import com.itstyle.handler.MyTextWebSocketHandler;
 import com.itstyle.service.AccessTypeService;
 import com.itstyle.service.CarNumService;
 import com.itstyle.service.GlobalSettingService;
@@ -158,6 +163,17 @@ public class CarNumController {
         return Response.build(Status.NORMAL, "", null);
     }
 
+    @RequestMapping("/deleteInner")
+    @ResponseBody
+    public Response deleteInner(@RequestBody Long[] ids) {
+        try {
+            carNumService.deleteInner(ids);
+        } catch (Exception e) {
+            return Response.build(Status.ERROR, "系统错误", null);
+        }
+        return Response.build(Status.NORMAL, "", null);
+    }
+
     @RequestMapping("/query")
     @ResponseBody
     public Response query(CarNumVo carNumVo) {
@@ -182,5 +198,20 @@ public class CarNumController {
         }
         Page<CarNumVo> page = carNumService.query(queryVo, isEnter);
         return PageResponse.build(page);
+    }
+
+    @RequestMapping("/watch-car-img")
+    public String watchCarImg(@RequestParam Long id,
+                              @RequestParam Integer limit,
+                              Model model) {
+        CarNumVo carNumVo = carNumService.findById(id);
+        carNumVo.getCarNumExtVos().sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
+        if (limit > carNumVo.getCarNumExtVos().size()) {
+            limit = carNumVo.getCarNumExtVos().size();
+        }
+        for (int i = 0; i < limit; i++) {
+            model.addAttribute("img" + i, carNumVo.getCarNumExtVos().get(i).getUuid());
+        }
+        return "/backend/watch-car-img";
     }
 }
