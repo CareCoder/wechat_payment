@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>收费报表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>报表查询</cite></a>
+                <a><cite>出入明细</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 ok-search">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <select name="carType">
+                        <option value="">暂无选择</option>
+                        <option th:each="vo,it : ${fixedCars}" th:value="${vo.carType}" th:text="${vo.customName}"></option>
+                        <option value="TEMP_CAR_A">蓝牌</option>
+                        <option value="TEMP_CAR_B">黄牌</option>
+                        <option value="TEMP_CAR_C">黑牌</option>
+                        <option value="TEMP_CAR_D">绿牌</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <input name="startTime" class="layui-input" placeholder="入场时间" autocomplete="off" id="startTime">
+                </div>
+                <div class="layui-input-inline">
+                    <input name="endTime" class="layui-input" placeholder="出场时间" autocomplete="off" id="endTime">
+                </div>
+                <div class="layui-input-inline">
+                    <button class="layui-btn" lay-submit="" lay-filter="search">
+                        <i class="layui-icon layui-icon-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--操作栏-->
+    <div class="layui-btn-group demoTable">
+        <button class="layui-btn" data-type="deleteCheckData">删除选中行数据</button>
+    </div>
+    <!--数据表格-->
+    <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+    var fixedcarData = new Map();
+    layui.use(['table', 'form', 'jquery', 'laydate'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var tableIns;
+        $.ajax({
+            url: "/gs/get/fixedcar/data",
+            type: "GET",
+            success: function (resp) {
+                resp.data.forEach(function(e){
+                    fixedcarData.set(e.carType,e.customName);
+                });
+                tableIns = table.render({
+                    elem: '#tableId',
+                    url: '/carnum/list',
+                    limit: 5,
+                    page: true,
+                    cols: [
+                        [
+                            {type:'checkbox', fixed: 'left'},
+                            {field: 'id', title: '序号', width: 80},
+                            {field: 'carNum', title: '车牌', width: 150},
+                            {field: 'carType', title: '车辆类型', width: 150, templet: '#carType'},
+                            {field: 'time', title: '入场时间', width: 250, templet: '#timeTemp'},
+                            {field: 'enterPass', title: '入口通道', width: 100},
+                            {width: 100, toolbar: '#findImg'},
+                            {field: 'enterWay', title: '入场类型', width: 100}
+                        ]
+                    ],
+                    done: function (res, curr, count) {
+                        $("#countNum").text(count);
+                    }
+                });
+            }
+        });
+
+        laydate.render({
+            elem: '#startTime',
+            type: "datetime"
+        });
+
+        laydate.render({
+            elem: '#endTime',
+            type: "datetime"
+        });
+
+        form.on('submit(search)', function (data) {
+            layer.msg('正在查询，请稍后...');
+            if (data.field.startTime != "") {
+                data.field.startTime = new Date(data.field.startTime).getTime();
+            }
+            if (data.field.endTime != "") {
+                data.field.endTime = new Date(data.field.endTime).getTime();
+            }
+            data.field.isEnter = true;
+            tableIns.reload({
+                where: data.field,
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+
+        //监听工具条
+        table.on('tool(tableFilter)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'detail'){
+                layer.open({
+                    type: 2,
+                    content: "/carnum/watch-car-img?id=" + data.id+"&limit=2",
+                    area: ['600px', '800px']
+                });
+            }
+        });
+        var active = {
+            deleteCheckData: function(){ //获取选中数据
+                var checkStatus = table.checkStatus('tableId')
+                    ,data = checkStatus.data;
+                var ids = [];
+                for(var i= 0;i<data.length;i++){
+                    ids.push(data[i].id);
+                }
+                $.ajax({
+                    url: "/carnum/deleteInner"
+                    ,type : "POST"
+                    ,contentType: "application/json"
+                    ,data : JSON.stringify(ids)
+                    ,complete : function(){
+                        layer.msg("删除成功");
+                        $(".layui-icon-refresh")[0].click();
+                    }
+                });
+            }
+        };
+        $('.demoTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    })
+
+</script>
+<!--模板-->
+<script type="text/html" id="timeTemp">
+    {{#
+        console.log(d.time);
+    }}
+    {{#  if(d.time == "" || d.time == null){ }}
+    {{#
+    return "";
+    }}
+    {{#  } }}
+    {{#  if(d.time != "" && d.time != null){ }}
+    {{#
+    var date = new Date();
+    date.setTime(d.time);
+    return date.toLocaleString();
+    }}
+    {{#  } }}
+</script>
+<script type="text/html" id="carType">
+    {{#
+    if(d.carType == "TEMP_CAR_A"){
+    return "蓝牌";
+    }else if(d.carType == "TEMP_CAR_B"){
+    return "黄牌";
+    }else if(d.carType == "TEMP_CAR_C"){
+    return "黑牌";
+    }else if(d.carType == "TEMP_CAR_D"){
+    return "绿牌";
+    }else{
+    return "";
+    }
+    }}
+</script>
+<script type="text/html" id="findImg">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看图片</a>
+</script>
+</body>
+</html>

@@ -69,7 +69,7 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
     /**
      * 给某个用户发送消息
      */
-    public static int sendMessageToUser(String username, TextMessage message) {
+    private static int sendMessageToUser(String username, TextMessage message) {
         WebSocketSession user = users.get(username);
         if (user == null) {
             return Status.USER_OFFLINE;
@@ -89,11 +89,18 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
     /**
      * 给所有在线用户发送消息
      */
-    public static void sendMessageToAllUser(TextMessage message) {
+    private static void sendMessageToAllUser(TextMessage message) {
         for (WebSocketSession user : users.values()) {
             doSendMessage(user, message);
         }
         log.info("send mesage to all：" + message);
+    }
+
+    /**
+     * 给所有在线用户发送消息
+     */
+    public static void sendMessageToAllUser(String message) {
+        sendMessageToAllUser(new TextMessage(message));
     }
 
     private static void doSendMessage(WebSocketSession user, TextMessage message){
