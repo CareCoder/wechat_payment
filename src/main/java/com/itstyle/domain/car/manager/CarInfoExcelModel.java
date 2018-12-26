@@ -4,6 +4,7 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.itstyle.domain.car.manager.enums.CarColor;
 import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.utils.CommonUtils;
 import com.itstyle.utils.DateUtil;
 import lombok.Data;
 
@@ -47,13 +48,13 @@ public class CarInfoExcelModel extends BaseRowModel {
         c.setName(m.getName());
         c.setCarNum(m.getCarNum());
         c.setPhone(m.getPhone());
-        c.setCarType(m.getCarType() != null ? m.getCarType().toString() : "");
+        c.setCarType(m.getCarType() != null ? m.getCarType().getName() : "");
         c.setStartTime(DateUtil.format(m.getStartTime()));
         c.setEndTime(DateUtil.format(m.getEndTime()));
         c.setCarGroup(m.getCarGroup());
         c.setRemarks(m.getRemarks());
         c.setIdCardNum(m.getIdCardNum());
-        c.setCarColor(m.getCarColor() != null ?m.getCarColor().toString() : "");
+        c.setCarColor(m.getCarColor() != null ? m.getCarColor().getName() : "");
         return c;
     }
 
@@ -62,8 +63,8 @@ public class CarInfoExcelModel extends BaseRowModel {
         m.setName(c.getName());
         m.setCarNum(c.getCarNum());
         m.setPhone(c.getPhone());
-        if (c.carType != null) {
-            m.setCarType(CarType.valueOf(c.carType));
+        if (c.getCarType() != null) {
+            m.setCarType(CommonUtils.fetchEnum(c.carType, CarType.class));
         }
         m.setStartTime(Objects.requireNonNull(DateUtil.parse(c.getStartTime())).getTime());
         m.setEndTime(Objects.requireNonNull(DateUtil.parse(c.getEndTime())).getTime());
@@ -71,7 +72,7 @@ public class CarInfoExcelModel extends BaseRowModel {
         m.setRemarks(c.getRemarks());
         m.setIdCardNum(c.getIdCardNum());
         if (c.getCarColor() != null) {
-            m.setCarColor(CarColor.valueOf(c.getCarColor()));
+            m.setCarColor(CommonUtils.fetchEnum(c.getCarColor(), CarColor.class));
         }
         return m;
     }
