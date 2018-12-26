@@ -67,7 +67,7 @@
 
     <!--表格区域-->
     <div class="layui-row">
-        <div class="layui-col-md6 layui-col-md-offset3">
+        <div class="layui-col-md6 layui-col-md-offset4">
             <form class="layui-form layui-form-pane" action="">
                 <div class="layui-form-item" pane>
                     <div class="layui-inline">
@@ -169,10 +169,10 @@
         });
 
         if (enterTime != 0) {
-            $("input[name='enterTime']").val(new Date(parseInt(enterTime)).toLocaleDateString());
+            $("input[name='enterTime']").val(new Date(parseInt(enterTime)).toLocaleString());
         }
         if (leaveTime != 0) {
-            $("input[name='leaveTime']").val(new Date(parseInt(leaveTime)).toLocaleDateString());
+            $("input[name='leaveTime']").val(new Date(parseInt(leaveTime)).toLocaleString());
         }
 
         form.on('submit(add)', function (data) {
