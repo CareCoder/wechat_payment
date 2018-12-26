@@ -151,6 +151,16 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             if (queryVo.getLeaveEndTime() != null) {
                 predicate.add(cb.le(root.get("lTime").as(Long.class), queryVo.getLeaveEndTime()));
             }
+            if (queryVo.getRecord() != null) {
+                if (queryVo.getRecord()) {
+                    //查询还产生收费记录的
+                    predicate.add(cb.isNotNull(root.get("record").as(Boolean.class)));
+                }else{
+                    //查询还未产生收费记录的
+                    predicate.add(cb.isNull(root.get("record").as(Boolean.class)));
+
+                }
+            }
             query.orderBy(cb.desc(root.get("time")));
             query.where(predicate.toArray(new Predicate[0]));
             return query.getRestriction();

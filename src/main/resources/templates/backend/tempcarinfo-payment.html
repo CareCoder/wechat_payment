@@ -71,29 +71,29 @@
             <form class="layui-form layui-form-pane" action="">
                 <div class="layui-form-item" pane>
                     <div class="layui-inline">
+                        <label class="layui-form-label">车牌</label>
+                        <div class="layui-input-inline">
+                            <input th:value="${vo?.carNum}" type="text" name="carNum" class="layui-input" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
                         <label class="layui-form-label">入场时间</label>
                         <div class="layui-input-inline">
                             <input th:value="${enterTime}" type="text" name="enterTime" class="layui-input" disabled>
                         </div>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">出场时间</label>
-                        <div class="layui-input-inline">
-                            <input th:value="${leaveTime}" type="text" name="leaveTime" class="layui-input" disabled>
-                        </div>
-                    </div>
                 </div>
                 <div class="layui-form-item" pane>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">车辆类型</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="carType" class="layui-input" disabled>
-                        </div>
-                    </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">停车时长</label>
                         <div class="layui-input-inline">
                             <input th:value="${stopTime}" type="text" name="stopTime" class="layui-input" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">车辆类型</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="carType" class="layui-input" disabled>
                         </div>
                     </div>
                 </div>

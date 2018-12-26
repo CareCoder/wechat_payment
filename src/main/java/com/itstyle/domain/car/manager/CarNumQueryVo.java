@@ -15,4 +15,5 @@ public class CarNumQueryVo {
     private Long leaveEndTime;
     private String leavePass;
     private String enterPass;
+    private Boolean record;//这次临时停车是否已经生成明细
 }
