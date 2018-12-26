@@ -1,23 +1,17 @@
 package com.itstyle.control;
 
-import com.google.gson.Gson;
 import com.itstyle.common.PageResponse;
-import com.itstyle.common.WebSocketData;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
-import com.itstyle.domain.car.manager.CarNumQueryVo;
-import com.itstyle.domain.car.manager.CarNumVo;
-import com.itstyle.domain.car.manager.FixedCarManager;
+import com.itstyle.domain.car.manager.*;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
-import com.itstyle.domain.car.manager.enums.CarType;
-import com.itstyle.domain.car.manager.enums.WebSocketAction;
 import com.itstyle.domain.caryard.ResponseAccessType;
 import com.itstyle.domain.park.resp.Response;
-import com.itstyle.handler.MyTextWebSocketHandler;
 import com.itstyle.service.AccessTypeService;
 import com.itstyle.service.CarNumService;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.utils.FeeUtil;
+import com.itstyle.utils.FileUtils;
 import com.itstyle.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -213,5 +208,11 @@ public class CarNumController {
             model.addAttribute("img" + i, carNumVo.getCarNumExtVos().get(i).getUuid());
         }
         return "/backend/watch-car-img";
+    }
+
+    @RequestMapping("exportExcel")
+    public ResponseEntity<byte[]> exportExcel() {
+        List<CarNumExcelModel> data = carNumService.list().stream().map(CarNumExcelModel::convert).collect(Collectors.toList());
+        return FileUtils.buildExcelResponseEntity(data, CarNumExcelModel.class, "出入报表.xlsx");
     }
 }

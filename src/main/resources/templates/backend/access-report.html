@@ -45,37 +45,43 @@
                         <input name="leaveEndTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
                     </div>
                 </div>
+                <button class="layui-btn" lay-submit="" lay-filter="search">
+                    <i class="layui-icon layui-icon-search"></i>
+                </button>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">出口</label>
-                <div class="layui-input-block">
-                    <select name="leavePass">
-                        <option value="">暂无选择</option>
-                        <option th:each="vo,it : ${accessTypes}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">场内车辆</label>
-                <div class="layui-input-inline">
-                    <input type="checkbox" name="isEnter" title="场内">
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">入场时间</label>
-                    <div class="layui-input-inline">
-                        <input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="leaveStartTime">
-                    </div>
-                    <div class="layui-form-mid">至</div>
-                    <div class="layui-input-inline">
-                        <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="leaveEndTime">
-                    </div>
-                </div>
-            </div>
-            <button class="layui-btn" lay-submit="" lay-filter="search">
-                <i class="layui-icon layui-icon-search"></i>
-            </button>
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">出口</label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<select name="leavePass">-->
+                        <!--<option value="">暂无选择</option>-->
+                        <!--<option th:each="vo,it : ${accessTypes}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>-->
+                    <!--</select>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">场内车辆</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="checkbox" name="isEnter" title="场内">-->
+                <!--</div>-->
+                <!--<div class="layui-inline">-->
+                    <!--<label class="layui-form-label">入场时间</label>-->
+                    <!--<div class="layui-input-inline">-->
+                        <!--<input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="leaveStartTime">-->
+                    <!--</div>-->
+                    <!--<div class="layui-form-mid">至</div>-->
+                    <!--<div class="layui-input-inline">-->
+                        <!--<input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="leaveEndTime">-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
         </form>
     </div>
+    <!--工具栏-->
+    <okToolbar>
+        <button class="layui-btn" id="exportExcel">
+            <i class="layui-icon">&#xe601;</i>导出EXCEL
+        </button>
+    </okToolbar>
     <!--数据表格-->
     <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
 </div>
@@ -166,6 +172,9 @@
                     area: ['1000px', '400px']
                 });
             }
+        });
+        $("#exportExcel").click(function(){
+            window.location.href = "/carnum/exportExcel";
         });
     })
 
