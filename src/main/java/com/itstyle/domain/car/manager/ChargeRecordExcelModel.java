@@ -61,10 +61,10 @@ public class ChargeRecordExcelModel  extends BaseRowModel{
         m.setCarNum(c.getCarNum());
         m.setEnterTime(DateUtil.format(c.getEnterTime()));
         m.setLeaveTime(DateUtil.format(c.getLeaveTime()));
-        m.setCarRealType(c.getCarRealType() == null ? "" : c.getCarRealType().toString());
+        m.setCarRealType(c.getCarRealType() == null ? "" : c.getCarRealType().getName());
         m.setFee(c.getFee());
         m.setDiscountAmount(c.getDiscountAmount());
-        m.setChargeType(c.getChargeType() == null ? "" : c.getChargeType().toString());
+        m.setChargeType(c.getChargeType() == null ? "" : c.getChargeType().getName());
         m.setChargePersonnel(c.getChargePersonnel());
         return m;
     }
