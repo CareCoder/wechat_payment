@@ -8,6 +8,7 @@ import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
 import com.itstyle.domain.car.manager.enums.*;
+import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.handler.MyTextWebSocketHandler;
 import com.itstyle.mapper.CarNumExtMapper;
@@ -208,8 +209,12 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         for (Long id : ids) {
             delete(id);
             Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
+            CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
             if (remainingParkingNum != null) {
                 remainingParkingNum -= 1;
+            }
+            if(remainingParkingNum<=carYardName.getParkingNum()){
+                remainingParkingNum = carYardName.getParkingNum();
             }
             globalSettingService.set(YstCommon.REMAINING_PARKING_NUM, remainingParkingNum);
             WebSocketData data = new WebSocketData();
