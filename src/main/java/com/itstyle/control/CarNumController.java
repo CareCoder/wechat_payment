@@ -5,6 +5,7 @@ import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.*;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
+import com.itstyle.domain.car.manager.enums.CarNumType;
 import com.itstyle.domain.caryard.ResponseAccessType;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.AccessTypeService;
@@ -45,13 +46,13 @@ public class CarNumController {
         if (queryVo.getPage() <= 0) {
             queryVo.setPage(1);
         }
-        Page<CarNumVo> page = carNumService.query(queryVo, null);
+        queryVo.setRecord(false);//已经缴费的不在显示
+        Page<CarNumVo> page = carNumService.query(queryVo, "true");
         List<CarNumVo> carNumVos = page.getContent();
-//                .stream()
-//                .filter(e -> e.getCarNumExtVos() != null && e.getCarNumExtVos().size() > 1)
-//                .collect(Collectors.toList());
         carNumVos.forEach(e -> {
             List<CarNumExtVo> carNumExtVos = e.getCarNumExtVos();
+            carNumExtVos.stream()
+                    .filter(f -> f.getCarNumType() == CarNumType.ENTER_SMALL || f.getCarNumType() == CarNumType.ENTER_SMALL);
             carNumExtVos.sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
         });
         model.addAttribute("carNumVos", carNumVos);
