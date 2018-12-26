@@ -77,15 +77,23 @@ public class LogServiceImpl implements LogService {
             return query.getRestriction();
         };
         Page<SysLogger> all = logMapper.findAll(sp, pageRequest);
-        List<SysLogger> content = all.getContent();
+        List<SysLoggerResponse> collect = fillSysLoggerResponses(all.getContent());
+        return new PageResponse<>(all.getTotalElements(), collect);
+    }
+
+    @Override
+    public List<SysLoggerResponse> list() {
+        return fillSysLoggerResponses(logMapper.findAll());
+    }
+
+    private List<SysLoggerResponse> fillSysLoggerResponses(List<SysLogger> content) {
         List<Role> roles = roleMapper.findAll();
         Map<Long, String> mapRole = roles.stream().collect(Collectors.toMap(Role::getId, Role::getName));
-        List<SysLoggerResponse> collect = content.stream().map(sysLogger -> {
+        return content.stream().map(sysLogger -> {
             SysLoggerResponse sysLoggerResponse = new SysLoggerResponse();
             BeanUtilIgnore.copyPropertiesIgnoreNull(sysLogger, sysLoggerResponse);
             sysLoggerResponse.setRoleName(mapRole.get(sysLoggerResponse.getRoleId()));
             return sysLoggerResponse;
         }).sorted((SysLoggerResponse e1, SysLoggerResponse e2) -> e2.getLogDate().compareTo(e1.getLogDate())).collect(Collectors.toList());
-        return new PageResponse<>(all.getTotalElements(), collect);
     }
 }

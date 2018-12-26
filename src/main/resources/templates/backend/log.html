@@ -45,6 +45,12 @@
             </div>
         </form>
     </div>
+    <!--工具栏-->
+    <okToolbar>
+        <button class="layui-btn" id="exportExcel">
+            <i class="layui-icon">&#xe601;</i>导出EXCEL
+        </button>
+    </okToolbar>
     <!--数据表格-->
     <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
 </div>
@@ -130,8 +136,9 @@
             });
             return false;
         });
-
-
+        $("#exportExcel").click(function(){
+            window.location.href = "/log/exportExcel";
+        });
     })
 </script>
 </body>

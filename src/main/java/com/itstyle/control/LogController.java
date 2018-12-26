@@ -2,11 +2,18 @@ package com.itstyle.control;
 
 import com.itstyle.common.PageResponse;
 import com.itstyle.domain.account.Role;
+import com.itstyle.domain.car.manager.ChargeRecordExcelModel;
+import com.itstyle.domain.car.manager.LogExcelModel;
+import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.log.SysLogger;
 import com.itstyle.domain.log.SysLoggerResponse;
+import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.service.LogService;
 import com.itstyle.service.RoleService;
+import com.itstyle.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequestMapping("/log")
@@ -49,5 +57,11 @@ public class LogController {
             model.addAttribute("role", list.get(0));
         }
         return "/backend/log";
+    }
+
+    @RequestMapping("exportExcel")
+    public ResponseEntity<byte[]> exportExcel() {
+        List<LogExcelModel> data = logService.list().stream().map(LogExcelModel::convert).collect(Collectors.toList());
+        return FileUtils.buildExcelResponseEntity(data, LogExcelModel.class, "操作日志.xlsx");
     }
 }
