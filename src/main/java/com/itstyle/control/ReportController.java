@@ -6,6 +6,7 @@ import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
+import com.itstyle.domain.report.ChargeRecordStatistics;
 import com.itstyle.service.CarNumService;
 import com.itstyle.service.ChargeRecordService;
 import com.itstyle.service.GlobalSettingService;
@@ -52,6 +53,15 @@ public class ReportController {
                                            CarType carRealType,
                                            String chargePersonnel, Long startTime, Long endTime) {
         return chargeRecordService.query(page, limit, chargeType, carType,carRealType,
+                chargePersonnel, startTime, endTime);
+    }
+
+    @RequestMapping("/charge/statistics")
+    @ResponseBody
+    public ChargeRecordStatistics statistics(ChargeType chargeType, CarType carType,
+                                             CarType carRealType,
+                                             String chargePersonnel, Long startTime, Long endTime) {
+        return chargeRecordService.statistics(chargeType, carType,carRealType,
                 chargePersonnel, startTime, endTime);
     }
 
