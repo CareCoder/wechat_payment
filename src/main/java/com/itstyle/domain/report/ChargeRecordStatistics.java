@@ -7,14 +7,14 @@ public class ChargeRecordStatistics {
     /**
      * 收费金额
      */
-    private String totleFee;
+    private Integer totleFee;
     /**
      * 应收金额
      */
-    private String totleReceivableFee;
+    private Integer totleReceivableFee;
 
     /**
      * 折扣金额
      */
-    private String totleDiscountAmount;
+    private Integer totleDiscountAmount;
 }

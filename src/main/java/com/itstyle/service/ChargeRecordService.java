@@ -60,9 +60,9 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
         ChargeRecordStatistics crs = new ChargeRecordStatistics();
         if (statistics != null && statistics.size() > 0) {
             Object[] datas = statistics.get(0);
-            crs.setTotleFee(datas[0] == null ? null : FeeUtil.convert(((BigDecimal)datas[0]).intValue()));
-            crs.setTotleReceivableFee(datas[1] == null ? null : FeeUtil.convert(((BigDecimal)datas[1]).intValue()));
-            crs.setTotleDiscountAmount(datas[2] == null ? null : FeeUtil.convert(((BigDecimal)datas[2]).intValue()));
+            crs.setTotleFee(datas[0] == null ? null : ((BigDecimal)datas[0]).intValue());
+            crs.setTotleReceivableFee(datas[1] == null ? null : ((BigDecimal)datas[1]).intValue());
+            crs.setTotleDiscountAmount(datas[2] == null ? null : ((BigDecimal)datas[2]).intValue());
         }
         return crs;
     }
