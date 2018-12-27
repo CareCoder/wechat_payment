@@ -9,6 +9,13 @@
     <link rel="stylesheet" href="/css/sub-page.css">
     <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
 </head>
+<style>
+    .statistics_data{
+        padding-right: 10px;
+        padding-left: 10px;
+        color: #ff0000;
+    }
+</style>
 <body>
 <div class="ok-body">
     <!--面包屑导航区域-->
@@ -41,6 +48,10 @@
             </button>
         </form>
     </div>
+    <!--统计数据-->
+    <p class="layui-elem-quote">
+        <span class="statistics_title">实收金额:</span><span class="statistics_data" id="statistics_fee">0</span>
+    </p>
     <!--工具栏-->
     <okToolbar>
         <button class="layui-btn" id="exportExcel">
@@ -115,6 +126,17 @@
             if (data.field.endTime != "") {
                 data.field.endTime = new Date(data.field.endTime).getTime();
             }
+            $.ajax({
+                url: '/report/charge/statistics?carType=' + carType,
+                type : "POST",
+                data : data.field,
+                success : function(resp){
+                    $("#statistics_receivableFee").html(resp.totleReceivableFee);
+                    $("#statistics_discountAmount").html(resp.totleDiscountAmount);
+                    $("#statistics_fee").html(resp.totleFee);
+                }
+            });
+
             table.reload('tableId', {
                 url: '/report/charge/list?carType=' + carType,
                 where: data.field,
@@ -126,6 +148,14 @@
         });
         $("#exportExcel").click(function(){
             window.location.href = "/report/charge/exportExcel?carType=" + carType;
+        });
+
+        $.ajax({
+            url: '/report/charge/statistics?carType=' + carType,
+            type : "POST",
+            success : function(resp){
+                $("#statistics_fee").html(resp.totleFee);
+            }
         });
     })
 
