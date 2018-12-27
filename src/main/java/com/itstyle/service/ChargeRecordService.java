@@ -2,11 +2,12 @@ package com.itstyle.service;
 
 import com.itstyle.common.PageResponse;
 import com.itstyle.domain.car.manager.ChargeRecordExcelModel;
-import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
+import com.itstyle.domain.report.ChargeRecordStatistics;
 import com.itstyle.mapper.ChargeRecordMapper;
+import com.itstyle.utils.FeeUtil;
 import com.itstyle.utils.FileUtils;
 import com.itstyle.utils.hibernate.BaseDaoService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +45,46 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
     public PageResponse<ChargeRecord> query(int page, int limit, ChargeType chargeType, CarType carType,CarType carRealType,
                                             String chargePersonnel, Long startTime, Long endTime) {
         PageRequest pageRequest = PageResponse.getPageRequest(page, limit);
-        Specification<ChargeRecord> sp = (root, query, cb) -> {
+        Specification<ChargeRecord> sp = fillSpecification(chargeType, carType, carRealType, chargePersonnel, startTime, endTime);
+        Page<ChargeRecord> all = chargeRecordMapper.findAll(sp, pageRequest);
+        return PageResponse.build(all);
+    }
+
+    public ChargeRecordStatistics statistics(ChargeType chargeType, CarType carType, CarType carRealType, String chargePersonnel, Long startTime, Long endTime) {
+        List<Object[]> statistics = chargeRecordMapper.statistics(
+                chargeType == null ? null : chargeType.ordinal(),
+                carType == null ? null : carType.ordinal(),
+                carRealType == null ? null : carRealType.ordinal(),
+                StringUtils.isEmpty(chargePersonnel) ? null : chargePersonnel,
+                startTime, endTime);
+        ChargeRecordStatistics crs = new ChargeRecordStatistics();
+        if (statistics != null && statistics.size() > 0) {
+            Object[] datas = statistics.get(0);
+            crs.setTotleFee(datas[0] == null ? null : FeeUtil.convert(((BigDecimal)datas[0]).intValue()));
+            crs.setTotleReceivableFee(datas[1] == null ? null : FeeUtil.convert(((BigDecimal)datas[1]).intValue()));
+            crs.setTotleDiscountAmount(datas[2] == null ? null : FeeUtil.convert(((BigDecimal)datas[2]).intValue()));
+        }
+        return crs;
+    }
+
+    public List<Object> statisticsTemp(Integer carType, Integer count) {
+        return chargeRecordMapper.statisticsTemp(carType, count);
+    }
+
+    public ResponseEntity<byte[]> exportExcel(CarType carType) {
+        List<ChargeRecord> chargeRecordList = chargeRecordMapper.findByCarType(carType);
+        List<ChargeRecordExcelModel> data = chargeRecordList.stream().map(ChargeRecordExcelModel::convert).collect(Collectors.toList());
+        String fileName;
+        if (carType == CarType.TEMP_CAR_A) {
+            fileName = "临时车收费明细.xlsx";
+        }else{
+            fileName = "月租车明细.xlsx";
+        }
+        return FileUtils.buildExcelResponseEntity(data, ChargeRecordExcelModel.class, fileName);
+    }
+
+    private Specification<ChargeRecord> fillSpecification(ChargeType chargeType, CarType carType, CarType carRealType, String chargePersonnel, Long startTime, Long endTime) {
+        return (root, query, cb) -> {
             List<Predicate> predicate = new ArrayList<>();
             if (chargeType != null) {
                 Predicate p1 = cb.equal(root.get("chargeType").as(Integer.class), chargeType.ordinal());
@@ -69,23 +110,5 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
             query.where(predicate.toArray(new Predicate[0]));
             return query.getRestriction();
         };
-        Page<ChargeRecord> all = chargeRecordMapper.findAll(sp, pageRequest);
-        return PageResponse.build(all);
-    }
-
-    public List<Object> statisticsTemp(Integer carType, Integer count) {
-        return chargeRecordMapper.statisticsTemp(carType, count);
-    }
-
-    public ResponseEntity<byte[]> exportExcel(CarType carType) {
-        List<ChargeRecord> chargeRecordList = chargeRecordMapper.findByCarType(carType);
-        List<ChargeRecordExcelModel> data = chargeRecordList.stream().map(ChargeRecordExcelModel::convert).collect(Collectors.toList());
-        String fileName;
-        if (carType == CarType.TEMP_CAR_A) {
-            fileName = "临时车收费明细.xlsx";
-        }else{
-            fileName = "月租车明细.xlsx";
-        }
-        return FileUtils.buildExcelResponseEntity(data, ChargeRecordExcelModel.class, fileName);
     }
 }
