@@ -38,6 +38,11 @@ public class ChargeRecord {
     private Integer fee;
 
     /**
+     * 应收金额
+     */
+    private Integer receivableFee;
+
+    /**
      * 收费类型
      */
     private ChargeType chargeType;
@@ -67,4 +72,11 @@ public class ChargeRecord {
      */
 
     private Long time;
+
+    public void setFee(Integer fee) {
+        this.fee = fee;
+        if (discountAmount != null && fee != null) {
+            receivableFee = discountAmount + fee;
+        }
+    }
 }
