@@ -45,7 +45,7 @@
                 <label class="layui-form-label">车辆类型</label>
                 <select name="carType">
                     <option value="">暂无选择</option>
-                    <option th:each="vo,it : ${fixedCars}" th:value="${vo.carType}" th:text="${vo.customName}"></option>
+                    <!--<option th:each="vo,it : ${fixedCars}" th:value="${vo.carType}" th:text="${vo.customName}"></option>-->
                     <option value="TEMP_CAR_A">蓝牌</option>
                     <option value="TEMP_CAR_B">黄牌</option>
                     <option value="TEMP_CAR_C">黑牌</option>
@@ -55,7 +55,7 @@
                 <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">出口通道</label>
+                <label class="layui-form-label">入口通道</label>
                 <div class="layui-input-block">
                     <select name="enterPass">
                         <option value="">暂无选择</option>

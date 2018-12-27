@@ -51,9 +51,11 @@ public class CarNumController {
         List<CarNumVo> carNumVos = page.getContent();
         carNumVos.forEach(e -> {
             List<CarNumExtVo> carNumExtVos = e.getCarNumExtVos();
-            carNumExtVos.stream()
-                    .filter(f -> f.getCarNumType() == CarNumType.ENTER_SMALL || f.getCarNumType() == CarNumType.ENTER_SMALL);
+            carNumExtVos = carNumExtVos.stream()
+                    .filter(f -> f.getCarNumType() == CarNumType.ENTER_SMALL || f.getCarNumType() == CarNumType.ENTER_BIG)
+                    .collect(Collectors.toList());
             carNumExtVos.sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
+            e.setCarNumExtVos(carNumExtVos);
         });
         model.addAttribute("carNumVos", carNumVos);
         model.addAttribute("queryVo", queryVo);
@@ -61,7 +63,7 @@ public class CarNumController {
         model.addAttribute("fixedCars", fixedCars);
         List<ResponseAccessType> accessTypes = accessTypeService.listNoPage();
         //业务需求这里只需要入口通道
-        accessTypes.stream().filter(e -> e.getChannelTypeId() % 2 == 1);
+        accessTypes = accessTypes.stream().filter(e -> e.getChannelTypeId() % 2 == 1).collect(Collectors.toList());
         model.addAttribute("accessTypes", accessTypes);
 
         model.addAttribute("maxPage", Math.ceil(page.getTotalElements() / 4));
