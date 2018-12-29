@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>异常开闸</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/scroll-bar.css">
+    <link rel="stylesheet" href="/css/sub-page.css">
+    <link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>报表查询</cite></a>
+                <a><cite>异常开闸</cite></a>
+            </span>
+        <a class="layui-btn layui-btn-small" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--模糊搜索区域-->
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 ok-search">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">操作时间</label>
+                    <div class="layui-input-inline">
+                        <input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
+                    </div>
+                    <div class="layui-form-mid">至</div>
+                    <div class="layui-input-inline">
+                        <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
+                    </div>
+                </div>
+                <button class="layui-btn" lay-submit="" lay-filter="search">
+                    <i class="layui-icon layui-icon-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    <!--数据表格-->
+    <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+</div>
+<!--js逻辑-->
+<script src="/lib/layui/layui.js"></script>
+<script src="/lib/nprogress/nprogress.js"></script>
+<script>
+    NProgress.start();
+    window.onload = function () {
+        NProgress.done();
+    };
+    layui.use(['table', 'form', 'jquery', 'laydate'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        var tableIns = table.render({
+            elem: '#tableId',
+            url: '/exception_gate/list',
+            limit: 5,
+            page: true,
+            cols: [
+                [
+                    {field: 'id', title: 'ID', width: 80},
+                    {field: 'operTime', title: '车牌号', width: 150, templet: '#timeTemp'},
+                    {field: 'operChannel', title: '入场时间', width: 150},
+                    {field: 'operType', title: '出场时间', width: 150},
+                    {width: 100, toolbar: '#findImg'}
+                ]
+            ],
+            done: function (res, curr, count) {
+                $("#countNum").text(count);
+            }
+        });
+        laydate.render({
+            elem: '#startTime',
+            type: "datetime"
+        });
+
+        laydate.render({
+            elem: '#endTime',
+            type: "datetime"
+        });
+
+        form.on('submit(search)', function (data) {
+            layer.msg('正在查询，请稍后...');
+            if (data.field.startTime != "") {
+                data.field.startTime = new Date(data.field.startTime).getTime();
+            }
+            if (data.field.endTime != "") {
+                data.field.endTime = new Date(data.field.endTime).getTime();
+            }
+            tableIns.reload({
+                where: data.field,
+                page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+
+        //监听工具条
+        table.on('tool(tableFilter)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'detail'){
+                layer.open({
+                    type: 2,
+                    content: ["/exception_gate/watch-car-img?id=" + data.id, 'no'],
+                    area: ['600px', '700px']
+                });
+            }
+        });
+    })
+
+</script>
+<!--模板-->
+<script type="text/html" id="timeTemp">
+    {{#  if(d.operTime == "" || d.operTime == null){ }}
+    {{#
+    return "";
+    }}
+    {{#  } }}
+    {{#  if(d.operTime != "" && d.operTime != null){ }}
+    {{#
+    var date = new Date();
+    date.setTime(d.operTime);
+    return date.toLocaleString();
+    }}
+    {{#  } }}
+</script>
+<script type="text/html" id="findImg">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看图片</a>
+</script>
+</body>
+</html>

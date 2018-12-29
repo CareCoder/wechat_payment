@@ -85,6 +85,7 @@
                         <!--<dd><a href="javascript:;" path="/report/list.html" tab-id="5-3"><i class="iconfont icon-jiaoseshouquan"></i> 报表查询</a></dd>-->
                         <dd th:style="'display:'+@{((${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2)?'display':'none')}"><a href="javascript:;" path="/carnum/access/report.html" tab-id="5-4"><i class="iconfont icon-jiaoseshouquan"></i>出入明细</a></dd>
                         <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/log/page" tab-id="5-5"><i class="iconfont icon-tupian"></i> 操作日志</a></dd>
+                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/exception_gate/list.html" tab-id="5-6"><i class="iconfont icon-tupian"></i> 异常开闸</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item ">

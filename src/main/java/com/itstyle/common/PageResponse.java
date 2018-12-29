@@ -32,7 +32,13 @@ public class PageResponse<T> {
         return new PageResponse<>(page.getTotalElements(), page.getContent());
     }
 
-    public static PageRequest getPageRequest(int page, int limit) {
+    public static PageRequest getPageRequest(Integer page, Integer limit) {
+        if (page == null) {
+            page = 1;
+        }
+        if (limit == null) {
+            limit = 10;
+        }
         return new PageRequest(page - 1, limit);
     }
 
