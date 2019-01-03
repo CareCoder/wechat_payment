@@ -38,11 +38,11 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">出场时间</label>
                     <div class="layui-input-inline">
-                        <input name="leaveStartTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
+                        <input name="leaveStartTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="leaveStartTime">
                     </div>
                     <div class="layui-form-mid">至</div>
                     <div class="layui-input-inline">
-                        <input name="leaveEndTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
+                        <input name="leaveEndTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="leaveEndTime">
                     </div>
                 </div>
                 <button class="layui-btn" lay-submit="" lay-filter="search">
@@ -66,11 +66,11 @@
                 <!--<div class="layui-inline">-->
                     <!--<label class="layui-form-label">入场时间</label>-->
                     <!--<div class="layui-input-inline">-->
-                        <!--<input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="leaveStartTime">-->
+                        <!--<input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">-->
                     <!--</div>-->
                     <!--<div class="layui-form-mid">至</div>-->
                     <!--<div class="layui-input-inline">-->
-                        <!--<input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="leaveEndTime">-->
+                        <!--<input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">-->
                     <!--</div>-->
                 <!--</div>-->
             <!--</div>-->
@@ -141,12 +141,12 @@
 
         form.on('submit(search)', function (data) {
             layer.msg('正在查询，请稍后...');
-            if (data.field.startTime != "") {
-                data.field.startTime = new Date(data.field.startTime).getTime();
-            }
-            if (data.field.endTime != "") {
-                data.field.endTime = new Date(data.field.endTime).getTime();
-            }
+            // if (data.field.startTime != "") {
+            //     data.field.startTime = new Date(data.field.startTime).getTime();
+            // }
+            // if (data.field.endTime != "") {
+            //     data.field.endTime = new Date(data.field.endTime).getTime();
+            // }
             if (data.field.leaveStartTime != "") {
                 data.field.leaveStartTime = new Date(data.field.leaveStartTime).getTime();
             }

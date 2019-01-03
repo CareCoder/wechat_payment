@@ -41,7 +41,8 @@
                 <option value="">暂无选择</option>
                 <option th:each="vo,it : ${fixedCars}" th:value="${vo.carType}" th:text="${vo.customName}"></option>
             </select>
-            <input name="startTime" class="layui-input" placeholder="入场时间" autocomplete="off" id="startTime">
+            <label class="layui-form-label">收费时间</label>
+            <input name="startTime" class="layui-input" placeholder="开始时间" autocomplete="off" id="startTime">
             <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
             <button class="layui-btn" lay-submit="" lay-filter="search">
                 <i class="layui-icon layui-icon-search"></i>
