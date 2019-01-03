@@ -41,7 +41,8 @@
                 <option value="">暂无选择</option>
                 <option th:each="vo,it : ${fixedCars}" th:value="${vo.carType}" th:text="${vo.customName}"></option>
             </select>
-            <input name="startTime" class="layui-input" placeholder="入场时间" autocomplete="off" id="startTime">
+            <label class="layui-form-label">收费时间</label>
+            <input name="startTime" class="layui-input" placeholder="开始时间" autocomplete="off" id="startTime">
             <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
             <button class="layui-btn" lay-submit="" lay-filter="search">
                 <i class="layui-icon layui-icon-search"></i>
@@ -97,7 +98,7 @@
                             {field: 'carRealType', title: '车辆类型', width: 100, templet: '#carRealType'},
                             {field: 'chargeType', title: '收费类型', width: 100, templet: '#chargeTypeTemp'},
                             {field: 'fee', title: '收费金额', width: 100},
-                            {field: 'discountAmount', title: '优惠金额', width: 100},
+                            // {field: 'discountAmount', title: '优惠金额', width: 100},
                             {field: 'time', title: '续费时间', width: 250, templet: '#timeTemp'},
                             {field: 'chargePersonnel', title: '收费人员', width: 100}
                         ]
