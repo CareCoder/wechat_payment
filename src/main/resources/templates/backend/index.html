@@ -97,7 +97,7 @@
                         <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/gs/get/lcd-info" tab-id="6-2"><i class="iconfont icon-wenzhang2"></i> LCD信息发布</a></dd>
                         <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/remote/gate.html" tab-id="6-3"><i class="iconfont icon-wenzhang2"></i> 远程开闸</a></dd>
                         <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/gs/get/phone-num" tab-id="6-4"><i class="iconfont icon-wenzhang2"></i>人工呼叫号码</a></dd>
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==2?'display':'none')}"><a href="javascript:;" path="/carnum/inner/car-info.html" tab-id="6-5"><i class="iconfont icon-wenzhang2"></i>场内车辆</a></dd>
+                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2?'display':'none')}"><a href="javascript:;" path="/carnum/inner/car-info.html" tab-id="6-5"><i class="iconfont icon-wenzhang2"></i>场内车辆</a></dd>
                     </dl>
                 </li>
                 <!--<li class="layui-nav-item ">-->
