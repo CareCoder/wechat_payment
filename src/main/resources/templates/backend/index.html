@@ -26,7 +26,7 @@
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
             <ul class="layui-nav layui-nav-tree" lay-shrink="all" lay-filter="">
-                <li class="layui-nav-item" th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}">
+                <li class="layui-nav-item" th:if="${session?.login_account?.roleId}==1">
                     <a class="" href="javascript:;">
                         <i class="layui-icon">&#xe62a;</i> 车场设置
                     </a>
@@ -39,23 +39,23 @@
                         <!--<dd><a href="javascript:;" path="/feature/setting/page" tab-id="1-7"><i class="iconfont icon-tupian"></i> 功能性设置</a></dd>-->
                     </dl>
                 </li>
-                <li class="layui-nav-item " th:style="'display:'+@{((${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==3)?'display':'none')}">
+                <li class="layui-nav-item " th:if="${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==3">
                     <a class="" href="javascript:;">
                         <i class="layui-icon">&#xe62a;</i> 车辆管理
                     </a>
                     <dl class="layui-nav-child">
                         <!--<dd><a href="javascript:;" path="user.html" tab-id="2-1"><i class="iconfont icon-dianliyonghuzongshu"></i> 月租车续费</a></dd>-->
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/monthcarinfo/monthcarinfo.html" tab-id="2-2"><i class="iconfont icon-wenzhang2"></i> 新加固定车</a></dd>
-                        <dd th:style="'display:'+@{((${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==3)?'display':'none')}"><a href="javascript:;" path="/carnum/tempcarinfo.html" tab-id="2-3"><i class="iconfont icon-jiaoseshouquan"></i> 临时车收费</a></dd>
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/gs/get/fixedcar" tab-id="2-4"><i class="iconfont icon-liucheng"></i> 固定车管理</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/monthcarinfo/monthcarinfo.html" tab-id="2-2"><i class="iconfont icon-wenzhang2"></i> 新加固定车</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==3"><a href="javascript:;" path="/carnum/tempcarinfo.html" tab-id="2-3"><i class="iconfont icon-jiaoseshouquan"></i> 临时车收费</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/gs/get/fixedcar" tab-id="2-4"><i class="iconfont icon-liucheng"></i> 固定车管理</a></dd>
                         <!--<dd><a href="javascript:;" path="/gs/get/banlist" tab-id="2-5"><i class="iconfont icon-tupian"></i> 禁入车辆管理</a></dd>-->
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/carinfo/carinfo/free" tab-id="2-6"><i class="iconfont icon-tupian"></i> 免费车辆管理</a></dd>
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/carinfo/carinfo/blacklist" tab-id="2-7"><i class="iconfont icon-tupian"></i> 黑名单管理</a></dd>
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/gs/get/specialcar" tab-id="2-8"><i class="iconfont icon-tupian"></i> 特种车辆管理</a></dd>
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/gs/get/fastigium/" tab-id="2-9"><i class="iconfont icon-tupian"></i> 高峰期管理</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/carinfo/carinfo/free" tab-id="2-6"><i class="iconfont icon-tupian"></i> 免费车辆管理</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/carinfo/carinfo/blacklist" tab-id="2-7"><i class="iconfont icon-tupian"></i> 黑名单管理</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/gs/get/specialcar" tab-id="2-8"><i class="iconfont icon-tupian"></i> 特种车辆管理</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/gs/get/fastigium/" tab-id="2-9"><i class="iconfont icon-tupian"></i> 高峰期管理</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item" th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}">
+                <li class="layui-nav-item" th:if="${session?.login_account?.roleId}==1">
                     <a class="" href="javascript:;">
                         <i class="layui-icon">&#xe62a;</i> 收费设置
                     </a>
@@ -75,40 +75,31 @@
                         <dd><a href="javascript:;" path="/account/info" tab-id="4-1"><i class="iconfont icon-tupian"></i> 账号列表</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item " th:style="'display:'+@{((${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2)?'display':'none')}">
+                <li class="layui-nav-item " th:if="${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2">
                     <a class="" href="javascript:;">
                         <i class="layui-icon">&#xe62a;</i> 报表查询
                     </a>
                     <dl class="layui-nav-child">
-                        <dd th:style="'display:'+@{((${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2)?'display':'none')}"><a href="javascript:;" path="/report/charge/temp/list.html" tab-id="5-1"><i class="iconfont icon-dianliyonghuzongshu"></i> 临时车收费明细</a></dd>
-                        <dd th:style="'display:'+@{((${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2)?'display':'none')}"><a href="javascript:;" path="/report/charge/month/list.html" tab-id="5-2"><i class="iconfont icon-dianliyonghuzongshu"></i> 月租车收费明细</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2"><a href="javascript:;" path="/report/charge/temp/list.html" tab-id="5-1"><i class="iconfont icon-dianliyonghuzongshu"></i> 临时车收费明细</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2"><a href="javascript:;" path="/report/charge/month/list.html" tab-id="5-2"><i class="iconfont icon-dianliyonghuzongshu"></i> 月租车收费明细</a></dd>
                         <!--<dd><a href="javascript:;" path="/report/list.html" tab-id="5-3"><i class="iconfont icon-jiaoseshouquan"></i> 报表查询</a></dd>-->
-                        <dd th:style="'display:'+@{((${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2)?'display':'none')}"><a href="javascript:;" path="/carnum/access/report.html" tab-id="5-4"><i class="iconfont icon-jiaoseshouquan"></i>出入明细</a></dd>
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/log/page" tab-id="5-5"><i class="iconfont icon-tupian"></i> 操作日志</a></dd>
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/exception_gate/list.html" tab-id="5-6"><i class="iconfont icon-tupian"></i> 异常开闸</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2"><a href="javascript:;" path="/carnum/access/report.html" tab-id="5-4"><i class="iconfont icon-jiaoseshouquan"></i>出入明细</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/log/page" tab-id="5-5"><i class="iconfont icon-tupian"></i> 操作日志</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/exception_gate/list.html" tab-id="5-6"><i class="iconfont icon-tupian"></i> 异常开闸</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item ">
+                <li class="layui-nav-item " th:if="${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2">
                     <a class="" href="javascript:;">
                         <i class="layui-icon">&#xe62a;</i> 远程控制
                     </a>
                     <dl class="layui-nav-child">
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/gs/get/led-info" tab-id="6-1"><i class="iconfont icon-dianliyonghuzongshu"></i> LED信息发布</a></dd>
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/gs/get/lcd-info" tab-id="6-2"><i class="iconfont icon-wenzhang2"></i> LCD信息发布</a></dd>
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/remote/gate.html" tab-id="6-3"><i class="iconfont icon-wenzhang2"></i> 远程开闸</a></dd>
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1?'display':'none')}"><a href="javascript:;" path="/gs/get/phone-num" tab-id="6-4"><i class="iconfont icon-wenzhang2"></i>人工呼叫号码</a></dd>
-                        <dd th:style="'display:'+@{(${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2?'display':'none')}"><a href="javascript:;" path="/carnum/inner/car-info.html" tab-id="6-5"><i class="iconfont icon-wenzhang2"></i>场内车辆</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/gs/get/led-info" tab-id="6-1"><i class="iconfont icon-dianliyonghuzongshu"></i> LED信息发布</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/gs/get/lcd-info" tab-id="6-2"><i class="iconfont icon-wenzhang2"></i> LCD信息发布</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/remote/gate.html" tab-id="6-3"><i class="iconfont icon-wenzhang2"></i> 远程开闸</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1"><a href="javascript:;" path="/gs/get/phone-num" tab-id="6-4"><i class="iconfont icon-wenzhang2"></i>人工呼叫号码</a></dd>
+                        <dd th:if="${session?.login_account?.roleId}==1 or ${session?.login_account?.roleId}==2"><a href="javascript:;" path="/carnum/inner/car-info.html" tab-id="6-5"><i class="iconfont icon-wenzhang2"></i>场内车辆</a></dd>
                     </dl>
                 </li>
-                <!--<li class="layui-nav-item ">-->
-                    <!--<a class="" href="javascript:;">-->
-                        <!--<i class="layui-icon">&#xe62a;</i> 数据管理-->
-                    <!--</a>-->
-                    <!--<dl class="layui-nav-child">-->
-                        <!--<dd><a href="javascript:;" path="user.html" tab-id="8-1"><i class="iconfont icon-dianliyonghuzongshu"></i> 配置导入</a></dd>-->
-                        <!--<dd><a href="javascript:;" path="article.html" tab-id="8-2"><i class="iconfont icon-wenzhang2"></i> 配置导出</a></dd>-->
-                    <!--</dl>-->
-                <!--</li>-->
             </ul>
         </div>
     </div>
