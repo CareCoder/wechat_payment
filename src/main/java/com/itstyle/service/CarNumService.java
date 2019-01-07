@@ -5,9 +5,11 @@ import com.itstyle.common.PageResponse;
 import com.itstyle.common.WebSocketData;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
+import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
 import com.itstyle.domain.car.manager.enums.*;
+import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.handler.MyTextWebSocketHandler;
 import com.itstyle.mapper.CarNumExtMapper;
@@ -16,6 +18,7 @@ import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.utils.enums.Status;
 import com.itstyle.utils.hibernate.BaseDaoService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.jpa.criteria.OrderImpl;
 import org.springframework.data.domain.Example;
@@ -51,6 +54,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     private ChargeRecordService chargeRecordService;
     @Resource
     private GlobalSettingService globalSettingService;
+    @Resource
+    private CarInfoService carInfoService;
 
     @PostConstruct
     private void init() {
@@ -64,11 +69,6 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo.buildQueryVo()));
         CarNumVo saveVo = new CarNumVo();
         if (find != null && !find.isEmpty()) {
-//            Optional<CarNumExtVo> any = find.stream().flatMap(e -> e.getCarNumExtVos().stream())
-//                    .filter(e -> e.getCarNumType() == carNumExtVo.getCarNumType()).findAny();
-//            if (any.isPresent()) {
-//                return Status.WARN_ALREAD_EXIST;
-//            }
             if (find.size() == 1) {
                 saveVo = find.get(0);
             }
@@ -84,6 +84,13 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         }
         saveVo.getCarNumExtVos().add(carNumExtVo);
         try {
+            //实时设置当前进入车辆是否是开启固定车
+            if (carNumVo.getFixedParkingSpace() == null) {
+                CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
+                if (carYardName != null) {
+                    carNumVo.setFixedParkingSpace(carYardName.getFixedParkingSpace());
+                }
+            }
             carNumMapper.save(saveVo);
             fileResourceService.upload(file, uuid);
         } catch (Exception e) {
@@ -215,16 +222,43 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
      * 刪除场内车辆
      */
     public void deleteInner(Long[] ids) {
+        //标记,如果true则不会减少剩余车位数,false则会
+        boolean flag = false;
         for (Long id : ids) {
-            delete(id);
-            Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
-            if (remainingParkingNum != null) {
-                remainingParkingNum -= 1;
+            //先判断是否是免费车
+            CarNumVo carNumVo = findById(id);
+            if (carNumVo.getCarType() != null) {
+                if (carNumVo.getCarType() == CarType.TEMP_CAR_A
+                        || carNumVo.getCarType() == CarType.TEMP_CAR_B
+                        || carNumVo.getCarType() == CarType.TEMP_CAR_C
+                        || carNumVo.getCarType() == CarType.TEMP_CAR_D) {
+                    CarInfo carInfoVo = carInfoService.getByCarNum(carNumVo.getCarNum());
+                    if (carInfoVo != null) {
+                        //免费车不减车位数
+                        flag = BooleanUtils.toBoolean(carInfoVo.getIsFree());
+                    }
+                } else if (carNumVo.getCarType() == CarType.MONTH_CAR_A
+                        || carNumVo.getCarType() == CarType.MONTH_CAR_B
+                        || carNumVo.getCarType() == CarType.MONTH_CAR_C) {
+                    //当是否选定固定车位为选中状态 ,进入的月租车也是不减车位数的
+                    flag = BooleanUtils.toBoolean(carNumVo.getFixedParkingSpace());
+                } else if (carNumVo.getCarType() == CarType.VIP_CAR) {
+                    flag = true;
+                }
             }
-            globalSettingService.set(YstCommon.REMAINING_PARKING_NUM, remainingParkingNum);
-            WebSocketData data = new WebSocketData();
-            data.setAction(WebSocketAction.CLEAR_PARKING_LOT);
-            MyTextWebSocketHandler.sendMessageToAllUser(gson.toJson(data));
+
+            delete(id);
+
+            if (! flag) {
+                Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
+                if (remainingParkingNum != null) {
+                    remainingParkingNum += 1;
+                }
+                globalSettingService.set(YstCommon.REMAINING_PARKING_NUM, remainingParkingNum);
+                WebSocketData data = new WebSocketData();
+                data.setAction(WebSocketAction.CLEAR_PARKING_LOT);
+                MyTextWebSocketHandler.sendMessageToAllUser(gson.toJson(data));
+            }
         }
     }
 }

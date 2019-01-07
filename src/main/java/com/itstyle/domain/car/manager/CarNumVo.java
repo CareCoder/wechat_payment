@@ -30,6 +30,7 @@ public class CarNumVo{
     private String enterWay;
     private Long lTime;//算是扩展字段,离开时间,为了提高性能添加这个字段,和扩展字段重复
     private Boolean record;//这次临时停车是否已经生成明细
+    private Boolean fixedParkingSpace;//是否固定车位
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_num_id")
