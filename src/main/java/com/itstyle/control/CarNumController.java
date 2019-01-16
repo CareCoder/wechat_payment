@@ -10,6 +10,7 @@ import com.itstyle.domain.caryard.ResponseAccessType;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.AccessTypeService;
 import com.itstyle.service.CarNumService;
+import com.itstyle.service.FeeTestService;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.utils.FeeUtil;
 import com.itstyle.utils.FileUtils;
@@ -40,6 +41,8 @@ public class CarNumController {
     private GlobalSettingService globalSettingService;
     @Resource
     private AccessTypeService accessTypeService;
+    @Resource
+    private FeeTestService feeTestService;
 
     @GetMapping("/tempcarinfo.html")
     public String tempcarinfo(CarNumQueryVo queryVo, Model model) {
@@ -91,6 +94,14 @@ public class CarNumController {
     @GetMapping("/tempcarinfo-payment.html")
     public String tempcarinfo(Long id, Model model, HttpSession session) {
         CarNumVo carNumVo = carNumService.findById(id);
+        //如果这里客户端没有上传收费金额,则服务器生成收费信息
+        if (carNumVo.getFee() == null) {
+            long now = System.currentTimeMillis();
+            int fee = feeTestService.fetchCurCharge(carNumVo.getCarType(), carNumVo.getTime(), now);
+            carNumVo.setFee(fee);
+            carNumVo.setLTime(now);
+            carNumService.add(carNumVo);
+        }
         carNumVo.getCarNumExtVos().sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
         Long enterTime = carNumVo.getTime();
         Long leaveTime = carNumVo.getLTime();
