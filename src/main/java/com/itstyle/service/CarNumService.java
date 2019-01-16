@@ -8,7 +8,10 @@ import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
-import com.itstyle.domain.car.manager.enums.*;
+import com.itstyle.domain.car.manager.enums.CarNumExtVo;
+import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.ChargeType;
+import com.itstyle.domain.car.manager.enums.WebSocketAction;
 import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.handler.MyTextWebSocketHandler;
@@ -20,7 +23,6 @@ import com.itstyle.utils.hibernate.BaseDaoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.jpa.criteria.OrderImpl;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,13 +33,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -189,38 +189,24 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         CarNumVo carNumVo = carNumMapper.getOne(id);
         if (carNumVo.getRecord() != null && carNumVo.getRecord()) {
             info = "收费放行失败 重复放行";
-        }else{
+        }else {
             if (carNumVo.getLTime() == null) {
                 info = "收费放行失败 车辆还未离场";
-            }else{
+            } else {
                 chargeRecord(carNumVo, account);
                 carNumVo.setRecord(true);
                 carNumMapper.save(carNumVo);
             }
+        }
+        log.info("info = {} id = {}", info, id);
+        return info;
+    }
 
     public PageResponse<CarNumVo> queryComplex(CarNumQueryVo queryVo) {
-        if (StringUtils.isEmpty(queryVo.getIsEnter())) {
-            queryVo.setStartTime(null);
-            queryVo.setEndTime(null);
-        }else{
-            queryVo.setLeaveStartTime(null);
-            queryVo.setLeaveEndTime(null);
-        }
-        if (queryVo.getLeaveStartTime() == null || queryVo.getLeaveEndTime() == null) {
-
-        }
         CarType carType = queryVo.getCarType();
         List<CarNumVo> carNumVos = carNumMapper.queryComplex(carType == null ? null : carType.ordinal());
         long count = carNumMapper.distincCount();
         return new PageResponse(0, "", count, carNumVos);
-    }
-
-    private void chargeRecord(CarNumVo carNumVo, CarNumExtVo carNumExtVo,Account account) {
-        if (carNumExtVo.getCarNumType() != CarNumType.LEAVE_BIG) {
-            return;
-        }
-        log.info("info = {} id = {}", info, id);
-        return info;
     }
 
     private void chargeRecord(CarNumVo carNumVo, Account account) {

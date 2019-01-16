@@ -3,7 +3,10 @@ package com.itstyle.control;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
-import com.itstyle.domain.car.manager.*;
+import com.itstyle.domain.car.manager.CarNumExcelModel;
+import com.itstyle.domain.car.manager.CarNumQueryVo;
+import com.itstyle.domain.car.manager.CarNumVo;
+import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
 import com.itstyle.domain.car.manager.enums.CarNumType;
 import com.itstyle.domain.caryard.ResponseAccessType;
@@ -16,7 +19,6 @@ import com.itstyle.utils.FeeUtil;
 import com.itstyle.utils.FileUtils;
 import com.itstyle.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Comparator;
 import java.util.List;
@@ -50,7 +51,7 @@ public class CarNumController {
             queryVo.setPage(1);
         }
         queryVo.setRecord(false);//已经缴费的不在显示
-        Page<CarNumVo> page = carNumService.query(queryVo, "true");
+        Page<CarNumVo> page = carNumService.query(queryVo);
         List<CarNumVo> carNumVos = page.getContent();
         carNumVos.forEach(e -> {
             List<CarNumExtVo> carNumExtVos = e.getCarNumExtVos();
@@ -136,8 +137,7 @@ public class CarNumController {
     public Response upload(@RequestParam("file") MultipartFile file, CarNumVo carNumVo,
                            CarNumExtVo carNumExtVo,
                            Long leaveTime,
-                           Integer remainingParkingNum,//剩余的车位数
-                           HttpServletRequest request) {
+                           Integer remainingParkingNum) {
         int status = Status.NORMAL;
         try {
             //先更新剩余车位数
