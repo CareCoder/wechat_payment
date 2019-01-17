@@ -199,7 +199,14 @@ public class CarNumController {
 
     @RequestMapping("/list")
     @ResponseBody
-    public PageResponse query(CarNumQueryVo queryVo) {
+    public PageResponse query(CarNumQueryVo queryVo, String isEnter) {
+        Page<CarNumVo> page = carNumService.query(queryVo, isEnter);
+        return PageResponse.build(page);
+    }
+
+    @RequestMapping("/queryComplex")
+    @ResponseBody
+    public PageResponse queryComplex(CarNumQueryVo queryVo) {
         return carNumService.queryComplex(queryVo);
     }
 
