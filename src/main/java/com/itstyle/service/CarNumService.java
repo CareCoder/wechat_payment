@@ -263,6 +263,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     }
 
     public PageResponse queryComplex(CarNumQueryVo queryVo) {
+        if (queryVo.getCarNum() != null && StringUtils.isEmpty(queryVo.getCarNum())) {
+            queryVo.setCarNum(null);
+        }
         List<CarNumVo> carNumVos = carNumMapper.queryComplex(queryVo.getCarType() == null ? null : queryVo.getCarType().getValue(),
                 queryVo.getCarNum(), queryVo.getLeaveStartTime(), queryVo.getLeaveEndTime(),
                 (queryVo.getPage() - 1) * queryVo.getLimit(), queryVo.getLimit());
