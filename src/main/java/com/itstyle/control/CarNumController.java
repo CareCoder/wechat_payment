@@ -199,16 +199,8 @@ public class CarNumController {
 
     @RequestMapping("/list")
     @ResponseBody
-    public PageResponse query(CarNumQueryVo queryVo, String isEnter) {
-        if (StringUtils.isEmpty(isEnter)) {
-            queryVo.setStartTime(null);
-            queryVo.setEndTime(null);
-        }else{
-            queryVo.setLeaveStartTime(null);
-            queryVo.setLeaveEndTime(null);
-        }
-        Page<CarNumVo> page = carNumService.query(queryVo, isEnter);
-        return PageResponse.build(page);
+    public PageResponse query(CarNumQueryVo queryVo) {
+        return carNumService.queryComplex(queryVo);
     }
 
     @RequestMapping("/watch-car-img")
