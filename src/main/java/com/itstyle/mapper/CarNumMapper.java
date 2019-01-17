@@ -19,7 +19,7 @@ public interface CarNumMapper extends JpaRepository<CarNumVo, Long>, JpaSpecific
     //            "and if(#{#queryVo.leavePass} is not null,leave_pass=#{#queryVo.leavePass},1=1)", nativeQuery = true)
     @Query(value = "SELECT * FROM car_num cn WHERE id IN ( SELECT MAX(id) FROM car_num WHERE l_time IS NOT NULL GROUP BY car_num )" +
             " and if(?1 is not null,car_type=?1 , 1 = 1 ) " +
-            " and if(?2 is not null,car_num=?2 , 1 = 1 ) " +
+            " and if(?2 is not null,car_num like CONCAT('%',?2,'%') , 1 = 1 ) " +
             " and if(?3 is not null,?3 <= l_time, 1 = 1 ) " +
             " and if(?4 is not null,?4 >= l_time, 1 = 1 ) " +
             " ORDER BY id DESC limit ?5, ?6" ,nativeQuery = true)
@@ -27,7 +27,7 @@ public interface CarNumMapper extends JpaRepository<CarNumVo, Long>, JpaSpecific
 
     @Query(value = "SELECT count(1) from (SELECT DISTINCT car_num from car_num cn where cn.l_time is not null " +
             " and if(?1 is not null,car_type=?1 , 1 = 1 ) " +
-            " and if(?2 is not null,car_num=?2 , 1 = 1 ) " +
+            " and if(?2 is not null,car_num like CONCAT('%',?2,'%') , 1 = 1 ) " +
             " and if(?3 is not null,?3 <= l_time, 1 = 1 ) " +
             " and if(?4 is not null,?4 >= l_time, 1 = 1 ) ) as c", nativeQuery = true)
     Long distincCount(Integer carType, String carNum, Long leaveStartTime, Long leaveEndTime);
