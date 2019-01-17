@@ -51,8 +51,8 @@ public class CarNumController {
         }
         queryVo.setRecord(false);//已经缴费的不在显示
         queryVo.setLeave(false);
-        Page<CarNumVo> page = carNumService.query(queryVo);
-        List<CarNumVo> carNumVos = page.getContent();
+        PageResponse pageResponse = carNumService.queryComplex(queryVo);
+        List<CarNumVo> carNumVos = pageResponse.getData();
         carNumVos.forEach(e -> {
             List<CarNumExtVo> carNumExtVos = e.getCarNumExtVos();
             carNumExtVos = carNumExtVos.stream()
@@ -70,7 +70,7 @@ public class CarNumController {
         accessTypes = accessTypes.stream().filter(e -> e.getChannelTypeId() % 2 == 1).collect(Collectors.toList());
         model.addAttribute("accessTypes", accessTypes);
 
-        model.addAttribute("maxPage", Math.ceil(page.getTotalElements() / 4));
+        model.addAttribute("maxPage", Math.ceil(pageResponse.getCount() / 4));
         return "/backend/tempcarinfo";
     }
 
