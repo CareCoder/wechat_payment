@@ -125,7 +125,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         return carNumMapper.findAll(Example.of(carNumVo));
     }
 
-    public Page<CarNumVo> query(CarNumQueryVo queryVo, String isEnter) {
+    public Page<CarNumVo> query(CarNumQueryVo queryVo) {
         PageRequest pageRequest = PageResponse.getPageRequest(queryVo.getPage(), queryVo.getLimit());
         Specification<CarNumVo> sp = (root, query, cb) -> {
             List<Predicate> predicate = new ArrayList<>();
@@ -144,8 +144,11 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             if (queryVo.getEndTime() != null) {
                 predicate.add(cb.le(root.get("time").as(Long.class), queryVo.getEndTime()));
             }
-            if (StringUtils.isNotEmpty(isEnter)) {
+            if (queryVo.getLeave() != null && !queryVo.getLeave()) {
                 predicate.add(cb.isNull(root.get("lTime").as(Long.class)));
+            }
+            if (queryVo.getLeave() != null && queryVo.getLeave()) {
+                predicate.add(cb.isNotNull(root.get("lTime").as(Long.class)));
             }
             if (StringUtils.isNotEmpty(queryVo.getLeavePass())) {
                 Predicate p1 = cb.equal(root.get("leavePass").as(String.class), queryVo.getLeavePass());

@@ -50,7 +50,8 @@ public class CarNumController {
             queryVo.setPage(1);
         }
         queryVo.setRecord(false);//已经缴费的不在显示
-        Page<CarNumVo> page = carNumService.query(queryVo, "true");
+        queryVo.setLeave(false);
+        Page<CarNumVo> page = carNumService.query(queryVo);
         List<CarNumVo> carNumVos = page.getContent();
         carNumVos.forEach(e -> {
             List<CarNumExtVo> carNumExtVos = e.getCarNumExtVos();
@@ -200,7 +201,8 @@ public class CarNumController {
     @RequestMapping("/list")
     @ResponseBody
     public PageResponse query(CarNumQueryVo queryVo) {
-        Page<CarNumVo> page = carNumService.query(queryVo, null);
+        queryVo.setLeave(true);
+        Page<CarNumVo> page = carNumService.query(queryVo);
         return PageResponse.build(page);
     }
 
