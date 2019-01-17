@@ -199,8 +199,8 @@ public class CarNumController {
 
     @RequestMapping("/list")
     @ResponseBody
-    public PageResponse query(CarNumQueryVo queryVo, String isEnter) {
-        Page<CarNumVo> page = carNumService.query(queryVo, isEnter);
+    public PageResponse query(CarNumQueryVo queryVo) {
+        Page<CarNumVo> page = carNumService.query(queryVo, null);
         return PageResponse.build(page);
     }
 
