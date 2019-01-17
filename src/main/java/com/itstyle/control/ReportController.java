@@ -50,18 +50,18 @@ public class ReportController {
     @RequestMapping("/charge/list")
     @ResponseBody
     public PageResponse<ChargeRecord> list(int page, int limit, ChargeType chargeType,CarType carType,
-                                           CarType carRealType,
+                                           CarType carRealType,String carNum,
                                            String chargePersonnel, Long startTime, Long endTime) {
-        return chargeRecordService.query(page, limit, chargeType, carType,carRealType,
+        return chargeRecordService.query(page, limit, chargeType, carType,carRealType,carNum,
                 chargePersonnel, startTime, endTime);
     }
 
     @RequestMapping("/charge/statistics")
     @ResponseBody
     public ChargeRecordStatistics statistics(ChargeType chargeType, CarType carType,
-                                             CarType carRealType,
+                                             CarType carRealType,String carNum,
                                              String chargePersonnel, Long startTime, Long endTime) {
-        return chargeRecordService.statistics(chargeType, carType,carRealType,
+        return chargeRecordService.statistics(chargeType, carType,carRealType,carNum,
                 chargePersonnel, startTime, endTime);
     }
 

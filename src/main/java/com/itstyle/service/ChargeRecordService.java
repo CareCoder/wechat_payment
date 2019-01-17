@@ -43,18 +43,19 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
     }
 
     public PageResponse<ChargeRecord> query(int page, int limit, ChargeType chargeType, CarType carType,CarType carRealType,
-                                            String chargePersonnel, Long startTime, Long endTime) {
+                                            String carNum, String chargePersonnel, Long startTime, Long endTime) {
         PageRequest pageRequest = PageResponse.getPageRequest(page, limit);
-        Specification<ChargeRecord> sp = fillSpecification(chargeType, carType, carRealType, chargePersonnel, startTime, endTime);
+        Specification<ChargeRecord> sp = fillSpecification(chargeType, carType, carRealType, carNum, chargePersonnel, startTime, endTime);
         Page<ChargeRecord> all = chargeRecordMapper.findAll(sp, pageRequest);
         return PageResponse.build(all);
     }
 
-    public ChargeRecordStatistics statistics(ChargeType chargeType, CarType carType, CarType carRealType, String chargePersonnel, Long startTime, Long endTime) {
+    public ChargeRecordStatistics statistics(ChargeType chargeType, CarType carType, CarType carRealType, String carNum, String chargePersonnel, Long startTime, Long endTime) {
         List<Object[]> statistics = chargeRecordMapper.statistics(
                 chargeType == null ? null : chargeType.ordinal(),
                 carType == null ? null : carType.ordinal(),
                 carRealType == null ? null : carRealType.ordinal(),
+                StringUtils.isEmpty(carNum) ? null : carNum,
                 StringUtils.isEmpty(chargePersonnel) ? null : chargePersonnel,
                 startTime, endTime);
         ChargeRecordStatistics crs = new ChargeRecordStatistics();
@@ -83,7 +84,7 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
         return FileUtils.buildExcelResponseEntity(data, ChargeRecordExcelModel.class, fileName);
     }
 
-    private Specification<ChargeRecord> fillSpecification(ChargeType chargeType, CarType carType, CarType carRealType, String chargePersonnel, Long startTime, Long endTime) {
+    private Specification<ChargeRecord> fillSpecification(ChargeType chargeType, CarType carType, CarType carRealType, String carNum, String chargePersonnel, Long startTime, Long endTime) {
         return (root, query, cb) -> {
             List<Predicate> predicate = new ArrayList<>();
             if (chargeType != null) {
@@ -92,6 +93,10 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
             }
             if (carRealType != null) {
                 Predicate p1 = cb.equal(root.get("carRealType").as(Integer.class), carRealType.ordinal());
+                predicate.add(p1);
+            }
+            if (StringUtils.isNotEmpty(carNum)) {
+                Predicate p1 = cb.like(root.get("carNum").as(String.class), "%"+carNum+"%");
                 predicate.add(p1);
             }
             if (carType != null) {
