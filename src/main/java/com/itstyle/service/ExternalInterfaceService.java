@@ -113,6 +113,11 @@ public class ExternalInterfaceService {
         //获取剩余车位数,如果未获取到则默认为车场总数
         Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
         if (remainingParkingNum != null && carYardName != null) {
+            //如果获取到的剩余车位数大于等于总床位数则让其等于总车位数
+            if(remainingParkingNum >= carYardName.getParkingNum()){
+                remainingParkingNum = carYardName.getParkingNum();
+                globalSettingService.set(YstCommon.REMAINING_PARKING_NUM,remainingParkingNum);
+            }
             carYardName.setParkingNum(remainingParkingNum);
         }
         return carYardName;
