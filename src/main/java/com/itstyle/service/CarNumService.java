@@ -197,6 +197,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             }else{
                 chargeRecord(carNumVo, account);
                 carNumVo.setRecord(true);
+                carNumVo.setLTime(System.currentTimeMillis());
                 carNumMapper.save(carNumVo);
             }
         }
