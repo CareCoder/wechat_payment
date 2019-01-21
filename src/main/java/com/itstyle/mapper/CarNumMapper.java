@@ -3,6 +3,7 @@ package com.itstyle.mapper;
 import com.itstyle.domain.car.manager.CarNumVo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -25,4 +26,8 @@ public interface CarNumMapper extends JpaRepository<CarNumVo, Long>, JpaSpecific
             " and if(?3 is not null,?3 <= time, 1 = 1 ) " +
             " and if(?4 is not null,?4 >= time, 1 = 1 ) ) as c", nativeQuery = true)
     Long distincCount(Integer carType, String carNum, Long startTime, Long endTime);
+
+    @Modifying
+    @Query("delete from CarNumVo vo where vo.LTime is null and vo.carNum = ?1")
+    Long deleteExceptionData(String carNum);
 }
