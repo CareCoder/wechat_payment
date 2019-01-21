@@ -49,8 +49,8 @@ public class CarNumController {
         if (queryVo.getPage() <= 0) {
             queryVo.setPage(1);
         }
-        queryVo.setRecord(false);//已经缴费的不在显示
-        queryVo.setLeave(false);
+//        queryVo.setRecord(false);//已经缴费的不在显示
+//        queryVo.setLeave(false);
         PageResponse pageResponse = carNumService.queryComplex(queryVo);
         List<CarNumVo> carNumVos = pageResponse.getData();
         carNumVos.forEach(e -> {
