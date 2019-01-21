@@ -100,7 +100,7 @@ public class CarNumController {
             long now = System.currentTimeMillis();
             int fee = feeTestService.fetchCurCharge(carNumVo.getCarType(), carNumVo.getTime(), now);
             carNumVo.setFee(fee);
-            carNumVo.setLTime(now);
+//            carNumVo.setLTime(now);
             carNumService.add(carNumVo);
         }
         carNumVo.getCarNumExtVos().sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));

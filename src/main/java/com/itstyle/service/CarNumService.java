@@ -197,10 +197,14 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             }else{
                 chargeRecord(carNumVo, account);
                 carNumVo.setRecord(true);
+                carNumVo.setLTime(System.currentTimeMillis());
                 carNumMapper.save(carNumVo);
+                //删除所有异常数据 PS:异常数据具体就是删除这个车牌下面所有没有离场的
+                Long deleteCount = carNumMapper.deleteExceptionData(carNumVo.getCarNum());
+                log.info("tempcarinfoPaymentConfirm deleteCount = {}", deleteCount);
             }
         }
-        log.info("info = {} id = {}", info, id);
+        log.info("tempcarinfoPaymentConfirm info = {} id = {}", info, id);
         return info;
     }
 
