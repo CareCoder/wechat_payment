@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface CarNumMapper extends JpaRepository<CarNumVo, Long>, JpaSpecificationExecutor<CarNumVo> {
@@ -28,6 +29,7 @@ public interface CarNumMapper extends JpaRepository<CarNumVo, Long>, JpaSpecific
     Long distincCount(Integer carType, String carNum, Long startTime, Long endTime);
 
     @Modifying
-    @Query("delete from CarNumVo vo where vo.LTime is null and vo.carNum = ?1")
-    Long deleteExceptionData(String carNum);
+    @Transactional
+    @Query("delete from CarNumVo vo where vo.lTime is null and vo.carNum = ?1")
+    Integer deleteExceptionData(String carNum);
 }
