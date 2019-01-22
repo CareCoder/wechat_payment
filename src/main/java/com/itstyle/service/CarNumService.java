@@ -17,6 +17,7 @@ import com.itstyle.mapper.CarNumMapper;
 import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.utils.enums.Status;
 import com.itstyle.utils.hibernate.BaseDaoService;
+import com.itstyle.vo.socket.TempCarInfoPayMentConfirm;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -189,21 +190,23 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     public String tempcarinfoPaymentConfirm(Long id, Account account) {
         String info = "放行成功";
         CarNumVo carNumVo = carNumMapper.getOne(id);
-        if (carNumVo.getRecord() != null && carNumVo.getRecord()) {
-            info = "收费放行失败 重复放行";
-        }else{
-            if (carNumVo.getLTime() == null) {
-                info = "收费放行失败 车辆还未离场";
-            }else{
-                chargeRecord(carNumVo, account);
-                carNumVo.setRecord(true);
-                carNumVo.setLTime(System.currentTimeMillis());
-                carNumMapper.save(carNumVo);
-                //删除所有异常数据 PS:异常数据具体就是删除这个车牌下面所有没有离场的
-                Long deleteCount = carNumMapper.deleteExceptionData(carNumVo.getCarNum());
-                log.info("tempcarinfoPaymentConfirm deleteCount = {}", deleteCount);
-            }
-        }
+        //生成明细
+        chargeRecord(carNumVo, account);
+        carNumVo.setRecord(true);
+        carNumVo.setLTime(System.currentTimeMillis());
+        carNumMapper.save(carNumVo);
+        //通过socket通知所有客户端
+        WebSocketData webSocketData = new WebSocketData();
+        webSocketData.setAction(WebSocketAction.TEMPCARINFO_PAYMENT_CONFIRM);
+        TempCarInfoPayMentConfirm data = new TempCarInfoPayMentConfirm();
+        data.carNum = carNumVo.getCarNum();
+        data.fee = carNumVo.getFee();
+        data.payTime = carNumVo.getLTime();
+        webSocketData.setData(data);
+        MyTextWebSocketHandler.sendMessageToAllUser(gson.toJson(webSocketData));
+        //删除所有异常数据 PS:异常数据具体就是删除这个车牌下面所有没有离场的
+        Integer deleteCount = carNumMapper.deleteExceptionData(carNumVo.getCarNum());
+        log.info("tempcarinfoPaymentConfirm deleteCount = {}", deleteCount);
         log.info("tempcarinfoPaymentConfirm info = {} id = {}", info, id);
         return info;
     }
