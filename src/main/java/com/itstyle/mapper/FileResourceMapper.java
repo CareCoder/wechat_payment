@@ -10,6 +10,12 @@ import javax.transaction.Transactional;
 public interface FileResourceMapper extends JpaRepository<FileResource, Long> {
     FileResource getByUuid(String uuid);
 
+    /**
+     * 根据新图片名获取指定图片
+     * @param fileName
+     * @return
+     */
+    FileResource getByFileName(String fileName);
     /***
      * 删除文件
      */
