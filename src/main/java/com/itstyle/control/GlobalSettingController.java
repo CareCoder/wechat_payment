@@ -183,6 +183,28 @@ public class GlobalSettingController {
         return Response.build(Status.NORMAL, null, null);
     }
 
+    @PostMapping("/delete/lcd-info")
+    @ResponseBody
+    public Response deleteLcdByIndex(String fileName,Integer index){
+        ImageDisplay imageDisplay = (ImageDisplay) globalSettingService.get(YstCommon.LCD_INFO, ImageDisplay.class);
+        if (imageDisplay == null) {
+            imageDisplay = new ImageDisplay();
+        }
+        if (fileName != "") {
+            if (imageDisplay.urlList == null) {
+                imageDisplay.urlList = new ArrayList<>(lcdInfoSize);
+            }
+            List<ImageDownloadUrl> urlList = imageDisplay.urlList;
+
+            fileResourceService.deleteByFileName(fileName);
+            urlList.remove(index.intValue());
+            globalSettingService.set(YstCommon.LCD_INFO, imageDisplay);
+            return Response.build(Status.NORMAL, null, null);
+        }else{
+            return Response.build(Status.ERROR, "没有可删除的图片！", null);
+        }
+    }
+
     @RequestMapping("/get/phone-num")
     public String phoneNumGet() {
         return "/backend/phone-num";

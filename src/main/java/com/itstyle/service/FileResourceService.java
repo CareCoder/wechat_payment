@@ -116,6 +116,17 @@ public class FileResourceService {
         fileResourceMapper.deleteByUuid(uuid);
     }
 
+    /**
+     * 根据新图片名删除指定图片
+     * @param fileName
+     */
+    public void deleteByFileName(String fileName){
+        File file = new File(fileName);
+        FileUtils.deleteQuietly(file);
+        FileResource fileResource = fileResourceMapper.getByFileName(fileName.substring(fileName.lastIndexOf("/") + 1,fileName.length()));
+        fileResourceMapper.deleteByUuid(fileResource.getUuid());
+    }
+
     private List<FileResourceBo> convertToBos(List<FileResource> fileResources) {
         List<FileResourceBo> bos = new ArrayList<>();
         if (fileResources == null || fileResources.isEmpty()) {
