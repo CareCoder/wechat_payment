@@ -34,7 +34,11 @@ public class CarNumVo{
     private Long stopTime;//停车时长, stopTime+time=缴费时间<=lTime 这个关系一定要理解
 
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
-    @JoinColumn(name = "car_num_id")
+    @JoinColumn(name = "car_num_id"
+            ,referencedColumnName = "id"
+            ,foreignKey = @ForeignKey(
+            name = "FK_child_to_parent",
+            value = ConstraintMode.NO_CONSTRAINT))
     private List<CarNumExtVo> carNumExtVos = new ArrayList<>();
 
     public String getUuid(CarNumType carNumType) {
