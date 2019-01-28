@@ -114,7 +114,7 @@ public class CarNumController {
         model.addAttribute("id", id);
         model.addAttribute("enterTime", enterTime);
         model.addAttribute("leaveTime", leaveTime);
-        model.addAttribute("stopTime", carNumVo.getStopTime() == null ? "" : carNumVo.getStopTime());
+        model.addAttribute("stopTime", carNumVo.getStopTime() == null ? "" :  FeeUtil.secondToTime(carNumVo.getStopTime()));
         model.addAttribute("userName", userName);
         model.addAttribute("fee", carNumVo.getFee() == null ? "" :FeeUtil.convert(carNumVo.getFee()));
         model.addAttribute("vo", carNumVo);
