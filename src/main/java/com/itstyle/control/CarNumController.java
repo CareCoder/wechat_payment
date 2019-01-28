@@ -100,7 +100,7 @@ public class CarNumController {
             long now = System.currentTimeMillis();
             int fee = feeTestService.fetchCurCharge(carNumVo.getCarType(), carNumVo.getTime(), now);
             carNumVo.setFee(fee);
-//            carNumVo.setLTime(now);
+            carNumVo.setStopTime(now - carNumVo.getTime());
             carNumService.add(carNumVo);
         }
         carNumVo.getCarNumExtVos().sort(Comparator.comparingInt(e1 -> e1.getCarNumType().ordinal()));
@@ -114,7 +114,7 @@ public class CarNumController {
         model.addAttribute("id", id);
         model.addAttribute("enterTime", enterTime);
         model.addAttribute("leaveTime", leaveTime);
-        model.addAttribute("stopTime", leaveTime == null ? "" : FeeUtil.secondToTime(leaveTime - enterTime));
+        model.addAttribute("stopTime", carNumVo.getStopTime() == null ? "" : carNumVo.getStopTime());
         model.addAttribute("userName", userName);
         model.addAttribute("fee", carNumVo.getFee() == null ? "" :FeeUtil.convert(carNumVo.getFee()));
         model.addAttribute("vo", carNumVo);
