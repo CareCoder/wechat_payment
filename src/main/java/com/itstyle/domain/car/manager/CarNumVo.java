@@ -33,7 +33,7 @@ public class CarNumVo{
     private Boolean fixedParkingSpace;//是否固定车位
     private Long stopTime;//停车时长, stopTime+time=缴费时间<=lTime 这个关系一定要理解
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "car_num_id")
     private List<CarNumExtVo> carNumExtVos = new ArrayList<>();
 
