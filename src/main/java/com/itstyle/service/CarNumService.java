@@ -92,6 +92,13 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                     carNumVo.setFixedParkingSpace(carYardName.getFixedParkingSpace());
                 }
             }
+            //如果是车辆离场
+            if (carNumVo.getLTime() != null) {
+                if (carNumVo.getTime() != null) {
+                    //设置车辆的停放时间
+                    saveVo.setStopTime(carNumVo.getLTime() - carNumVo.getTime());
+                }
+            }
             carNumMapper.save(saveVo);
             fileResourceService.upload(file, uuid);
         } catch (Exception e) {
@@ -258,6 +265,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
             }
 
             delete(id);
+            //同时删除异常数据
+            carNumMapper.deleteExceptionData(carNumVo.getCarNum());
 
             if (! flag) {
                 Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
