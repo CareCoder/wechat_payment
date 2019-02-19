@@ -23,6 +23,7 @@ import com.itstyle.vo.syncarinfo.response.BlackListVehicle;
 import com.itstyle.vo.syncarinfo.response.FreeVehicle;
 import com.itstyle.vo.syncarinfo.response.MonlyCarInfo;
 import com.itstyle.vo.syncarinfo.response.SynCarInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ExternalInterfaceService {
     @Resource
     private RedisDao redisDao;
@@ -224,6 +226,7 @@ public class ExternalInterfaceService {
      * 定时把外设的信息上传给服务器做更新
      */
     public void uploadEquipmentStatus(EquipmentStatus equipmentStatus) {
+        log.info("uploadEquipmentStatus equipmentStatus = {}",gson.toJson(equipmentStatus));
         redisDao.hset(YstCommon.EQUIPMENT_STATUS, equipmentStatus.getPassWayName(), gson.toJson(equipmentStatus));
     }
 }
