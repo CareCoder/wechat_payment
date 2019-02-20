@@ -148,4 +148,30 @@ public class WxPayAllController {
 
 	}
 
+	/**
+	 * 生成临时二维码（一天）
+	 *
+	 * @return
+	 */
+	@RequestMapping("/createTemporaryQRCode")
+	public String createTemporaryQRCode(Integer args){
+		if (args<=0) {
+			return "/error/404";
+		}
+		try {
+			String json = "{\"expire_seconds\": 86400,\"action_name\": \"QR_SCENE\", \"action_info\": {\"scene\": {\"scene_id\": \""+ args +"\"}}}";
+			String strResult = HttpUtils.HttPost(
+					"https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=" + assessTokenTask.getAssessToken(),
+					json);
+			JSONObject jsonObject = JSON.parseObject(strResult);
+			String ticket = (String) jsonObject.get("ticket");
+			System.out.println(strResult);
+			log.info("strResult:"+strResult);
+			return "redirect:https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + ticket;
+		} catch (Exception e) {
+			log.error("生成二维码报错{}", e);
+			return null;
+		}
+	}
+
 }
