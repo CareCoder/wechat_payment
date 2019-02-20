@@ -64,9 +64,16 @@
             <div class="layui-input-block">
                 <input name="startTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="startTime">
             </div>
-            <label class="layui-form-label">截止日期 :</label>
+            <label class="layui-form-label">缴费月数</label>
             <div class="layui-input-block">
-                <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
+                <select name="month" lay-filter="month" class="select" lay-verify="type">
+                    <option value="1">一个月</option>
+                    <option value="2">二个月</option>
+                    <option value="3">三个月</option>
+                    <option value="4">四个月</option>
+                    <option value="5">五个月</option>
+                    <option value="6">六个月</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
@@ -101,21 +108,6 @@
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
-        // var fixedcarData = new Map();
-        // $.ajax({
-        //     url: "/gs/get/fixedcar/data",
-        //     type: "GET",
-        //     success: function (resp) {
-        //         resp.data.forEach(function(e){
-        //             fixedcarData.set(e.carType,e.customName);
-        //         });
-        //         fixedcarData.forEach(function (value, key) {
-        //             console.log("属性：" + key + ",值：" + value);
-        //             $("dd[lay-value="+ key  +"]").html(value);
-        //         })
-        //     }
-        // });
-
         $("input[name='name']").val('[[${monthCarInfo?.name}]]');
         $("input[name='phone']").val('[[${monthCarInfo?.phone}]]');
         $("input[name='remarks']").val('[[${monthCarInfo?.remarks}]]');
@@ -125,7 +117,6 @@
         var id = '[[${monthCarInfo?.id}]]';
         $("input[name='id']").val(id);
         if (id != '') {
-            $("input[name='endTime']").attr("disabled", "disabled");
             $("input[name='startTime']").attr("disabled", "disabled");
         }
 
@@ -150,21 +141,10 @@
         }
         $("select option[value=" + carColor + "]").attr("selected", 'selected');
 
-        var endTime = '[[${monthCarInfo?.endTime}]]';
-        if (endTime === '') {
-            endTime = new Date().getTime();
-        }
-
         var startTime = '[[${monthCarInfo?.startTime}]]';
         if (startTime === '') {
             startTime = new Date().getTime();
         }
-
-        laydate.render({
-            elem: '#endTime',
-            type: "datetime",
-            value: new Date(parseInt(endTime))
-        })
 
         laydate.render({
             elem: '#startTime',
@@ -180,7 +160,6 @@
         });
 
         form.on('submit(add)', function (data) {
-            data.field.endTime = new Date(data.field.endTime).getTime();
             data.field.startTime = new Date(data.field.startTime).getTime();
             data.field.carNum = data.field.carNumHead + data.field.carNum;
             console.log(data.field);

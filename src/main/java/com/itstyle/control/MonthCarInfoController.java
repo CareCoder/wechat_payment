@@ -82,10 +82,13 @@ public class MonthCarInfoController {
      */
     @PostMapping("/edit")
     @ResponseBody
-    public String edit(MonthCarInfo monthCarInfo, HttpServletResponse httpResponse) {
+    public String edit(MonthCarInfo monthCarInfo, @RequestParam Integer month,
+                       HttpServletRequest request, HttpServletResponse httpResponse) {
         String result = "";
         try {
-          result =  monthCarInfoService.edit(monthCarInfo);
+            HttpSession session = request.getSession();
+            Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
+            result = monthCarInfoService.edit(monthCarInfo, month, account);
         } catch (DataIntegrityViolationException exception) {
             httpResponse.setStatus(503);
         }
@@ -123,8 +126,10 @@ public class MonthCarInfoController {
      */
     @RequestMapping("/importExcel")
     @ResponseBody
-    public Response importExcel(MultipartFile file) throws IOException {
-        monthCarInfoService.importExcel(file);
+    public Response importExcel(MultipartFile file, HttpServletRequest request) throws IOException {
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute(YstCommon.LOGIN_ACCOUNT);
+        monthCarInfoService.importExcel(file, account);
         return Response.build(200, "", null);
     }
 }

@@ -114,4 +114,37 @@ public class DateUtil {
         }
         return null;
     }
+
+    /**
+     * 计算当前时间之后的几个月是多久
+     * @param time 当前时间
+     * @param month 几个月
+     * @return 计算当前时间之后的几个月的数据
+     */
+    public static Long calcAfterMonthTime(Long time, Integer month) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        calendar.add(Calendar.MONTH, month);
+        return calendar.getTimeInMillis();
+    }
+
+    /**
+     * 计算相差几个月
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     */
+    public static Integer calcMonth(Long startTime, Long endTime) {
+        try {
+            Calendar c1 = Calendar.getInstance();
+            c1.setTimeInMillis(startTime);
+            Calendar c2 = Calendar.getInstance();
+            c2.setTimeInMillis(endTime);
+            int c2Value = c2.get(Calendar.YEAR) * 12 + c2.get(Calendar.MONTH);
+            int c1Value = c1.get(Calendar.YEAR) * 12 + c1.get(Calendar.MONTH);
+            return c2Value - c1Value;
+        } catch (Exception e) {
+            log.error("calcMonth", e);
+            return 0;
+        }
+    }
 }

@@ -1,7 +1,6 @@
 package com.itstyle.service;
 
 import com.alibaba.excel.ExcelReader;
-import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
 import com.itstyle.common.PageResponse;
@@ -16,16 +15,14 @@ import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.mapper.MonthCarInfoMapper;
 import com.itstyle.service.listener.MonthCarExcelListener;
+import com.itstyle.utils.DateUtil;
 import com.itstyle.utils.FileUtils;
-import com.itstyle.utils.HttpUtils;
 import com.itstyle.utils.hibernate.BaseDaoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -81,7 +77,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
 //        if (endTime < now) {
 //            endTime = now;
 //        }
-        endTime = endTime + (new Long(month) * 30 * 24 * 60 * 60 * 1000);
+        endTime = DateUtil.calcAfterMonthTime(endTime, month);
         one.setEndTime(endTime);
         one.setModifyTime(new Date());
         update(one.getId(), one);
@@ -89,23 +85,30 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         chargeRecord(one, month, account);
     }
 
+
     /**
      * 新增和更新车辆
      * @param monthCarInfo
      * @return
      */
-    public String edit(MonthCarInfo monthCarInfo) {
+    public String edit(MonthCarInfo monthCarInfo, Integer month, Account account) {
         String result = carInfoService.verification(monthCarInfo.getCarNum());
+        long now = System.currentTimeMillis();
         if (monthCarInfo.getId() == null) {
             //add
             if (monthCarInfo.getStartTime() == null) {
-                monthCarInfo.setStartTime(System.currentTimeMillis());
+                monthCarInfo.setStartTime(now);
             }
-            monthCarInfo.setCreateTime(new Date());
-            if(result!=""){
+            if (month != null) {
+                monthCarInfo.setEndTime(DateUtil.calcAfterMonthTime(now, month));
+            }
+            monthCarInfo.setCreateTime(new Date(now));
+            if(!result.equals("")){
                 return result;
             }
             add(monthCarInfo);
+            //上传月租车续费信息
+            chargeRecord(monthCarInfo, month, account);
             return "添加成功！";
         }else{
             //update 这个接口不得修改 startTime 和 endTime ，如果需要修改需要去续费接口
@@ -203,12 +206,12 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         return FileUtils.buildExcelResponseEntity(data, CarInfoExcelModel.class, "月租车数据.xlsx");
     }
 
-    public void importExcel(MultipartFile excel) throws IOException {
+    public void importExcel(MultipartFile excel, Account account) throws IOException {
         InputStream inputStream = null;
         try {
             inputStream = excel.getInputStream();
             // 解析每行结果在listener中处理
-            MonthCarExcelListener listener = new MonthCarExcelListener(this);
+            MonthCarExcelListener listener = new MonthCarExcelListener(this, account);
 
             ExcelReader excelReader = new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, listener);
 
