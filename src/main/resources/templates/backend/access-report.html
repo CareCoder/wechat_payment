@@ -104,24 +104,40 @@
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
-        var tableIns = table.render({
-            elem: '#tableId',
-            url: '/carnum/list',
-            page: true,
-            cols: [
-                [
-                    {field: 'id', title: 'ID', width: 80},
-                    {field: 'carNum', title: '车牌号', width: 150},
-                    {field: 'time', title: '入场时间', width: 250, templet: '#timeTemp'},
-                    {field: 'ltime', title: '出场时间', width: 250, templet: '#lTimeTemp'},
-                    {field: 'enterPass', title: '入口通道', width: 100},
-                    {field: 'leavePass', title: '出口通道', width: 100},
-                    {field: 'enterWay', title: '入场类型', width: 100},
-                    {width: 100, toolbar: '#findImg'}
-                ]
-            ],
-            done: function (res, curr, count) {
-                $("#countNum").text(count);
+        var fixedcarData = new Map();
+        var tableIns;
+        $.ajax({
+            url: "/gs/get/fixedcar/data",
+            type: "GET",
+            success: function (resp) {
+                resp.data.forEach(function(e){
+                    fixedcarData.set(e.carType,e.customName);
+                });
+                fixedcarData.set("TEMP_CAR_A","蓝牌");
+                fixedcarData.set("TEMP_CAR_B","黄牌");
+                fixedcarData.set("TEMP_CAR_C","黑牌");
+                fixedcarData.set("TEMP_CAR_D","绿牌");
+                tableIns = table.render({
+                    elem: '#tableId',
+                    url: '/carnum/list',
+                    page: true,
+                    cols: [
+                        [
+                            {field: 'id', title: 'ID', width: 80},
+                            {field: 'carNum', title: '车牌号', width: 150},
+                            {field: 'carType', title: '车辆类型', width: 100, templet: '#carType'},
+                            {field: 'time', title: '入场时间', width: 250, templet: '#timeTemp'},
+                            {field: 'ltime', title: '出场时间', width: 250, templet: '#lTimeTemp'},
+                            {field: 'enterPass', title: '入口通道', width: 100},
+                            {field: 'leavePass', title: '出口通道', width: 100},
+                            {field: 'enterWay', title: '入场类型', width: 100},
+                            {width: 100, toolbar: '#findImg'}
+                        ]
+                    ],
+                    done: function (res, curr, count) {
+                        $("#countNum").text(count);
+                    }
+                });
             }
         });
         laydate.render({
@@ -215,6 +231,12 @@
         return date.toLocaleString();
         }}
     {{#  } }}
+</script>
+<script type="text/html" id="carType">
+    {{#
+    return fixedcarData.get(d.carType);
+    }}
+
 </script>
 <script type="text/html" id="findImg">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看图片</a>
