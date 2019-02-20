@@ -194,14 +194,16 @@
             ,url: '/monthcarinfo/importExcel' //上传接口
             ,accept: 'file' //允许上传的文件类型
             ,done: function(res){
-                layer.msg("上传成功！", {icon: 6, time: 1000, anim: 4}, function () {
-                    parent.layer.close(parent.layer.getFrameIndex(window.name));
-                });
-            }
-            ,error: function(){
-                layer.msg("上传成功！", {icon: 6, time: 1000, anim: 4}, function () {
-                    parent.layer.close(parent.layer.getFrameIndex(window.name));
-                });
+                debugger;
+                if (res != null && res.status === 200) {
+                    layer.msg("上传成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }else{
+                    layer.msg("上传失败！", {icon: 6, time: 1000, anim: 4}, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    });
+                }
             }
         });
     })
