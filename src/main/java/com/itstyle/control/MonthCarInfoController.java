@@ -6,6 +6,7 @@ import com.itstyle.common.YstCommon;
 import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.MonthCarInfo;
+import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.service.MonthCarInfoService;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -122,7 +123,8 @@ public class MonthCarInfoController {
      */
     @RequestMapping("/importExcel")
     @ResponseBody
-    public void importExcel(MultipartFile file) {
+    public Response importExcel(MultipartFile file) throws IOException {
         monthCarInfoService.importExcel(file);
+        return Response.build(200, "", null);
     }
 }

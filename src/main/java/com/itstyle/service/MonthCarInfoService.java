@@ -203,7 +203,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         return FileUtils.buildExcelResponseEntity(data, CarInfoExcelModel.class, "月租车数据.xlsx");
     }
 
-    public void importExcel(MultipartFile excel) {
+    public void importExcel(MultipartFile excel) throws IOException {
         InputStream inputStream = null;
         try {
             inputStream = excel.getInputStream();
@@ -215,6 +215,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
             excelReader.read(new Sheet(1, 1, CarInfoExcelModel.class));
         } catch (Exception e) {
             log.error("importExcel error1",e);
+            throw e;
         } finally {
             try {
                 if (inputStream != null) {
