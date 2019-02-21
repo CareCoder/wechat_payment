@@ -99,12 +99,12 @@
     window.onload = function () {
         NProgress.done();
     };
+    var fixedcarData = new Map();
     layui.use(['table', 'form', 'jquery', 'laydate'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
-        var fixedcarData = new Map();
         var tableIns;
         $.ajax({
             url: "/gs/get/fixedcar/data",
