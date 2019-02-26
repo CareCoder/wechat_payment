@@ -32,8 +32,12 @@
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">车牌号码</label>
-            <div class="layui-input-block">
-                <input type="text" name="carNum" placeholder="请输入车牌号码" autocomplete="off" class="layui-input" lay-verify="required|carNum">
+            <div class="layui-input-inline">
+                <select id="province_select", name="carNumHead" lay-verify="required">
+                </select>
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="carNum" placeholder="请输入车牌号码" autocomplete="off" class="layui-input" lay-verify="required|carNum" maxlength="7" minlength="6">
             </div>
         </div>
         <div class="layui-form-item">
@@ -42,17 +46,17 @@
                 <input type="text" name="phone" placeholder="请输入手机号码" autocomplete="off" class="layui-input" lay-verify="phone">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">车牌颜色</label>
-            <div class="layui-input-block">
-                <select name="carColor" lay-verify="required">
-                    <option value="LC_BLUE">蓝牌</option>
-                    <option value="LC_YELLOW">黄牌</option>
-                    <option value="LC_BLACK">黑牌</option>
-                    <option value="LC_GREEN">绿牌</option>
-                </select>
-            </div>
-        </div>
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">车牌颜色</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<select name="carColor" lay-verify="required">-->
+                    <!--<option value="LC_BLUE">蓝牌</option>-->
+                    <!--<option value="LC_YELLOW">黄牌</option>-->
+                    <!--<option value="LC_BLACK">黑牌</option>-->
+                    <!--<option value="LC_GREEN">绿牌</option>-->
+                <!--</select>-->
+            <!--</div>-->
+        <!--</div>-->
         <div class="layui-form-item">
             <label class="layui-form-label">备注</label>
             <div class="layui-input-block">
@@ -81,7 +85,7 @@
 
         $("input[name='id']").val('[[${car_info.id}]]');
         $("input[name='name']").val('[[${car_info.name}]]');
-        $("input[name='carNum']").val('[[${car_info.carNum}]]');
+        var carNum = '[[${car_info.carNum}]]';
         $("input[name='phone']").val('[[${car_info.phone}]]');
         $("input[name='remarks']").val('[[${car_info.remarks}]]');
 
@@ -103,12 +107,20 @@
             ]
         });
 
+        var carNumHead = "京";
+        var carNumBody = "";
+        if (carNum != '') {
+            carNumHead = carNum.substring(0, 1);
+            carNumBody = carNum.substring(1, carNum.length);
+        }
+        $("input[name='carNum']").val(carNumBody);
         form.on('submit(add)', function (data) {
             if (type == 'free') {
                 data.field.isFree = true;
             }else{
                 data.field.isBlackList = true;
             }
+            data.field.carNum = data.field.carNumHead + data.field.carNum;
             console.log(data.field);
             $.ajax({
                 url:"/carinfo/update",
@@ -129,6 +141,14 @@
             return false;
         });
 
+        var province = ["京", "津", "沪", "渝", "冀", "晋", "辽", "吉", "黑", "苏", "浙", "皖", "闽", "赣", "鲁", "豫", "鄂", "湘", "粤", "琼", "川", "黔", "云", "陕", "甘", "青", "藏", "桂", "蒙", "宁", "新"];
+        province.forEach(function (value, i) {
+            if (value == carNumHead) {
+                $('#province_select').append("<option selected value='"+value+"'>"+value+"</option>");
+            }else{
+                $('#province_select').append("<option value='"+value+"'>"+value+"</option>");
+            }
+        });
         form.render();
     })
 </script>
