@@ -60,6 +60,12 @@ public class FeeTestService {
     public Response byCharges(Integer carType, Long start, Long end) {
         String result = redisDao.hget(YstCommon.BY_CHARGES, mapperCarTyep.get(carType));
         ByCharges byCharges = gson.fromJson(result, ByCharges.class);
+        if (start == null) {
+            //如果客户端没上传入场信息,则按首段时间收费
+            FeeTestResponse feeTestResponse = new FeeTestResponse();
+            feeTestResponse.setParkingAmount((double)byCharges.getOneTimeCharge());
+            return Response.build(Status.NORMAL, null, gson.toJson(feeTestResponse));
+        }
         BilllingCost billlingCost = new BilllingCost(1, carType, byCharges.getCappingAmount(), byCharges.getFreeTime());
         billlingCost.getBillingRules().CommonStandardInit(0,
                 0, 0, 0, byCharges.getOptionalCycle() == 24 ? 1 : 0);
@@ -69,6 +75,12 @@ public class FeeTestService {
     public Response standardCharges(Integer carType, Long start, Long end) {
         String result = redisDao.hget(YstCommon.STANDARD_CHARGES, mapperCarTyep.get(carType));
         StandardCharges standardCharges = gson.fromJson(result, StandardCharges.class);
+        if (start == null) {
+            //如果客户端没上传入场信息,则按首段时间收费
+            FeeTestResponse feeTestResponse = new FeeTestResponse();
+            feeTestResponse.setParkingAmount(standardCharges.getFirstAmount());
+            return Response.build(Status.NORMAL, null, gson.toJson(feeTestResponse));
+        }
         BilllingCost billlingCost = new BilllingCost(2, carType, standardCharges.getCappingAmount(), standardCharges.getFreeTime());
         billlingCost.getBillingRules().CommonStandardInit(standardCharges.getFirstTime(), standardCharges.getFirstAmount(), (int) (long) standardCharges.getIncreasingTime(),
                 standardCharges.getIncreasingAmount(), standardCharges.getOptionalCycle() == 24 ? 1 : 0);
@@ -78,6 +90,12 @@ public class FeeTestService {
     public Response szCharges(Integer carType, Long start, Long end) {
         String result = redisDao.hget(YstCommon.SZ_CHARGES, mapperCarTyep.get(carType));
         SZCharges szCharges = gson.fromJson(result, SZCharges.class);
+        if (start == null) {
+            //如果客户端没上传入场信息,则按首段时间收费
+            FeeTestResponse feeTestResponse = new FeeTestResponse();
+            feeTestResponse.setParkingAmount(szCharges.getNonPeakFirstAmount());
+            return Response.build(Status.NORMAL, null, gson.toJson(feeTestResponse));
+        }
         BilllingCost billlingCost = new BilllingCost(3, carType, (int) (long) szCharges.getCappingAmount(), szCharges.getFreeTime());
         billlingCost.getBillingRules().PeakModelPeakTimeSlot(szCharges.getPeakModelPeakTimeStart(), szCharges.getPeakModelPeakTimeEnd(),
                 (int) (long) szCharges.getCappingAmount(), szCharges.getOptionalCycle() == 24 ? 1 : 0);
