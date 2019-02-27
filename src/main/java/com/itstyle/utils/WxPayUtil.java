@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,7 +35,7 @@ public class WxPayUtil {
 
 	/**
 	 * 根据code获取openid
-	 * 
+	 *
 	 * @param code
 	 * @return
 	 * @throws IOException
@@ -75,7 +74,7 @@ public class WxPayUtil {
 
 	/**
 	 * 统一下单
-	 * 
+	 *
 	 * @param body
 	 * @param out_trade_no
 	 * @param total_fee
@@ -125,7 +124,7 @@ public class WxPayUtil {
 
 	/**
 	 * 根据统一下单返回预支付订单的id和其他信息生成签名并拼装为map（调用微信支付）
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
@@ -150,7 +149,7 @@ public class WxPayUtil {
 
 	/**
 	 * 修改订单状态，获取微信回调结果
-	 * 
+	 *
 	 * @return 如果成功返回openid ，否则返回null
 	 */
 	public static ParkCarOrder getNotifyResult(HttpServletRequest request) throws Exception {
@@ -223,7 +222,7 @@ public class WxPayUtil {
 
 	/**
 	 * 获取32位随机字符串
-	 * 
+	 *
 	 * @return
 	 */
 	public static String getNonceStr() {
@@ -238,7 +237,7 @@ public class WxPayUtil {
 
 	/**
 	 * 插入XML标签
-	 * 
+	 *
 	 * @param sb
 	 * @param Key
 	 * @param value
@@ -260,7 +259,7 @@ public class WxPayUtil {
 
 	/**
 	 * 解析XML 获得名称为para的参数值
-	 * 
+	 *
 	 * @param xml
 	 * @param para
 	 * @return
@@ -276,8 +275,33 @@ public class WxPayUtil {
 	}
 
 	/**
+	 * 将请求参数转换为xml格式的string
+	 *
+	 * @param parameters
+	 * @return
+	 */
+	public static String getRequestXml(SortedMap<Object, Object> parameters) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("<xml>");
+		Set<Map.Entry<Object, Object>> es = parameters.entrySet();
+		Iterator<Map.Entry<Object, Object>> it = es.iterator();
+		while (it.hasNext()) {
+			Map.Entry<Object, Object> entry = (Map.Entry<Object, Object>) it.next();
+			String k = (String) entry.getKey();
+			String v = entry.getValue() + "";
+			if ("attach".equalsIgnoreCase(k) || "body".equalsIgnoreCase(k) || "sign".equalsIgnoreCase(k)) {
+				sb.append("<" + k + ">" + "<![CDATA[" + v + "]]></" + k + ">");
+			} else {
+				sb.append("<" + k + ">" + v + "</" + k + ">");
+			}
+		}
+		sb.append("</xml>");
+		return sb.toString();
+	}
+
+	/**
 	 * 获取ip地址
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -297,5 +321,53 @@ public class WxPayUtil {
 			ipAddrStr += ipAddr[i] & 0xFF;
 		}
 		return ipAddrStr;
+	}
+
+	/**
+	 * 获取当前时间 yyyyMMddHHmmss
+	 *
+	 * @return String
+	 */
+	public static String getCurrTime() {
+		Date now = new Date();
+		SimpleDateFormat outFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		String s = outFormat.format(now);
+		return s;
+	}
+
+	/**
+	 * 取出一个指定长度大小的随机正整数.
+	 *
+	 * @param length int 设定所取出随机数的长度。length小于11
+	 * @return int 返回生成的随机数。
+	 */
+	public static int buildRandom(int length) {
+		int num = 1;
+		double random = Math.random();
+		if (random < 0.1) {
+			random = random + 0.1;
+		}
+		for (int i = 0; i < length; i++) {
+			num = num * 10;
+		}
+		return (int) ((random * num));
+	}
+
+
+
+	/**
+	 * 获取系统前一天的信息（amount=-1）,当前时间（amount=0），后一天（amount=1）
+	 *
+	 * @param date
+	 * @return
+	 */
+	public static String getPreDay(Date date, Integer amount) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DAY_OF_MONTH, amount);
+		date = calendar.getTime();
+		String value = sdf.format(date);
+		return value.split(" ")[0];
 	}
 }

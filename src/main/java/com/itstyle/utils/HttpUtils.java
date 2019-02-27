@@ -27,7 +27,19 @@ public class HttpUtils {
 			logger.error("发送post请求失败{}", e);
 			return null;
 		}
+	}
 
+	public static String HttPost(String url) {
+		try {
+			HttpPost httppost = new HttpPost(url);
+			CloseableHttpClient httpclient = HttpClients.createDefault();
+			CloseableHttpResponse response = httpclient.execute(httppost);
+			String strResult = EntityUtils.toString(response.getEntity(), Charset.forName("utf-8"));
+			return strResult;
+		} catch (Exception e) {
+			logger.error("发送post请求失败{}", e);
+			return null;
+		}
 	}
 
 	public static HttpHeaders getDownloadHttpHeaders(String fileName) throws Exception{
