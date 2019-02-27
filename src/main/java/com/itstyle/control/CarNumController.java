@@ -224,7 +224,7 @@ public class CarNumController {
             limit = carNumVo.getCarNumExtVos().size();
         }
         for (int i = 0; i < limit; i++) {
-            model.addAttribute("img" + i, carNumVo.getCarNumExtVos().get(i).getUuid());
+            model.addAttribute("img" + carNumVo.getCarNumExtVos().get(i).getCarNumType(), carNumVo.getCarNumExtVos().get(i).getUuid());
         }
         return "/backend/watch-car-img";
     }
