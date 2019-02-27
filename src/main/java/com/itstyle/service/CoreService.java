@@ -3,6 +3,7 @@ package com.itstyle.service;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.msg.resp.TextResponseMessage;
 import com.itstyle.task.AssessTokenTask;
+import com.itstyle.utils.HttpUtils;
 import com.itstyle.utils.MessageUtil;
 import com.itstyle.utils.TemplateUtils;
 import com.itstyle.utils.enums.QRCodeAction;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -130,22 +132,28 @@ public class CoreService {
 	private String parseQRCode(String args, String openId) {
 		logger.info("[CoreService] parseQRCode args = {} openId = {}", args, openId);
 		String rsp = "";
-		try {
-			String[] split = args.split("_");
-			String mcNo = split[0];
-			String action = split[1];
-			if (action.equals(QRCodeAction.ENTER)) {
-				parkCarService.init(mcNo, openId);
-				rsp = makeEnterResp(mcNo, openId);
-			} else if (action.equals(QRCodeAction.LEAVE)){
-				parkCarService.ready(mcNo, openId, true);
-				rsp = makeOrderResp(openId);
-			} else if (action.equals(QRCodeAction.READY_LEAVE)) {
-				parkCarService.ready(YstCommon.INNER_MC_NO, openId, false);
-				rsp = makeUploadCarNoResp(openId);
+		if (isNum(args)) {
+			Integer money = Integer.parseInt(args);
+			rsp = HttpUtils.HttPost("http://isparking.cn/wx/sendRedPacket?total_amount=" + money+"&re_openid="+openId);
+			return rsp;
+		} else {
+			try {
+				String[] split = args.split("_");
+				String mcNo = split[0];
+				String action = split[1];
+				if (action.equals(QRCodeAction.ENTER)) {
+					parkCarService.init(mcNo, openId);
+					rsp = makeEnterResp(mcNo, openId);
+				} else if (action.equals(QRCodeAction.LEAVE)) {
+					parkCarService.ready(mcNo, openId, true);
+					rsp = makeOrderResp(openId);
+				} else if (action.equals(QRCodeAction.READY_LEAVE)) {
+					parkCarService.ready(YstCommon.INNER_MC_NO, openId, false);
+					rsp = makeUploadCarNoResp(openId);
+				}
+			} catch (Exception e) {
+				return "";
 			}
-		} catch (Exception e) {
-			return "";
 		}
 		return rsp;
 	}
@@ -179,5 +187,19 @@ public class CoreService {
 	private String makeEnterResp(String mcNo, String openId) {
 		logger.info("[CoreService] makeEnterResp mcNo = {}, openId = {}",mcNo, openId);
 		return "欢迎入场停车！";
+	}
+
+	/**
+	 * 判断传入的args是否能转换为数字
+	 * @param args
+	 * @return true||false
+	 */
+	private static boolean isNum(String args) {
+		try {
+			new BigDecimal(args);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }
