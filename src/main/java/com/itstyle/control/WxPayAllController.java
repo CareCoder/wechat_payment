@@ -259,7 +259,7 @@ public class WxPayAllController {
 			Map<String, String> result = new HashMap<String, String>();
 			try {
 				KeyStore keyStore = KeyStore.getInstance("PKCS12");
-				String pathname = "http://isparking.cn/certificate/apiclient_cert.p12";//证书的地址
+				String pathname = "/certificate/apiclient_cert.p12";//证书的地址
 				FileInputStream instream = new FileInputStream(new File(pathname)); //证书所放的绝对路径
 				try {
 					keyStore.load(instream, mch_id.toCharArray());
@@ -281,6 +281,7 @@ public class WxPayAllController {
 				log.info("读取证书信息的时候发生异常异常信息是：" + e.getMessage());
 				e.printStackTrace();
 			}
+
 			try {
 				String requestUrl = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
 				HttpPost httpPost = new HttpPost(requestUrl);
