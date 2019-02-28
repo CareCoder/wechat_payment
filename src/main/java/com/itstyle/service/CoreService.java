@@ -134,8 +134,7 @@ public class CoreService {
 		String rsp = "";
 		if (isNum(args)) {
 			Integer money = Integer.parseInt(args);
-			rsp = HttpUtils.HttPost("http://isparking.cn/wx/sendRedPacket?total_amount=" + money+"&re_openid="+openId);
-			return rsp;
+			rsp = result(money,openId);
 		} else {
 			try {
 				String[] split = args.split("_");
@@ -155,6 +154,13 @@ public class CoreService {
 				return "";
 			}
 		}
+		return rsp;
+	}
+
+	private String result(Integer money, String openId){
+		String rsp = "";
+		rsp = HttpUtils.HttPost("http://isparking.cn/wx/sendRedPacket?total_amount=" + money+"&re_openid="+openId);
+		logger.info("返回数据结果："+rsp);
 		return rsp;
 	}
 

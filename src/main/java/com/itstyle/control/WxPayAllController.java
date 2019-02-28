@@ -299,8 +299,9 @@ public class WxPayAllController {
 				CloseableHttpResponse response = httpclient.execute(httpPost);
 				try {
 					HttpEntity entity = response.getEntity();
-					System.out.println(response.getStatusLine());
+					log.info("--------------:"+response.getStatusLine());
 					if (entity != null) {
+						log.info("-------测试运行位置1");
 						// 从request中取得输入流
 						InputStream inputStream = entity.getContent();
 						// 读取输入流
@@ -320,15 +321,18 @@ public class WxPayAllController {
 					EntityUtils.consume(entity);
 				} finally {
 					if (response != null) {
+						log.info("-------测试运行位置2");
 						response.close();
 					}
 				}
 			} catch (Exception e) {
+				log.info("存在异常的信息：" + e.getMessage());
 				e.printStackTrace();
 			} finally {
 				try {
 					httpclient.close();
 				} catch (Exception e) {
+					log.info("存在异常的信息：" + e.getMessage());
 					e.printStackTrace();
 				}
 			}
