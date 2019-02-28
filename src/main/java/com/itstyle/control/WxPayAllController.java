@@ -240,6 +240,8 @@ public class WxPayAllController {
 			XmlUtils.xstream().alias("xml", redPackEntity.getClass());
 			String data = XmlUtils.xstream().toXML(redPackEntity);
 			log.info("X生成ML信息："+data);
-			return RedPackUtil.sendRedPack(data);
+			String result = RedPackUtil.sendRedPack(data);
+			log.info("返回结果："+result);
+			return result;
 	}
 }
