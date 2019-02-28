@@ -289,11 +289,7 @@ public class WxPayUtil {
 			Map.Entry<Object, Object> entry = (Map.Entry<Object, Object>) it.next();
 			String k = (String) entry.getKey();
 			String v = entry.getValue() + "";
-			if ("attach".equalsIgnoreCase(k) || "body".equalsIgnoreCase(k) || "sign".equalsIgnoreCase(k)) {
-				sb.append("<" + k + ">" + "<![CDATA[" + v + "]]></" + k + ">");
-			} else {
-				sb.append("<" + k + ">" + v + "</" + k + ">");
-			}
+			sb.append("<" + k + ">" + "<![CDATA[" + v + "]]></" + k + ">");
 		}
 		sb.append("</xml>");
 		return sb.toString();
