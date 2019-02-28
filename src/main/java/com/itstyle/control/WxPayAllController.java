@@ -256,6 +256,7 @@ public class WxPayAllController {
 			parameters.put("sign", sign);//
 			/** 生成xml结构的数据，用于统一下单接口的请求 */
 			String requestXML = WxPayUtil.getRequestXml(parameters);
+			log.info("生成xml结构的数据："+requestXML);
 			/**
 			 * 读取证书
 			 */
@@ -263,7 +264,7 @@ public class WxPayAllController {
 			Map<String, String> result = new HashMap<String, String>();
 			try {
 				KeyStore keyStore = KeyStore.getInstance("PKCS12");
-				ClassPathResource pathResource = new ClassPathResource("static/certificate/apiclient_cert.p12");//证书的地址
+				ClassPathResource pathResource = new ClassPathResource("static/certificate/apiclient_cert.p12");
 				try {
 					keyStore.load(pathResource.getInputStream(), mch_id.toCharArray());
 				}catch (Exception e){
@@ -301,7 +302,6 @@ public class WxPayAllController {
 					HttpEntity entity = response.getEntity();
 					log.info("--------------:"+response.getStatusLine());
 					if (entity != null) {
-						log.info("-------测试运行位置1");
 						// 从request中取得输入流
 						InputStream inputStream = entity.getContent();
 						// 读取输入流
@@ -321,7 +321,6 @@ public class WxPayAllController {
 					EntityUtils.consume(entity);
 				} finally {
 					if (response != null) {
-						log.info("-------测试运行位置2");
 						response.close();
 					}
 				}
