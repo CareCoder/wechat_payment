@@ -29,6 +29,7 @@ import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -259,14 +260,16 @@ public class WxPayAllController {
 			Map<String, String> result = new HashMap<String, String>();
 			try {
 				KeyStore keyStore = KeyStore.getInstance("PKCS12");
-				String pathname = "/certificate/apiclient_cert.p12";//证书的地址
-				String resource = this.getClass().getClassLoader().getResource("/").getPath();
-				String path = resource + pathname;
-				FileInputStream instream = new FileInputStream(new File(path)); //证书所放的绝对路径
+				//String pathname = "http://isparking.cn/certificate/";//证书的地址
+				//FileInputStream instream = new FileInputStream(new File(pathname)); //证书所放的绝对路径
+				ClassPathResource pathResource = new ClassPathResource("apiclient_cert.p12");
 				try {
-					keyStore.load(instream, mch_id.toCharArray());
-				} finally {
-					instream.close();
+					keyStore.load(pathResource.getInputStream(), mch_id.toCharArray());
+				}catch (Exception e){
+					log.info("访问证书路径时发生的异常信息：" + e.getMessage());
+					e.printStackTrace();
+				}finally {
+					//instream.close();
 				}
 				SSLContext sslcontext = SSLContexts.custom()
 						.loadKeyMaterial(keyStore, mch_id.toCharArray())
