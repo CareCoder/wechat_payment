@@ -50,7 +50,7 @@ public class RedPackUtil {
             httpost.addHeader("X-Requested-With", "XMLHttpRequest");
             httpost.addHeader("Cache-Control", "max-age=0");
             httpost.addHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0) ");
-            httpost.setEntity(new StringEntity(data, "UTF-8"));
+            httpost.setEntity(new StringEntity(new String(data.toString().getBytes("UTF-8"), "ISO8859-1")));
             System.out.println("executing request" + httpost.getRequestLine());
             CloseableHttpResponse response = httpclient.execute(httpost);
             HttpEntity entity = response.getEntity();
