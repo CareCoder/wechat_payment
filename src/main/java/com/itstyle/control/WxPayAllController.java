@@ -204,11 +204,11 @@ public class WxPayAllController {
 			/** 四位随机数 */
 			String strRandom = WxPayUtil.buildRandom(4) + "";
 			log.info("随机数："+strRandom);
-			//商户订单号
-			String mch_billno = strTime + strRandom;
 			/** 商户号 */
 			String mch_id = YstCommon.MCH_ID;
-			parameters.put("mch_billno", mch_id + mch_billno);
+			//商户订单号
+			String mch_billno = mch_id + strTime + strRandom;
+			parameters.put("mch_billno", mch_billno);
 			parameters.put("mch_id", mch_id);
 			/** 随机字符串 */
 			String nonce_str = WxPayUtil.getNonceStr();
@@ -263,9 +263,7 @@ public class WxPayAllController {
 			Map<String, String> result = new HashMap<String, String>();
 			try {
 				KeyStore keyStore = KeyStore.getInstance("PKCS12");
-				//String pathname = "http://isparking.cn/certificate/";//证书的地址
-				//FileInputStream instream = new FileInputStream(new File(pathname)); //证书所放的绝对路径
-				ClassPathResource pathResource = new ClassPathResource("static/certificate/apiclient_cert.p12");
+				ClassPathResource pathResource = new ClassPathResource("static/certificate/apiclient_cert.p12");//证书的地址
 				try {
 					keyStore.load(pathResource.getInputStream(), mch_id.toCharArray());
 				}catch (Exception e){
