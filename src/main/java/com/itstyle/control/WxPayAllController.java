@@ -254,8 +254,6 @@ public class WxPayAllController {
 			WxPayUtil.setXmlKV(sb, "sign", after_sign);
 			sb.append("</xml>");
 			log.info("统一下单请求：" + sb);
-//			String requestXML = WxPayUtil.getRequestXml(parameters);
-//			log.info("生成xml结构的数据："+requestXML);
 			/**
 			 * 读取证书
 			 */
@@ -293,7 +291,7 @@ public class WxPayAllController {
 				HttpPost httpPost = new HttpPost(requestUrl);
 				StringEntity reqEntity = new StringEntity(new String(sb.toString().getBytes("UTF-8"), "ISO8859-1"));
 				// 设置类型
-				//reqEntity.setContentType("application/x-www-form-urlencoded");
+				reqEntity.setContentType("application/x-www-form-urlencoded");
 				httpPost.setEntity(reqEntity);
 				log.info("executing request" + httpPost.getRequestLine());
 				CloseableHttpResponse response = httpclient.execute(httpPost);
@@ -314,6 +312,7 @@ public class WxPayAllController {
 						for (Element e : elementList) {
 							result.put(e.getName(), e.getText());
 						}
+						log.info("发送红包微信返回的信息是---：" + JSON.toJSONString(result));
 						// 释放资源
 						inputStream.close();
 					}
