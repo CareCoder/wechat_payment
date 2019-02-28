@@ -262,7 +262,7 @@ public class WxPayAllController {
 				KeyStore keyStore = KeyStore.getInstance("PKCS12");
 				//String pathname = "http://isparking.cn/certificate/";//证书的地址
 				//FileInputStream instream = new FileInputStream(new File(pathname)); //证书所放的绝对路径
-				ClassPathResource pathResource = new ClassPathResource("apiclient_cert.p12");
+				ClassPathResource pathResource = new ClassPathResource("certificate/apiclient_cert.p12");
 				try {
 					keyStore.load(pathResource.getInputStream(), mch_id.toCharArray());
 				}catch (Exception e){
