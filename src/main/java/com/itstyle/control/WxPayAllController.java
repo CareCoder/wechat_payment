@@ -200,13 +200,15 @@ public class WxPayAllController {
 			String currTime = WxPayUtil.getCurrTime();
 			/** 8位日期 */
 			String strTime = currTime.substring(8, currTime.length());
+			log.info("日期："+strTime);
 			/** 四位随机数 */
 			String strRandom = WxPayUtil.buildRandom(4) + "";
+			log.info("随机数："+strRandom);
 			//商户订单号
 			String mch_billno = strTime + strRandom;
-			parameters.put("mch_billno", mch_billno);
 			/** 商户号 */
 			String mch_id = YstCommon.MCH_ID;
+			parameters.put("mch_billno", mch_id + mch_billno);
 			parameters.put("mch_id", mch_id);
 			/** 随机字符串 */
 			String nonce_str = WxPayUtil.getNonceStr();
@@ -248,6 +250,7 @@ public class WxPayAllController {
 					+ remark + "&send_name=" + send_name + "&total_amount=" + total_amount + "&total_num="
 					+ total_num + "&wishing=" + wishing + "&wxappid=" + wxappid + "&key=" + YstCommon.KEY;// 这个字段是用于之后MD5加密的，字段要按照ascii码顺序排序
 			Md5Util.getMD5(sign).toUpperCase();
+			log.info("微信签名信息是："+sign);
 			String requestJsonStr = JSON.toJSONString(parameters);
 			log.info("发送的信息是" + requestJsonStr);
 			parameters.put("sign", sign);//
