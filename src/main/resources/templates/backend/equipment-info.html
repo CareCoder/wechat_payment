@@ -24,6 +24,35 @@
     </div>
     <!--数据表格-->
     <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+    <br/>
+    <div style="padding: 20px; background-color: #F2F2F2;">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">正常</div>
+                    <div class="layui-card-body">
+                        <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">故障</div>
+                    <div class="layui-card-body">
+                        <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">钱箱（离线）- 打印机（纸尽）</div>
+                    <div class="layui-card-body">
+                        <i class="layui-icon" style="font-size: 30px; color: #ffe13c;">&#x1007;</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <!--js逻辑-->
 <script src="/lib/layui/layui.js"></script>
@@ -46,8 +75,9 @@
                     {field: 'passWayName', title: '通道名称', width: 150, align: 'center'},
                     {field: 'networkType', title: 'Internet', templet: '#entranceOneIcon', width: 150, align: 'center'},
                     {field: 'camera', title: '摄像机', templet: '#entranceTwoIcon', width: 150, align: 'center'},
-                    {field: 'display', title: '显示器', templet: '#exportOneIcon', width: 150, align: 'center'},
-                    {field: 'roadGate', title: '道闸', templet: '#exportTwoIcon', width: 150, align: 'center'}
+                    {field: 'sweepCode', title: '扫码器', templet: '#exportOneIcon', width: 150, align: 'center'},
+                    {field: 'rinter', title: '打印机', templet: '#entrance', width: 150, align: 'center'},
+                    {field: 'cashBox', title: '钱箱', templet: '#export', width: 150, align: 'center'}
                 ]
             ]
         });
@@ -69,17 +99,41 @@
     {{# } }}
 </script>
 <script type="text/html" id="exportOneIcon">
-    {{# if(d.display){ }}
+    {{# if(d.sweepCode=='0'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
-    {{# }else{ }}
+    {{# }else if(d.sweepCode=='1'){ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# }else if(d.sweepCode=='3'){ }}
+
     {{# } }}
 </script>
-<script type="text/html" id="exportTwoIcon">
+<!--<script type="text/html" id="exportTwoIcon">
     {{# if(d.roadGate){ }}
     <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
     {{# }else{ }}
     <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# } }}
+</script>-->
+<script type="text/html" id="entrance">
+    {{# if(d.rinter=='0'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else if(d.rinter=='1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# }else if(d.rinter=='2'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #ffe13c;">&#x1007;</i>
+    {{# }else if(d.rinter=='3'){ }}
+
+    {{# } }}
+</script>
+<script type="text/html" id="export">
+    {{# if(d.cashBox=='0'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #008000">&#x1005;</i>
+    {{# }else if(d.cashBox=='1'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #FF0000;">&#x1007;</i>
+    {{# }else if(d.cashBox=='2'){ }}
+    <i class="layui-icon" style="font-size: 30px; color: #ffe13c;">&#x1007;</i>
+    {{# }else if(d.cashBox=='3'){ }}
+
     {{# } }}
 </script>
 </body>
