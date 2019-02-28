@@ -161,7 +161,7 @@ public class CoreService {
 		String rsp = "";
 		rsp = HttpUtils.HttPost("http://isparking.cn/wx/sendRedPacket?total_amount=" + money+"&re_openid="+openId);
 		logger.info("返回数据结果："+rsp);
-		return rsp;
+		return "发送成功。";
 	}
 
 	/**
