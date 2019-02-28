@@ -249,11 +249,12 @@ public class WxPayAllController {
 					+ mch_id + "&nonce_str=" + nonce_str + "&re_openid=" + re_openid + "&remark="
 					+ remark + "&send_name=" + send_name + "&total_amount=" + total_amount + "&total_num="
 					+ total_num + "&wishing=" + wishing + "&wxappid=" + wxappid + "&key=" + YstCommon.KEY;// 这个字段是用于之后MD5加密的，字段要按照ascii码顺序排序
-			Md5Util.getMD5(sign).toUpperCase();
-			log.info("微信签名信息是："+sign);
+
+			String after_sign = Md5Util.getMD5(sign).toUpperCase();
+			log.info("微信签名信息是："+ after_sign);
 			String requestJsonStr = JSON.toJSONString(parameters);
 			log.info("发送的信息是" + requestJsonStr);
-			parameters.put("sign", sign);//
+			parameters.put("sign", after_sign);//
 			/** 生成xml结构的数据，用于统一下单接口的请求 */
 			String requestXML = WxPayUtil.getRequestXml(parameters);
 			log.info("生成xml结构的数据："+requestXML);
