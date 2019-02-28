@@ -190,12 +190,11 @@ public class WxPayAllController {
 
 
 	@RequestMapping("/sendRedPacket")
-	public String sendRedPacket(HttpServletRequest request,int total_amount,String re_openid) {
+	public String sendRedPacket(HttpServletRequest request,Integer total_amount,String re_openid) {
 		try {
 			log.info("获取用户信息的openid" + re_openid);
 			//开始发送红包
 			log.info("++++++++++++++开始发送红包++++++++++++++++++");
-			SortedMap<Object, Object> parameters = new TreeMap<Object, Object>();
 			/** 当前时间 yyyyMMddHHmmss */
 			String currTime = WxPayUtil.getCurrTime();
 			/** 8位日期 */
@@ -208,41 +207,26 @@ public class WxPayAllController {
 			String mch_id = YstCommon.MCH_ID;
 			//商户订单号
 			String mch_billno = mch_id + strTime + strRandom;
-			parameters.put("mch_billno", mch_billno);
-			parameters.put("mch_id", mch_id);
 			/** 随机字符串 */
 			String nonce_str = WxPayUtil.getNonceStr();
-			parameters.put("nonce_str", nonce_str);
 			/** 公众号APPID */
 			String wxappid = YstCommon.APPID;
-			parameters.put("wxappid", wxappid);
 			/** 商户名称 */
 			String send_name = "深圳市华睿智兴信息科技有限公司";
-			parameters.put("send_name", send_name);
-			/** 用户openid */
-			parameters.put("re_openid", re_openid);
-			/** 付款金额，红包的值，最低100分*/
-			parameters.put("total_amount", total_amount);
 			/** 红包发放总人数：1人*/
-			int total_num = 1;
-			parameters.put("total_num", total_num);
+			Integer total_num = 1;
 			/** 红包祝福语 */
 			String wishing = "微信找零";
-			parameters.put("wishing", wishing);
 			/** 调用接口的机器Ip地址 */
 			String client_ip = WxPayUtil.getIpAddr(request);
 			if (StringUtils.isBlank(client_ip)) {
 				client_ip = "127.0.0.1";
 			}
-			parameters.put("client_ip", client_ip);
 			/** 活动名称 */
 			String act_name = "微信找零";
-			parameters.put("act_name", act_name);
 			/** 备注 */
 			String remark = "欢迎下次再来";
-			parameters.put("remark", remark);
-			/** 场景id  发放红包使用场景，红包金额小于1或者大于200时必传*/
-			//parameters.put("scene_id", "PRODUCT_2");
+
 			/** MD5进行签名，必须为UTF-8编码，注意上面几个参数名称的大小写 */
 			// 组装请求参数,按照ASCII排序
 			String sign = "act_name=" + act_name + "&client_ip=" + client_ip + "&mch_billno=" + mch_billno + "&mch_id="
@@ -252,12 +236,26 @@ public class WxPayAllController {
 
 			String after_sign = Md5Util.getMD5(sign).toUpperCase();
 			log.info("微信签名信息是："+ after_sign);
-			String requestJsonStr = JSON.toJSONString(parameters);
-			log.info("发送的信息是" + requestJsonStr);
-			parameters.put("sign", after_sign);//
 			/** 生成xml结构的数据，用于统一下单接口的请求 */
-			String requestXML = WxPayUtil.getRequestXml(parameters);
-			log.info("生成xml结构的数据："+requestXML);
+			StringBuilder sb = new StringBuilder("");
+			sb.append("<xml>");
+			WxPayUtil.setXmlKV(sb, "act_name", act_name);
+			WxPayUtil.setXmlKV(sb, "client_ip", client_ip);
+			WxPayUtil.setXmlKV(sb, "mch_billno", mch_billno);
+			WxPayUtil.setXmlKV(sb, "mch_id", mch_id);
+			WxPayUtil.setXmlKV(sb, "nonce_str", nonce_str);
+			WxPayUtil.setXmlKV(sb, "re_openid", re_openid);/** 用户openid */
+			WxPayUtil.setXmlKV(sb, "remark", remark);
+			WxPayUtil.setXmlKV(sb, "send_name", send_name);
+			WxPayUtil.setXmlKV(sb, "total_amount", total_amount.toString());/** 付款金额，红包的值，最低100分*/
+			WxPayUtil.setXmlKV(sb, "total_num", total_num.toString());
+			WxPayUtil.setXmlKV(sb, "wishing", wishing);
+			WxPayUtil.setXmlKV(sb, "wxappid", wxappid);
+			WxPayUtil.setXmlKV(sb, "sign", after_sign);
+			sb.append("</xml>");
+			log.info("统一下单请求：" + sb);
+//			String requestXML = WxPayUtil.getRequestXml(parameters);
+//			log.info("生成xml结构的数据："+requestXML);
 			/**
 			 * 读取证书
 			 */
@@ -293,9 +291,9 @@ public class WxPayAllController {
 			try {
 				String requestUrl = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
 				HttpPost httpPost = new HttpPost(requestUrl);
-				StringEntity reqEntity = new StringEntity(requestXML, "utf-8");
+				StringEntity reqEntity = new StringEntity(new String(sb.toString().getBytes("UTF-8"), "ISO8859-1"));
 				// 设置类型
-				reqEntity.setContentType("application/x-www-form-urlencoded");
+				//reqEntity.setContentType("application/x-www-form-urlencoded");
 				httpPost.setEntity(reqEntity);
 				log.info("executing request" + httpPost.getRequestLine());
 				CloseableHttpResponse response = httpclient.execute(httpPost);
