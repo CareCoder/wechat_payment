@@ -86,22 +86,24 @@ public class CoreService {
 				// 事件类型
 				String eventType = "";
 				String[] array = new String[2];
-				for(int i =0;i<array.length;i++){
-					if(array[i]==null&&array[i].equals("")){
-						array[i] = ticket;
-						break;
+				String first = null;//第一个
+				if(first == null && array[0] == null){
+					first = ticket;
+					array[0] = first;
+				}else {
+					array[1] = ticket;
+					if(array[0]!=null&&!array[0].equals("")){
+						if(array[0]==array[1]){
+							eventType = "INVALID";
+							logger.info("1*****eventType:"+eventType);
+						}else{
+							array[0] = array[1];
+							eventType = requestMap.get("Event");
+							logger.info("2*****eventType:" + eventType);
+						}
 					}
 				}
-				if(array[1]!=null&&!array[1].equals("")){
-					if(array[0]==array[1]){
-						eventType = "INVALID";
-						logger.info("1*****eventType:"+eventType);
-					}else{
-						array[0] = array[1];
-						eventType = requestMap.get("Event");
-						logger.info("2*****eventType:" + eventType);
-					}
-				}
+
 
 				// 订阅
 				if (MessageUtil.EVENT_TYPE_SUBSCRIBE.equals(eventType)) {
