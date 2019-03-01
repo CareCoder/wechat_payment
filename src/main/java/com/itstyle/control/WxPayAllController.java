@@ -193,7 +193,7 @@ public class WxPayAllController {
 
 
 	@RequestMapping("/sendRedPacket")
-	public String sendRedPacket(HttpServletRequest request,Integer total_amount,String re_openid) {
+	public String sendRedPacket(HttpServletRequest request,Integer total_amount,String re_openid) throws Exception {
 			log.info("获取用户信息的openid" + re_openid);
 			//开始发送红包
 			log.info("++++++++++++++开始发送红包++++++++++++++++++");
@@ -216,7 +216,6 @@ public class WxPayAllController {
 			String wxappid = YstCommon.APPID;
 			/** 商户名称 */
 			String send_name = "深圳市华睿智兴信息科技有限公司";
-			/** 用户openid */
 			/** 付款金额，红包的值，最低100分*/
 			/** 红包发放总人数：1人*/
 			Integer total_num = 1;
@@ -242,6 +241,15 @@ public class WxPayAllController {
 			log.info("X生成ML信息："+data);
 			String result = RedPackUtil.sendRedPack(data);
 			log.info("返回结果："+result);
+			Map<String, Object> resultMap = XmlUtils.Dom2Map(result);
+			String return_code = (String) resultMap.get("return_code");
+			if (!StringUtils.equals(return_code, "SUCCESS")) {
+				return "/error/404";
+			}
+			String result_code = (String) resultMap.get("result_code");
+			if (!StringUtils.equals(result_code, "SUCCESS")) {
+				return "/error/404";
+			}
 			return result;
 	}
 }
