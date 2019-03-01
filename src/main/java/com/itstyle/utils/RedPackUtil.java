@@ -32,6 +32,7 @@ public class RedPackUtil {
     public static String sendRedPack(String data) {
         StringBuffer message = new StringBuffer();
         try {
+            String encodeData = URLEncoder.encode(data,"utf-8");
             //服务商ID
             String mch_id = YstCommon.MCH_ID;
             //获取KeyStore
@@ -50,7 +51,7 @@ public class RedPackUtil {
             httpost.addHeader("X-Requested-With", "XMLHttpRequest");
             httpost.addHeader("Cache-Control", "max-age=0");
             httpost.addHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0) ");
-            httpost.setEntity(new StringEntity(new String(data.toString().getBytes("UTF-8"), "ISO8859-1")));
+            httpost.setEntity(new StringEntity(new String(encodeData.toString().getBytes("UTF-8"), "ISO8859-1")));
             System.out.println("executing request" + httpost.getRequestLine());
             CloseableHttpResponse response = httpclient.execute(httpost);
             HttpEntity entity = response.getEntity();
@@ -68,12 +69,12 @@ public class RedPackUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("红包返回结果:" + message);
+        System.out.println("红包返回结果:" + message.toString());
         return message.toString();
     }
 
     /**
-     * <p>创建红包签名<p/></br>
+     * 创建红包签名
      *
      * @param redPack 红包实体
      * @return String MD5加密后的值
@@ -103,7 +104,7 @@ public class RedPackUtil {
     }
 
     /**
-     * <p>对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序），并且生成url参数串<p/></br>
+     * 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序），并且生成url参数串
      *
      * @param paraMap   要排序的Map对象
      * @param urlEncode 是否需要URLENCODE
