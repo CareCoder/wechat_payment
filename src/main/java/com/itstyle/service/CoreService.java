@@ -82,6 +82,7 @@ public class CoreService {
 			// 事件推送
 			else if (MessageUtil.REQ_MESSAGE_TYPE_EVENT.equals(msgType)) {
 				String ticket = requestMap.get("Ticket");
+				logger.info("Ticket:"+ticket);
 				// 事件类型
 				String eventType = "";
 				String[] array = new String[2];
@@ -90,10 +91,12 @@ public class CoreService {
 						array[i] = ticket;
 						if(array[i]==array[i+1]){
 							eventType = "INVALID";
+							logger.info("1*****eventType:"+eventType);
 							break;
 						}else if(array[i]!=array[i+1]){
 							array[i]=array[i+1];
 							eventType = requestMap.get("Event");
+							logger.info("2*****eventType:"+eventType);
 							break;
 						}
 					}
