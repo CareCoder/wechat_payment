@@ -191,7 +191,7 @@ public class WxPayAllController {
 	}
 
 	@RequestMapping("/sendRedPacket")
-	public Map<Object, Object> sendRedPacket(HttpServletRequest request,Integer total_amount,String re_openid) {
+	public String sendRedPacket(HttpServletRequest request,Integer total_amount,String re_openid) {
 		try {
 			log.info("获取用户信息的openid" + re_openid);
 			//开始发送红包
@@ -260,7 +260,7 @@ public class WxPayAllController {
 			 * 读取证书
 			 */
 			CloseableHttpClient httpclient = null;
-			Map<Object, Object> result = new HashMap<Object, Object>();
+			Map<String, String> result = new HashMap<String, String>();
 			try {
 				KeyStore keyStore = KeyStore.getInstance("PKCS12");
 				ClassPathResource pathResource = new ClassPathResource("static/certificate/apiclient_cert.p12");
