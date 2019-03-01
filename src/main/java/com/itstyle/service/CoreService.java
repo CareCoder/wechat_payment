@@ -86,7 +86,7 @@ public class CoreService {
 				// 事件类型
 				String eventType = "";
 				String[] array = new String[2];
-				if(array[0].equals("") && array[0] == null){
+				if(array[0] == null){
 					logger.info("==============1");
 					array[0] = ticket;
 				}else {
