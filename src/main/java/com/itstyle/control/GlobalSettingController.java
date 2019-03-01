@@ -8,7 +8,9 @@ import com.itstyle.domain.car.manager.BanListManager;
 import com.itstyle.domain.car.manager.Fastigium;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.caryard.ResponseAccessType;
 import com.itstyle.domain.park.resp.Response;
+import com.itstyle.service.AccessTypeService;
 import com.itstyle.service.FileResourceService;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.utils.enums.Status;
@@ -30,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/gs")
@@ -37,10 +40,20 @@ public class GlobalSettingController {
     @Resource
     private GlobalSettingService globalSettingService;
     @Resource
+    private AccessTypeService accessTypeService;
+    @Resource
     private FileResourceService fileResourceService;
 
     @GetMapping("/get/fastigium")
     public String fastigiumGet(Model model) {
+        List<ResponseAccessType> accessTypes1 = accessTypeService.listNoPage();
+        List<ResponseAccessType> accessTypes2 = accessTypeService.listNoPage();
+        //业务需求这里只需要入口通道
+        accessTypes1 = accessTypes1.stream().filter(e -> e.getChannelTypeId() % 2 == 1).collect(Collectors.toList());
+        model.addAttribute("accessTypes1", accessTypes1);
+        //业务需求这里只需要出口通道
+        accessTypes2 = accessTypes2.stream().filter(e -> e.getChannelTypeId() % 2 == 2).collect(Collectors.toList());
+        model.addAttribute("accessTypes2", accessTypes2);
         model.addAttribute("fastigium", globalSettingService.get(YstCommon.FASTIGIUM_KEY, Fastigium.class));
         return "/backend/fastigium";
     }
