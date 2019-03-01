@@ -38,6 +38,7 @@ public class CoreService {
 			String respContent = "服务号异常，请稍后再试";// 默认返回的文本消息内容
 			Map<String, String> requestMap = MessageUtil.parseXml(request); // xml请求解析
 			logger.info("打印微信回调的数据" + requestMap);
+
 			String fromUserName = requestMap.get("FromUserName"); // 发送方帐号（open_id）
 			String toUserName = requestMap.get("ToUserName"); // 公众帐号
 			String msgType = requestMap.get("MsgType"); // 消息类型
@@ -80,8 +81,23 @@ public class CoreService {
 			}
 			// 事件推送
 			else if (MessageUtil.REQ_MESSAGE_TYPE_EVENT.equals(msgType)) {
+				String ticket = requestMap.get("Ticket");
 				// 事件类型
-				String eventType = requestMap.get("Event");
+				String eventType = "";
+				String[] array = new String[2];
+				for(int i =0;i<array.length;i++){
+					if(array[i]!=null){
+						array[i] = ticket;
+						if(array[i]==array[i+1]){
+							eventType = "INVALID";
+							break;
+						}else if(array[i]!=array[i+1]){
+							array[i]=array[i+1];
+							eventType = requestMap.get("Event");
+							break;
+						}
+					}
+				}
 				// 订阅
 				if (MessageUtil.EVENT_TYPE_SUBSCRIBE.equals(eventType)) {
 					respContent = makeScanEventResp(requestMap, fromUserName);
@@ -95,6 +111,8 @@ public class CoreService {
 
 				} else if (MessageUtil.EVENT_TYPE_SCAN.equals(eventType)) {
 					respContent =  makeScanEventResp(requestMap, fromUserName);
+				}else if(MessageUtil.QR_CODE_INVALID.equals(eventType)){
+					respContent="此二维码已失效";
 				}
 			}
 			textMessage.setContent(respContent);
@@ -159,8 +177,7 @@ public class CoreService {
 
 	private String result(Integer money, String openId){
 		 HttpUtils.HttPost("http://isparking.cn/wx/sendRedPacket?total_amount=" + money+"&re_openid="+openId);
-		//logger.info("返回数据结果："+rsp);
-		return "发送成功";
+		return null;
 	}
 
 	/**

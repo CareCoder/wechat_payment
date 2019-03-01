@@ -167,7 +167,6 @@ public class WxPayAllController {
 
 	/**
 	 * 生成临时二维码（一天）
-	 *
 	 * @return
 	 */
 	@RequestMapping("/createTemporaryQRCode")
@@ -192,7 +191,7 @@ public class WxPayAllController {
 	}
 
 	@RequestMapping("/sendRedPacket")
-	public String sendRedPacket(HttpServletRequest request,Integer total_amount,String re_openid) {
+	public Map<Object, Object> sendRedPacket(HttpServletRequest request,Integer total_amount,String re_openid) {
 		try {
 			log.info("获取用户信息的openid" + re_openid);
 			//开始发送红包
@@ -261,7 +260,7 @@ public class WxPayAllController {
 			 * 读取证书
 			 */
 			CloseableHttpClient httpclient = null;
-			Map<String, String> result = new HashMap<String, String>();
+			Map<Object, Object> result = new HashMap<Object, Object>();
 			try {
 				KeyStore keyStore = KeyStore.getInstance("PKCS12");
 				ClassPathResource pathResource = new ClassPathResource("static/certificate/apiclient_cert.p12");
@@ -340,14 +339,14 @@ public class WxPayAllController {
 			//假如发送成功的话，保存发送的信息
 			if (result.get("return_msg").equals("发放成功")) {
 				log.info("红包发放成功，openid=" + re_openid + ",发送时间是：" + WxPayUtil.getPreDay(new Date(), 0));
-				return "红包发放成功!";
+				return null;
 			} else {
 				log.info("红包发放失败，openid=" + re_openid + ",发送时间是：" + WxPayUtil.getPreDay(new Date(), 0));
-				return "红包发放失败!";
+				return null;
 			}
 		} catch (Exception e) {
 			log.info("发送红包异常，异常信息是：" + e.getMessage());
-			return "发送红包时出现异常！";
+			return null;
 		}
 	}
 }
