@@ -28,7 +28,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 /**
  * 消息工具类
  * 
@@ -83,6 +82,8 @@ public class MessageUtil
    /* 扫描二维码事件*/
     public static final String EVENT_TYPE_SCAN= "SCAN";
 
+    /*二维码失效事件*/
+    public static final String QR_CODE_INVALID="INVALID";
     /**
      * 解析微信发来的请求（XML）
      * 
