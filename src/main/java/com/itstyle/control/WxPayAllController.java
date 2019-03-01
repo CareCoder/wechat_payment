@@ -215,7 +215,7 @@ public class WxPayAllController {
 			/** 公众号APPID */
 			String wxappid = YstCommon.APPID;
 			/** 商户名称 */
-			String send_name = "深圳市华睿智兴信息科技有限公司";
+			String send_name = "深圳市华睿智兴信息科技有限公司微";
 			/** 付款金额，红包的值，最低100分*/
 			/** 红包发放总人数：1人*/
 			Integer total_num = 1;
