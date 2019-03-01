@@ -40,18 +40,18 @@
                         <div class="layui-card">
                             <div class="layui-card-header">入口</div>
                             <div class="layui-card-body">
-                                <select name="entry">
+                                <label class="layui-form-label">入口通道：</label><select name="entry">
                                     <option value="">暂无选择</option>
                                     <option th:each="vo,it : ${accessTypes1}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
                                 </select>
                                 <div class="layui-form-item">
-                                    <label class="layui-form-label">开始日期 :</label>
+                                    <label class="layui-form-label">开始日期 ：</label>
                                     <div class="layui-input-block">
                                         <input name="entryStartTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="entryStartTime">
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <label class="layui-form-label">截止日期 :</label>
+                                    <label class="layui-form-label">截止日期 ：</label>
                                     <div class="layui-input-block">
                                         <input name="entryEndTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="entryEndTime">
                                     </div>
@@ -69,18 +69,18 @@
                         <div class="layui-card">
                             <div class="layui-card-header">出口</div>
                             <div class="layui-card-body">
-                                <select name="exit">
+                                <label class="layui-form-label">出口通道：</label><select name="exit">
                                     <option value="">暂无选择</option>
                                     <option th:each="vo,it : ${accessTypes2}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
                                 </select>
                                 <div class="layui-form-item">
-                                    <label class="layui-form-label">开始日期 :</label>
+                                    <label class="layui-form-label">开始日期 ：</label>
                                     <div class="layui-input-block">
                                         <input name="exitStartTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="exitStartTime">
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <label class="layui-form-label">截止日期 :</label>
+                                    <label class="layui-form-label">截止日期 ：</label>
                                     <div class="layui-input-block">
                                         <input name="exitEndTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="exitEndTime">
                                     </div>
