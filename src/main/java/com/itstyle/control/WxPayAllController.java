@@ -214,7 +214,7 @@ public class WxPayAllController {
 			/** 公众号APPID */
 			String wxappid = YstCommon.APPID;
 			/** 商户名称 */
-			String send_name = "HRZX";
+			String send_name = "华睿智兴";
 			/** 红包发放总人数：1人*/
 			Integer total_num = 1;
 			/** 红包祝福语 */
