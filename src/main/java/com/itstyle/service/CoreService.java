@@ -87,20 +87,22 @@ public class CoreService {
 				String eventType = "";
 				String[] array = new String[2];
 				for(int i =0;i<array.length;i++){
-					if(array[i]!=null){
+					if(array[i]==null&&array[i].equals("")){
 						array[i] = ticket;
-						if(array[i]==array[i+1]){
-							eventType = "INVALID";
-							logger.info("1*****eventType:"+eventType);
-							break;
-						}else if(array[i]!=array[i+1]){
-							array[i]=array[i+1];
-							eventType = requestMap.get("Event");
-							logger.info("2*****eventType:"+eventType);
-							break;
-						}
+						break;
 					}
 				}
+				if(array[1]!=null&&!array[1].equals("")){
+					if(array[0]==array[1]){
+						eventType = "INVALID";
+						logger.info("1*****eventType:"+eventType);
+					}else{
+						array[0] = array[1];
+						eventType = requestMap.get("Event");
+						logger.info("2*****eventType:" + eventType);
+					}
+				}
+
 				// 订阅
 				if (MessageUtil.EVENT_TYPE_SUBSCRIBE.equals(eventType)) {
 					respContent = makeScanEventResp(requestMap, fromUserName);
