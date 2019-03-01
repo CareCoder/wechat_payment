@@ -44,7 +44,7 @@ public class CoreService {
 			String msgType = requestMap.get("MsgType"); // 消息类型
 			logger.debug("fromUserName=【{}】, toUserName=【{}】, msgType=【{}】",
 					fromUserName, toUserName, msgType);
-
+			logger.info("fromUserName=【{}】, toUserName=【{}】, msgType=【{}】",fromUserName, toUserName, msgType);
 			// 回复文本消息
 			TextResponseMessage textMessage = new TextResponseMessage();
 			textMessage.setToUserName(fromUserName);
@@ -121,6 +121,7 @@ public class CoreService {
 			textMessage.setContent(respContent);
 			respMessage = MessageUtil.textMessageToXml(textMessage);
 			logger.debug("return respMessage=【{}】", respMessage);
+			logger.info("return respMessage=【{}】", respMessage);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("处理微信发来的请求异常!", e);
