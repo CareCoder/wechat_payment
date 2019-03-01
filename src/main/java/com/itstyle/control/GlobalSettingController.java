@@ -52,7 +52,7 @@ public class GlobalSettingController {
         accessTypes1 = accessTypes1.stream().filter(e -> e.getChannelTypeId() % 2 == 1).collect(Collectors.toList());
         model.addAttribute("accessTypes1", accessTypes1);
         //业务需求这里只需要出口通道
-        accessTypes2 = accessTypes2.stream().filter(e -> e.getChannelTypeId() % 2 == 2).collect(Collectors.toList());
+        accessTypes2 = accessTypes2.stream().filter(e -> e.getChannelTypeId() % 4 == 2).collect(Collectors.toList());
         model.addAttribute("accessTypes2", accessTypes2);
         model.addAttribute("fastigium", globalSettingService.get(YstCommon.FASTIGIUM_KEY, Fastigium.class));
         return "/backend/fastigium";
