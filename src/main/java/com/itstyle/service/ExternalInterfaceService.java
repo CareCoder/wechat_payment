@@ -1,5 +1,7 @@
 package com.itstyle.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
@@ -11,6 +13,8 @@ import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.caryard.EquipmentStatus;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
 import com.itstyle.domain.report.DeleteRecord;
+import com.itstyle.task.AssessTokenTask;
+import com.itstyle.utils.HttpUtils;
 import com.itstyle.vo.deletevehicleinfo.response.DeleteInfo;
 import com.itstyle.vo.deletevehicleinfo.response.DeleteVehicleInfo;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
@@ -54,6 +58,9 @@ public class ExternalInterfaceService {
 
     @Resource
     private DeleteRecordService deleteRecordService;
+
+    @Resource
+    private AssessTokenTask assessTokenTask;
 
     public SynCarInfo synCarInfo() {
         SynCarInfo synCarInfo = new SynCarInfo();
@@ -228,5 +235,28 @@ public class ExternalInterfaceService {
     public void uploadEquipmentStatus(EquipmentStatus equipmentStatus) {
         log.info("uploadEquipmentStatus equipmentStatus = {}",gson.toJson(equipmentStatus));
         redisDao.hset(YstCommon.EQUIPMENT_STATUS, equipmentStatus.getPassWayName(), gson.toJson(equipmentStatus));
+    }
+
+    /**
+     * 微信二维码
+     * @param args
+     * @return
+     */
+    public String createTemporaryQRCode(Integer args){
+        try {
+            String json = "{\"expire_seconds\": 86400,\"action_name\": \"QR_SCENE\", \"action_info\": {\"scene\": {\"scene_id\": \""+ args +"\"}}}";
+            String strResult = HttpUtils.HttPost(
+                    "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=" + assessTokenTask.getAssessToken(),
+                    json);
+            JSONObject jsonObject = JSON.parseObject(strResult);
+            //String ticket = (String) jsonObject.get("ticket");
+            log.info("strResult:"+strResult);
+            String url = (String) jsonObject.get("url");
+            log.info("url:"+url);
+            return url;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
