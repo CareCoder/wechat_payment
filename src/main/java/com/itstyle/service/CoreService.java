@@ -88,10 +88,13 @@ public class CoreService {
 				String eventType = "";
 				if(array[0] == null){
 					array[0] = ticket;
+					logger.info("array[0]:"+array[0]);
 					eventType = requestMap.get("Event");
 				}else {
 					array[1] = ticket;
-					if (array[0] == array[1]) {
+					logger.info("array[0]:"+array[0]);
+					logger.info("array[1]:"+array[1]);
+					if (array[0].equals(array[1])) {
 						eventType = "INVALID";
 						logger.info("1*****eventType:" + eventType);
 					} else {
@@ -181,7 +184,7 @@ public class CoreService {
 
 	private String result(Integer money, String openId){
 		 HttpUtils.HttPost("http://isparking.cn/wx/sendRedPacket?total_amount=" + money+"&re_openid="+openId);
-		return null;
+		return "";
 	}
 
 	/**
