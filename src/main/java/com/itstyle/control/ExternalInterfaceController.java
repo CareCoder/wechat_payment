@@ -236,4 +236,10 @@ public class ExternalInterfaceController {
     public void uploadEquipmentStatus(EquipmentStatus equipmentStatus) {
         externalInterfaceService.uploadEquipmentStatus(equipmentStatus);
     }
+
+    @RequestMapping("/changeAmount/QRCode")
+    @ResponseBody
+    public String createTemporaryQRCode(Integer changeAmount){
+        return externalInterfaceService.createTemporaryQRCode(changeAmount);
+    }
 }
