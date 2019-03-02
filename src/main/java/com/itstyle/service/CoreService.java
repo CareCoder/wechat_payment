@@ -26,6 +26,7 @@ public class CoreService {
 	@Autowired
 	ParkCarService parkCarService;
 
+	private static final String[] array = new String[2];
 	/**
 	 * 处理微信发来的请求
 	 * 
@@ -85,7 +86,6 @@ public class CoreService {
 				logger.info("Ticket:"+ticket);
 				// 事件类型
 				String eventType = "";
-				String[] array = new String[2];
 				if(array[0] == null){
 					array[0] = ticket;
 					eventType = requestMap.get("Event");
