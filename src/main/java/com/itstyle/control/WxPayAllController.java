@@ -339,14 +339,15 @@ public class WxPayAllController {
 			//假如发送成功的话，保存发送的信息
 			if (result.get("return_msg").equals("发放成功")) {
 				log.info("红包发放成功，openid=" + re_openid + ",发送时间是：" + WxPayUtil.getPreDay(new Date(), 0));
-				return null;
+				return result.get("return_msg");
 			} else {
 				log.info("红包发放失败，openid=" + re_openid + ",发送时间是：" + WxPayUtil.getPreDay(new Date(), 0));
-				return null;
+				return result.get("return_msg");
 			}
 		} catch (Exception e) {
 			log.info("发送红包异常，异常信息是：" + e.getMessage());
 			return null;
 		}
 	}
+
 }
