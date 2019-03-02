@@ -118,7 +118,7 @@ public class CoreService {
 				} else if (MessageUtil.EVENT_TYPE_SCAN.equals(eventType)) {
 					respContent =  makeScanEventResp(requestMap, fromUserName);
 				}else if(MessageUtil.QR_CODE_INVALID.equals(eventType)){
-					respContent="此二维码已失效";
+					respContent="二维码已失效";
 				}
 			}
 			textMessage.setContent(respContent);
@@ -184,7 +184,7 @@ public class CoreService {
 
 	private String result(Integer money, String openId){
 		 HttpUtils.HttPost("http://isparking.cn/wx/sendRedPacket?total_amount=" + money+"&re_openid="+openId);
-		return "";
+		return "欢迎下次再来";
 	}
 
 	/**
