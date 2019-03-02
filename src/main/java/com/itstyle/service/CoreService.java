@@ -184,6 +184,9 @@ public class CoreService {
 
 	private String result(Integer money, String openId){
 		 HttpUtils.HttPost("http://isparking.cn/wx/sendRedPacket?total_amount=" + money+"&re_openid="+openId);
+		 if(YstCommon.SENDNUM_LIMIT != null){
+		 	return "您今日的红包领取次数已满";
+		 }
 		return "欢迎下次再来";
 	}
 

@@ -318,6 +318,9 @@ public class WxPayAllController {
 				return result.get("return_msg");
 			} else {
 				log.info("红包发放失败，openid=" + re_openid + ",发送时间是：" + WxPayUtil.getPreDay(new Date(), 0));
+				if(result.get("err_code").equals("SENDNUM_LIMIT")){
+					YstCommon.SENDNUM_LIMIT="SENDNUM_LIMIT";
+				}
 				return result.get("return_msg");
 			}
 		} catch (Exception e) {
