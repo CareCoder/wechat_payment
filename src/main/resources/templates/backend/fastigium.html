@@ -40,10 +40,13 @@
                         <div class="layui-card">
                             <div class="layui-card-header">入口</div>
                             <div class="layui-card-body">
-                                <label class="layui-form-label">入口通道：</label><select name="entry">
-                                    <option value="">暂无选择</option>
-                                    <option th:each="vo,it : ${accessTypes1}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
-                                </select>
+                                <label class="layui-form-label">入口通道：</label>
+                                <div class="layui-input-block">
+                                    <select name="entry">
+                                        <option value="">暂无选择</option>
+                                        <option th:each="vo,it : ${accessTypes1}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
+                                    </select>
+                                </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">开始日期 ：</label>
                                     <div class="layui-input-block">
@@ -69,10 +72,13 @@
                         <div class="layui-card">
                             <div class="layui-card-header">出口</div>
                             <div class="layui-card-body">
-                                <label class="layui-form-label">出口通道：</label><select name="exit">
-                                    <option value="">暂无选择</option>
-                                    <option th:each="vo,it : ${accessTypes2}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
-                                </select>
+                                <label class="layui-form-label">出口通道：</label>
+                                <div class="layui-input-block">
+                                    <select name="exit">
+                                        <option value="">暂无选择</option>
+                                        <option th:each="vo,it : ${accessTypes2}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
+                                    </select>
+                                </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">开始日期 ：</label>
                                     <div class="layui-input-block">
@@ -96,7 +102,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item">
+            <div class="layui-form-item" style="text-align: center">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
                 </div>
