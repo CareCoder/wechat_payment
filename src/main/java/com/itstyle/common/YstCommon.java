@@ -75,4 +75,7 @@ public class YstCommon {
 
 	/**人工呼叫号码*/
 	public static final String PHONE_NUMBER = "PHONE_NUMBER";
+
+	/**该用户今日操作次数超过限制*/
+	public static String SENDNUM_LIMIT="";
 }
