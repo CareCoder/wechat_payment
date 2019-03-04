@@ -91,12 +91,6 @@
     var endTime = '[[${fastigium?.endTime}]]';
     var status = '[[${fastigium?.status}]]';
 
-    if (startTime === '') {
-        startTime = new Date().getTime();
-    }
-    if (endTime === '') {
-        endTime = new Date().getTime();
-    }
 
 
     layui.use(['form', 'jquery', 'laydate'], function () {
@@ -162,6 +156,21 @@
 
 
         form.on('submit(add)', function (data) {
+            var name = $("#add_channel_name").val();
+            var startTime = $("#startTime").val();
+            var endTime = $("#endTime").val();
+            if(name==""){
+                layer.alert('请选择通道名称', {icon: 6});
+                return false;
+            }
+            if (startTime === '') {
+                layer.alert('请选择开始时间', {icon: 6});
+                return false;
+            }
+            if (endTime === '') {
+                layer.alert('请选择截止时间', {icon: 6});
+                return false;
+            }
             $.ajax({
                 url:"/gs/set/fastigium",
                 type:"POST",
