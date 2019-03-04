@@ -38,73 +38,41 @@
                 <div class="layui-row layui-col-space15">
                     <div class="layui-col-md6">
                         <div class="layui-card">
-                            <div class="layui-card-header">入口</div>
+                            <div class="layui-card-header">高峰期设置</div>
                             <div class="layui-card-body">
-                                <label class="layui-form-label">入口通道：</label>
+                                <label class="layui-form-label">通道名称：</label>
                                 <div class="layui-input-block">
-                                    <select name="entry">
+                                    <select lay-filter="channelName" name="channelName" id="add_channel_name">
                                         <option value="">暂无选择</option>
-                                        <option th:each="vo,it : ${accessTypes1}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
+                                        <option th:each="vo,it : ${accessTypes}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
                                     </select>
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">开始日期 ：</label>
                                     <div class="layui-input-block">
-                                        <input name="entryStartTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="entryStartTime">
+                                        <input name="startTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime">
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">截止日期 ：</label>
                                     <div class="layui-input-block">
-                                        <input name="entryEndTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="entryEndTime">
+                                        <input name="endTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime">
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">开关 :</label>
                                     <div class="layui-input-block">
-                                        <input id="entryStatus" type="checkbox" name="entryStatus" lay-skin="switch" value="true" lay-text="启用|停用" >
+                                        <input id="status" type="checkbox" name="status" lay-skin="switch" value="true" lay-text="启用|停用">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="layui-col-md6">
-                        <div class="layui-card">
-                            <div class="layui-card-header">出口</div>
-                            <div class="layui-card-body">
-                                <label class="layui-form-label">出口通道：</label>
-                                <div class="layui-input-block">
-                                    <select name="exit">
-                                        <option value="">暂无选择</option>
-                                        <option th:each="vo,it : ${accessTypes2}" th:value="${vo.channelName}" th:text="${vo.channelName}"></option>
-                                    </select>
-                                </div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">开始日期 ：</label>
-                                    <div class="layui-input-block">
-                                        <input name="exitStartTime" class="layui-input" placeholder="开始日期" autocomplete="off" id="exitStartTime">
-                                    </div>
-                                </div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">截止日期 ：</label>
-                                    <div class="layui-input-block">
-                                        <input name="exitEndTime" class="layui-input" placeholder="截止日期" autocomplete="off" id="exitEndTime">
-                                    </div>
-                                </div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">开关 :</label>
-                                    <div class="layui-input-block">
-                                        <input id="exitStatus" type="checkbox" name="exitStatus" lay-skin="switch" value="true" lay-text="启用|停用" >
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item" style="text-align: center">
-                <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
                 </div>
             </div>
         </form>
@@ -118,78 +86,82 @@
     window.onload = function () {
         NProgress.done();
     }
-    var entry = '[[${fastigium?.entry}]]';
-    var exit = '[[${fastigium?.exit}]]';
-    var entryStatus = '[[${fastigium?.entryStatus}]]';
-    var entryStartTime = '[[${fastigium?.entryStartTime}]]';
-    var entryEndTime = '[[${fastigium?.entryEndTime}]]';
-    var exitStatus = '[[${fastigium?.exitStatus}]]';
-    var exitStartTime = '[[${fastigium?.exitStartTime}]]';
-    var exitEndTime = '[[${fastigium?.exitEndTime}]]';
+    var channelName = '[[${fastigium?.channelName}]]';
+    var startTime = '[[${fastigium?.startTime}]]';
+    var endTime = '[[${fastigium?.endTime}]]';
+    var status = '[[${fastigium?.status}]]';
 
-    if (entryStartTime === '') {
-        entryStartTime = new Date().getTime();
+    if (startTime === '') {
+        startTime = new Date().getTime();
     }
-    if (entryEndTime === '') {
-        entryEndTime = new Date().getTime();
+    if (endTime === '') {
+        endTime = new Date().getTime();
     }
-    if (exitStartTime === '') {
-        exitStartTime = new Date().getTime();
-    }
-    if (exitEndTime === '') {
-        exitEndTime = new Date().getTime();
-    }
-    if (entry != '') {
-        form_data.set("entry", entry);
-    }
-    if (exit != '') {
-        form_data.set("exit", exit);
-    }
+
+
     layui.use(['form', 'jquery', 'laydate'], function () {
         var form = layui.form;
         var $ = layui.jquery;
         var laydate = layui.laydate;
 
-        if (entryStatus === 'true') {
-            $('#entryStatus').attr('checked', 'checked');
+        if (status==='true') {
+            $('#status').prop('checked', true);
+        }else{
+            $('#status').prop("checked",false);
         }
-        if (exitStatus === 'true') {
-            $('#exitStatus').attr('checked', 'checked');
-        }
-        if (entry != "") {
-            $("select option[value=" + entry + "]").attr("selected", 'selected');
-        }
-        if (exit != "") {
-            $("select option[value=" + exit + "]").attr("selected", 'selected');
+
+        if (channelName != "") {
+            $("select option[value=" + channelName + "]").attr("selected", 'selected');
+            form.render("select");
         }
         laydate.render({
-            elem: '#entryStartTime',
+            elem: '#startTime',
             type: "time",
             format:'HH:mm',//显示格式：小时：分钟
-            value: entryStartTime
+            value: startTime
         });
 
         laydate.render({
-            elem: '#entryEndTime',
+            elem: '#endTime',
             type: "time",
             format:'HH:mm',//显示格式：小时：分钟
-            value: entryEndTime
-        });
-        laydate.render({
-            elem: '#exitStartTime',
-            type: "time",
-            format:'HH:mm',//显示格式：小时：分钟
-            value: exitStartTime
+            value: endTime
         });
 
-        laydate.render({
-            elem: '#exitEndTime',
-            type: "time",
-            format:'HH:mm',//显示格式：小时：分钟
-            value: exitEndTime
+        form.on('select(channelName)', function(data){
+
+            $.ajax({
+                url:"/gs/get/fastigium/data",
+                type:"POST",
+                dataType:"json",
+                data:{name:data.value},
+                success:function(result){
+                    laydate.render({
+                        elem: '#startTime',
+                        type: "time",
+                        format:'HH:mm',//显示格式：小时：分钟
+                        value: result.startTime
+                    });
+                    laydate.render({
+                        elem: '#endTime',
+                        type: "time",
+                        format:'HH:mm',//显示格式：小时：分钟
+                        value: result.endTime
+                    });
+
+                    if(result.status){
+                        $('#status').prop('checked', true);
+                    }else{
+                        $('#status').prop('checked', false);
+                    }
+
+                    form.render();                                // 显示出数据
+                }
+            });
         });
+
+
         form.on('submit(add)', function (data) {
-            debugger;
             $.ajax({
                 url:"/gs/set/fastigium",
                 type:"POST",
