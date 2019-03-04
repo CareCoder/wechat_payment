@@ -7,6 +7,7 @@ import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.Fastigium;
+import com.itstyle.domain.car.manager.FastigiumList;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType2;
 import com.itstyle.domain.caryard.CarYardName;
@@ -108,14 +109,17 @@ public class ExternalInterfaceService {
         vehicleManagement.blackVehicle = blackList.stream().map(BlackListVehicle::convert).collect(Collectors.toList());
         List<CarInfo> freeList = carInfoService.getFree();
         vehicleManagement.freeVehicle = freeList.stream().map(FreeVehicle::convert).collect(Collectors.toList());
-        Fastigium Fastigium = (Fastigium) globalSettingService.get(YstCommon.FASTIGIUM_KEY, Fastigium.class);
+        FastigiumList fastigiumList = (FastigiumList) globalSettingService.get(YstCommon.FASTIGIUM_KEY, FastigiumList.class);
         ForbidenVehicle fv = new ForbidenVehicle();
         String keyWords = (String) globalSettingService.get(YstCommon.SPECAL_CAR, String.class);
-        fv.setFastigium(Fastigium);
+        if(fastigiumList!=null){
+            fv.setPeakVehicle(fastigiumList.getFastigiumList());
+        }
         fv.specialCar = keyWords;
         vehicleManagement.forbidenVehicle = fv;
         return vehicleManagement;
     }
+
 
     private CarYardName carYardName() {
         CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);

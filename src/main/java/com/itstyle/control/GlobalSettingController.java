@@ -6,6 +6,7 @@ import com.itstyle.common.YstCommon;
 import com.itstyle.domain.FileResource.FileResourceBo;
 import com.itstyle.domain.car.manager.BanListManager;
 import com.itstyle.domain.car.manager.Fastigium;
+import com.itstyle.domain.car.manager.FastigiumList;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.caryard.ResponseAccessType;
@@ -19,7 +20,7 @@ import com.itstyle.vo.inition.response.ImageDownloadUrl;
 import com.itstyle.vo.inition.response.TextDisplay;
 import com.itstyle.vo.phonenumber.response.PhoneNumber;
 import com.itstyle.vo.phonenumber.response.PhoneNumberList;
-import org.springframework.http.HttpRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -45,23 +45,58 @@ public class GlobalSettingController {
     private FileResourceService fileResourceService;
 
     @GetMapping("/get/fastigium")
-    public String fastigiumGet(Model model) {
-        List<ResponseAccessType> accessTypes1 = accessTypeService.listNoPage();
-        List<ResponseAccessType> accessTypes2 = accessTypeService.listNoPage();
-        //业务需求这里只需要入口通道
-        accessTypes1 = accessTypes1.stream().filter(e -> e.getChannelTypeId() % 2 == 1).collect(Collectors.toList());
-        model.addAttribute("accessTypes1", accessTypes1);
-        //业务需求这里只需要出口通道
-        accessTypes2 = accessTypes2.stream().filter(e -> e.getChannelTypeId() % 4 == 2).collect(Collectors.toList());
-        model.addAttribute("accessTypes2", accessTypes2);
-        model.addAttribute("fastigium", globalSettingService.get(YstCommon.FASTIGIUM_KEY, Fastigium.class));
+    public String fastigiumInto(Model model) {
+        FastigiumList fastigiumList = (FastigiumList)globalSettingService.get(YstCommon.FASTIGIUM_KEY,FastigiumList.class);
+        List<ResponseAccessType> accessTypes = accessTypeService.listNoPage();
+        Fastigium fastigium = null;
+        if(fastigiumList!=null){
+            if(fastigiumList.getFastigiumList().size()!=0){
+                fastigium = fastigiumList.getFastigiumList().get(0);
+            }
+        }
+        model.addAttribute("accessTypes",accessTypes);
+        model.addAttribute("fastigium",fastigium);
+
         return "/backend/fastigium";
+    }
+    @RequestMapping("/get/fastigium/data")
+    @ResponseBody
+    public Fastigium fastigiumGet(@RequestParam("name") String channelName){
+        System.out.println("查看时通道名称：" +channelName);
+        FastigiumList fastigiumList = (FastigiumList)globalSettingService.get(YstCommon.FASTIGIUM_KEY,FastigiumList.class);
+        List<Fastigium> fastigiums =null;
+        if(fastigiumList!=null){
+            fastigiums = fastigiumList.getFastigiumList().stream().filter(e -> e.getChannelName().equals(channelName)).collect(Collectors.toList());
+        }
+        Fastigium fastigium = null;
+        if(fastigiums!=null&&fastigiums.size()!=0){
+            fastigium = fastigiums.get(0);
+        }
+        return fastigium;
     }
 
     @PostMapping("/set/fastigium")
     @ResponseBody
-    public void fastigiumSet(Fastigium param) {
-        globalSettingService.set(YstCommon.FASTIGIUM_KEY, param);
+    public void fastigiumSet(Fastigium fastigium) {
+        FastigiumList fastigiumList = (FastigiumList) globalSettingService.get(YstCommon.FASTIGIUM_KEY, FastigiumList.class);
+        System.out.println("添加时通道名称：" + fastigium.getChannelName());
+        List<ResponseAccessType> accessTypes = accessTypeService.listNoPage();
+        accessTypes = accessTypes.stream().filter(e -> e.getChannelName().equals(fastigium.getChannelName())).collect(Collectors.toList());
+        if (accessTypes != null && accessTypes.size() != 0) {
+            fastigium.setIp(accessTypes.get(0).getIp());
+        }
+        if (fastigiumList == null) {
+            fastigiumList = new FastigiumList();
+        }
+        fastigiumList.getFastigiumList().add(fastigium);
+        globalSettingService.set(YstCommon.FASTIGIUM_KEY, fastigiumList);
+        SystemLoggerHelper.log("配置", "配置高峰期管理");
+    }
+
+    @PostMapping("/set/fastigiumListSet/data")
+    @ResponseBody
+    public void fastigiumMapSet(FastigiumList fastigiumMap){
+        globalSettingService.set(YstCommon.FASTIGIUM_KEY, fastigiumMap);
         SystemLoggerHelper.log("配置", "配置高峰期管理");
     }
 
