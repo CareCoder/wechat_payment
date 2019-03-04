@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,6 +113,9 @@ public class ExternalInterfaceService {
         FastigiumList fastigiumList = (FastigiumList) globalSettingService.get(YstCommon.FASTIGIUM_KEY, FastigiumList.class);
         String keyWords = (String) globalSettingService.get(YstCommon.SPECAL_CAR, String.class);
         if(fastigiumList!=null){
+            vehicleManagement.setPeakVehicle(fastigiumList.getFastigiumList());
+        }else{
+            fastigiumList = new FastigiumList();
             vehicleManagement.setPeakVehicle(fastigiumList.getFastigiumList());
         }
         vehicleManagement.specialCar = keyWords;
