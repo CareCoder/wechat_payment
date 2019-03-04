@@ -110,13 +110,11 @@ public class ExternalInterfaceService {
         List<CarInfo> freeList = carInfoService.getFree();
         vehicleManagement.freeVehicle = freeList.stream().map(FreeVehicle::convert).collect(Collectors.toList());
         FastigiumList fastigiumList = (FastigiumList) globalSettingService.get(YstCommon.FASTIGIUM_KEY, FastigiumList.class);
-        ForbidenVehicle fv = new ForbidenVehicle();
         String keyWords = (String) globalSettingService.get(YstCommon.SPECAL_CAR, String.class);
         if(fastigiumList!=null){
-            fv.setPeakVehicle(fastigiumList.getFastigiumList());
+            vehicleManagement.setPeakVehicle(fastigiumList.getFastigiumList());
         }
-        fv.specialCar = keyWords;
-        vehicleManagement.forbidenVehicle = fv;
+        vehicleManagement.specialCar = keyWords;
         return vehicleManagement;
     }
 

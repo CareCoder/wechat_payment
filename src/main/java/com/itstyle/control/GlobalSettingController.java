@@ -79,14 +79,22 @@ public class GlobalSettingController {
     @ResponseBody
     public void fastigiumSet(Fastigium fastigium) {
         FastigiumList fastigiumList = (FastigiumList) globalSettingService.get(YstCommon.FASTIGIUM_KEY, FastigiumList.class);
-        System.out.println("添加时通道名称：" + fastigium.getChannelName());
         List<ResponseAccessType> accessTypes = accessTypeService.listNoPage();
         accessTypes = accessTypes.stream().filter(e -> e.getChannelName().equals(fastigium.getChannelName())).collect(Collectors.toList());
-        if (accessTypes != null && accessTypes.size() != 0) {
-            fastigium.setIp(accessTypes.get(0).getIp());
-        }
+        System.out.println("添加时通道名称：" + fastigium.getChannelName());
         if (fastigiumList == null) {
             fastigiumList = new FastigiumList();
+        }
+        if(fastigiumList.getFastigiumList()!=null&&fastigiumList.getFastigiumList().size()!=0) {
+            for (int i = 0; i < fastigiumList.getFastigiumList().size(); i++) {
+                System.out.println(fastigiumList.getFastigiumList().get(i).getChannelName());
+                if (fastigiumList.getFastigiumList().get(i).getChannelName().equals(fastigium.getChannelName()) ) {
+                    fastigiumList.getFastigiumList().remove(i);
+                }
+            }
+        }
+        if (accessTypes != null && accessTypes.size() != 0) {
+            fastigium.setIp(accessTypes.get(0).getIp());
         }
         fastigiumList.getFastigiumList().add(fastigium);
         globalSettingService.set(YstCommon.FASTIGIUM_KEY, fastigiumList);
