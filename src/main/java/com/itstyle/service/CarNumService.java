@@ -63,49 +63,53 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         jpaRepository = carNumMapper;
     }
 
+    private final Object UPLOAD_LOCK = new Object();
+
     public int upload(MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
-        int status = Status.NORMAL;
-        String uuid = UUID.randomUUID().toString();
-        carNumExtVo.setUuid(uuid);
-        List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo.buildQueryVo()));
-        CarNumVo saveVo = new CarNumVo();
-        if (find != null && !find.isEmpty()) {
-            if (find.size() == 1) {
-                saveVo = find.get(0);
-            }
-        }
-        carNumVo.setCarNumExtVos(null);//为下一个copy属性准备
-        BeanUtilIgnore.copyPropertiesIgnoreNull(carNumVo, saveVo);
-        //现在可以重复上传了，所以如果上传的type相同，则把之前的删除了。
-        Optional<CarNumExtVo> any = saveVo.getCarNumExtVos().stream().filter(e -> e.getCarNumType() == carNumExtVo.getCarNumType()).findAny();
-        if (any.isPresent()) {
-            CarNumExtVo getVo = any.get();
-            saveVo.getCarNumExtVos().remove(getVo);
-            carNumExtMapper.delete(getVo.getId());
-        }
-        saveVo.getCarNumExtVos().add(carNumExtVo);
-        try {
-            //实时设置当前进入车辆是否是开启固定车
-            if (carNumVo.getFixedParkingSpace() == null) {
-                CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
-                if (carYardName != null) {
-                    carNumVo.setFixedParkingSpace(carYardName.getFixedParkingSpace());
+        synchronized (UPLOAD_LOCK) {
+            int status = Status.NORMAL;
+            String uuid = UUID.randomUUID().toString();
+            carNumExtVo.setUuid(uuid);
+            List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo.buildQueryVo()));
+            CarNumVo saveVo = new CarNumVo();
+            if (find != null && !find.isEmpty()) {
+                if (find.size() == 1) {
+                    saveVo = find.get(0);
                 }
             }
-            //如果是车辆离场
-            if (carNumVo.getLTime() != null) {
-                if (carNumVo.getTime() != null) {
-                    //设置车辆的停放时间
-                    saveVo.setStopTime(carNumVo.getLTime() - carNumVo.getTime());
-                }
+            carNumVo.setCarNumExtVos(null);//为下一个copy属性准备
+            BeanUtilIgnore.copyPropertiesIgnoreNull(carNumVo, saveVo);
+            //现在可以重复上传了，所以如果上传的type相同，则把之前的删除了。
+            Optional<CarNumExtVo> any = saveVo.getCarNumExtVos().stream().filter(e -> e.getCarNumType() == carNumExtVo.getCarNumType()).findAny();
+            if (any.isPresent()) {
+                CarNumExtVo getVo = any.get();
+                saveVo.getCarNumExtVos().remove(getVo);
+                carNumExtMapper.delete(getVo.getId());
             }
-            carNumMapper.save(saveVo);
-            fileResourceService.upload(file, uuid);
-        } catch (Exception e) {
-            log.error("upload error",e);
-            status = Status.ERROR;
+            saveVo.getCarNumExtVos().add(carNumExtVo);
+            try {
+                //实时设置当前进入车辆是否是开启固定车
+                if (carNumVo.getFixedParkingSpace() == null) {
+                    CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
+                    if (carYardName != null) {
+                        carNumVo.setFixedParkingSpace(carYardName.getFixedParkingSpace());
+                    }
+                }
+                //如果是车辆离场
+                if (carNumVo.getLTime() != null) {
+                    if (carNumVo.getTime() != null) {
+                        //设置车辆的停放时间
+                        saveVo.setStopTime(carNumVo.getLTime() - carNumVo.getTime());
+                    }
+                }
+                carNumMapper.save(saveVo);
+                fileResourceService.upload(file, uuid);
+            } catch (Exception e) {
+                log.error("upload error",e);
+                status = Status.ERROR;
+            }
+            return status;
         }
-        return status;
     }
 
     public ResponseEntity<byte[]> download(CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
