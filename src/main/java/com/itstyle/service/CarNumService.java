@@ -197,11 +197,11 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     public String tempcarinfoPaymentConfirm(Long id, Account account) {
         String info = "放行成功";
         CarNumVo carNumVo = carNumMapper.getOne(id);
-        //生成明细
-        chargeRecord(carNumVo, account);
         carNumVo.setRecord(true);
         carNumVo.setLTime(System.currentTimeMillis());
         carNumMapper.save(carNumVo);
+        //生成明细
+        chargeRecord(carNumVo, account);
         //通过socket通知所有客户端
         WebSocketData webSocketData = new WebSocketData();
         webSocketData.setAction(WebSocketAction.TEMPCARINFO_PAYMENT_CONFIRM);
