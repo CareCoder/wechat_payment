@@ -31,7 +31,7 @@
 <body>
 <div class="ok-body">
     <div class="layui-row main-body layui-col-space30">
-        <div id="right" class="layui-col-md3 layui-col-md-offset3"  th:if="${img0 or img1}">
+        <div id="right" class="layui-col-md3 layui-col-md-offset3"  th:if="${img0 != null || img1 != null}">
             <blockquote class="layui-elem-quote">入场图片</blockquote>
             <div class="layui-row" th:if="${img0}">
                 <!--第一张图-->
@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <div id="left" class="layui-col-md3" th:if="${img2 or img3}">
+        <div id="left" class="layui-col-md3" th:if="${img2 != null || img3 != null}">
             <blockquote class="layui-elem-quote">出场图片</blockquote>
             <div class="layui-row" th:if="${img2}">
                 <!--第三张图-->
