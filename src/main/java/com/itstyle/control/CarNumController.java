@@ -98,7 +98,7 @@ public class CarNumController {
     public String tempcarinfo(Long id, Model model, HttpSession session) {
         CarNumVo carNumVo = carNumService.findById(id);
         //如果这里客户端没有上传收费金额,则服务器生成收费信息
-        if (carNumVo.getFee() == null) {
+        if (! carNumVo.getRecord() && carNumVo.getLeavePass() == null) {
             long now = System.currentTimeMillis();
             int fee = feeTestService.fetchCurCharge(carNumVo.getCarType(), carNumVo.getTime(), now);
             carNumVo.setFee(fee);
