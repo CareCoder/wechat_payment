@@ -9,6 +9,7 @@ import com.itstyle.domain.car.manager.CarNumVo;
 import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarNumExtVo;
 import com.itstyle.domain.car.manager.enums.CarNumType;
+import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.caryard.ResponseAccessType;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.service.AccessTypeService;
@@ -54,6 +55,7 @@ public class CarNumController {
         }
 //        queryVo.setRecord(false);//已经缴费的不在显示
 //        queryVo.setLeave(false);
+        queryVo.setCarTypeLimit(CarType.TEMP_CAR_D.getValue());//限制为只查询临时车
         PageResponse pageResponse = carNumService.queryComplex(queryVo);
         List<CarNumVo> carNumVos = pageResponse.getData();
         carNumVos.forEach(e -> {
@@ -212,6 +214,7 @@ public class CarNumController {
     @RequestMapping("/queryComplex")
     @ResponseBody
     public PageResponse queryComplex(CarNumQueryVo queryVo) {
+        queryVo.setCarTypeLimit(CarType.VIP_CAR.getValue());//不做限制
         return carNumService.queryComplex(queryVo);
     }
 

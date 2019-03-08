@@ -17,4 +17,5 @@ public class CarNumQueryVo {
     private String enterPass;
     private Boolean record;//这次临时停车是否已经生成明细
     private Boolean leave;//true代表进入了并且离开了,false代表还未离开
+    private Integer carTypeLimit;//车辆查询界限,<=3 则为临时车, <=7则为所有车
 }

@@ -291,9 +291,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         }
         List<CarNumVo> carNumVos = carNumMapper.queryComplex(queryVo.getCarType() == null ? null : queryVo.getCarType().getValue(),
                 queryVo.getCarNum(), queryVo.getStartTime(), queryVo.getEndTime(),
-                (queryVo.getPage() - 1) * queryVo.getLimit(), queryVo.getLimit());
+                (queryVo.getPage() - 1) * queryVo.getLimit(), queryVo.getLimit(), queryVo.getCarTypeLimit());
         Long count = carNumMapper.distincCount(queryVo.getCarType() == null ? null : queryVo.getCarType().getValue(),
-                queryVo.getCarNum(), queryVo.getStartTime(), queryVo.getEndTime());
+                queryVo.getCarNum(), queryVo.getCarTypeLimit(), queryVo.getStartTime(), queryVo.getEndTime());
         return new PageResponse<>(0, "", count, carNumVos);
     }
 }
