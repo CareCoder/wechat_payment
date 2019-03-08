@@ -19,6 +19,7 @@ import com.itstyle.utils.FeeUtil;
 import com.itstyle.utils.FileUtils;
 import com.itstyle.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -98,7 +99,7 @@ public class CarNumController {
     public String tempcarinfo(Long id, Model model, HttpSession session) {
         CarNumVo carNumVo = carNumService.findById(id);
         //如果这里客户端没有上传收费金额,则服务器生成收费信息
-        if (! carNumVo.getRecord() && carNumVo.getLeavePass() == null) {
+        if (!BooleanUtils.toBoolean(carNumVo.getRecord()) && carNumVo.getLeavePass() == null) {
             long now = System.currentTimeMillis();
             int fee = feeTestService.fetchCurCharge(carNumVo.getCarType(), carNumVo.getTime(), now);
             carNumVo.setFee(fee);
