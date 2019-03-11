@@ -15,18 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MyTextWebSocketHandler extends TextWebSocketHandler {
     public static final String WEB_SOCKET_USERNAME = "WEB_SOCKET_USERNAME";
 
-    private static final Map<String, WebSocketSession> users = new ConcurrentHashMap<>();
+    protected static final Map<String, WebSocketSession> users = new ConcurrentHashMap<>();
 
     //处理文本消息
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
-        String userName = (String) session.getAttributes().get(WEB_SOCKET_USERNAME);
-        log.trace("user " + userName + " send：" + message);
-        try {
-            session.sendMessage(new TextMessage("received"));
-        } catch (IOException e) {
-            log.error("doSendMessage ",e);
-        }
+        TextMessageHandler.handleTextMessage(session, message);
     }
 
     //连接建立后处理
