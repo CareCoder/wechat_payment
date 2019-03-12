@@ -34,6 +34,6 @@ public class TextMessageHandler {
                     }
                     return e.passType == webSocketUserInfo.passType;
                 })
-                .forEach(e -> MyTextWebSocketHandler.sendMessageToUser(e.userName, gson.toJson(webSocketData.getData())));
+                .forEach(e -> MyTextWebSocketHandler.sendMessageToUser(e.userName, (String) webSocketData.getData()));
     }
 }
