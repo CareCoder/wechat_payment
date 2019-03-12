@@ -20,11 +20,13 @@ public class MyHttpSessionHandshakeInterceptor extends HttpSessionHandshakeInter
         if (request instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
             String username = servletRequest.getServletRequest().getParameter("username");
+            String passType = servletRequest.getServletRequest().getParameter("pass_type");
             //必须提供 username,action 请求参数，否则不允许连接
-            if (StringUtils.isEmpty(username)){
+            if (StringUtils.isEmpty(username) || StringUtils.isEmpty(passType)){
                 return false;
             }
             attributes.put(MyTextWebSocketHandler.WEB_SOCKET_USERNAME, username);
+            attributes.put(MyTextWebSocketHandler.WEB_SOCKET_PASS_TYPE, passType);
         }
         return super.beforeHandshake(request, response, wsHandler, attributes);
     }

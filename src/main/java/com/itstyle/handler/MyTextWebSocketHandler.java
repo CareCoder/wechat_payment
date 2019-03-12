@@ -1,5 +1,7 @@
 package com.itstyle.handler;
 
+import com.itstyle.common.WebSocketUserInfo;
+import com.itstyle.domain.car.manager.enums.PassType;
 import com.itstyle.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.CloseStatus;
@@ -14,8 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class MyTextWebSocketHandler extends TextWebSocketHandler {
     public static final String WEB_SOCKET_USERNAME = "WEB_SOCKET_USERNAME";
+    public static final String WEB_SOCKET_PASS_TYPE = "WEB_SOCKET_PASS_TYPE";
 
-    protected static final Map<String, WebSocketSession> users = new ConcurrentHashMap<>();
+    protected static final Map<String, WebSocketUserInfo> users = new ConcurrentHashMap<>();
 
     //处理文本消息
     @Override
@@ -28,7 +31,12 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
         String username = (String) session.getAttributes().get(WEB_SOCKET_USERNAME);
-        users.put(username, session);
+        String passType = (String) session.getAttributes().get(WEB_SOCKET_PASS_TYPE);
+        WebSocketUserInfo webSocketUserInfo = new WebSocketUserInfo();
+        webSocketUserInfo.passType = PassType.valueOf(passType);
+        webSocketUserInfo.userName = username;
+        webSocketUserInfo.webSocketSession = session;
+        users.put(username, webSocketUserInfo);
         log.info("afterConnectionEstablished username = {}", username);
         session.sendMessage(new TextMessage("connect success"));
     }
@@ -64,7 +72,7 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
      * 给某个用户发送消息
      */
     private static int sendMessageToUser(String username, TextMessage message) {
-        WebSocketSession user = users.get(username);
+        WebSocketSession user = users.get(username).webSocketSession;
         if (user == null) {
             return Status.USER_OFFLINE;
         }
@@ -84,8 +92,8 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
      * 给所有在线用户发送消息
      */
     private static void sendMessageToAllUser(TextMessage message) {
-        for (WebSocketSession user : users.values()) {
-            doSendMessage(user, message);
+        for (WebSocketUserInfo webSocketUserInfo : users.values()) {
+            doSendMessage(webSocketUserInfo.webSocketSession, message);
         }
         log.info("send mesage to all：" + message);
     }

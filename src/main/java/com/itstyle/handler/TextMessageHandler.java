@@ -2,6 +2,7 @@ package com.itstyle.handler;
 
 import com.google.gson.Gson;
 import com.itstyle.common.WebSocketData;
+import com.itstyle.common.WebSocketUserInfo;
 import com.itstyle.domain.car.manager.enums.WebSocketAction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
@@ -25,16 +26,14 @@ public class TextMessageHandler {
     }
 
     private static void forwardMsgToOthers(String userName, WebSocketData webSocketData) {
-        String enterPassName = "入口";//包含这是入口,否则是出口
-        boolean enter = userName.contains(enterPassName);
-        MyTextWebSocketHandler.users.keySet().stream()
+        WebSocketUserInfo webSocketUserInfo = MyTextWebSocketHandler.users.get(userName);
+        MyTextWebSocketHandler.users.values().stream()
                 .filter(e -> {
-                    if (e.equals(userName)) {
-                        //不给自己发送
+                    if (userName.equals(e.userName)) {
                         return false;
                     }
-                    return e.contains(enterPassName) == enter;
+                    return e.passType == webSocketUserInfo.passType;
                 })
-                .forEach(e -> MyTextWebSocketHandler.sendMessageToUser(e, gson.toJson(webSocketData.getData())));
+                .forEach(e -> MyTextWebSocketHandler.sendMessageToUser(e.userName, gson.toJson(webSocketData.getData())));
     }
 }
