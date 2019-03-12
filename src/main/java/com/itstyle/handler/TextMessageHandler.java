@@ -14,7 +14,7 @@ public class TextMessageHandler {
     public static void handleTextMessage(WebSocketSession session, TextMessage message) {
         String userName = (String) session.getAttributes().get(MyTextWebSocketHandler.WEB_SOCKET_USERNAME);
         String msg = message.getPayload();
-        log.trace("user " + userName + " send：" + msg);
+        log.info("user " + userName + " send：" + msg);
         WebSocketData webSocketData = gson.fromJson(msg, WebSocketData.class);
         WebSocketAction action = webSocketData.getAction();
         if (action == WebSocketAction.FORWARD_MSG) {
