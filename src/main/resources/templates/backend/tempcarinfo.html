@@ -17,7 +17,6 @@
             padding: 10px;
             line-height: 30px;
             text-align: center;
-            background-color: #79C48C;
             color: #fff;
         }
         .center{
@@ -93,7 +92,7 @@
             </div>
             <br>
             <div class="layui-row">
-                <div class="layui-col-md6 grid" th:text="${vo.carNum}">
+                <div class="layui-col-md6 grid" th:attr="data-car_color=${vo.CarColor}" th:text="${vo.carNum}">
 
                 </div>
                 <div class="layui-col-md6 grid time_div" th:text="${vo?.time}">
@@ -261,6 +260,23 @@
             var time = $(this).html();
             if (time !== "" && time != null) {
                 $(this).html(new Date(parseInt(time)).toLocaleDateString());
+            }
+        });
+        //不同车牌的展示颜色不同
+        $(".grid").each(function () {
+            var attr = $(this).attr("data-car_color");
+            if (attr != null) {
+                if (attr === "LC_BLUE") {
+                    $(this).parent().css("background-color", "#4753c4");
+                }else if (attr === "LC_YELLOW") {
+                    $(this).parent().css("background-color", "#c4c339");
+                }else if (attr === "LC_BLACK") {
+                    $(this).parent().css("background-color", "#000000");
+                }else if (attr === "LC_GREEN") {
+                    $(this).parent().css("background-color", "#79C48C");
+                }else{
+                    $(this).parent().css("background-color", "#79C48C");
+                }
             }
         });
         form.render();
