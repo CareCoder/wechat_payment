@@ -150,15 +150,10 @@
             url: '/report/charge/statistics?carType=' + carType,
             type : "POST",
             success : function(resp){
-                $("#statistics_receivableFee").html(resp.totleReceivableFee);
-                $("#statistics_discountAmount").html(resp.totleDiscountAmount);
-                $("#statistics_fee").html(resp.totleFee);
+                $("#statistics_receivableFee").html(parseInt(resp.totleReceivableFee, 10) / 100);
+                $("#statistics_discountAmount").html(parseInt(resp.totleDiscountAmount, 10) / 100);
+                $("#statistics_fee").html(parseInt(resp.totleFee, 10) / 100);
             }
-        });
-        $('.fee_span').each(function () {
-            var fee_str = $(this).html();
-            var fee_value = parseInt(fee_str, 10) / 100;
-            $(this).html(fee_value)
         });
     })
 
@@ -203,7 +198,7 @@
 
 <script type="text/html" id="feeTemp">
     {{#
-    return parseInt(d, 10) / 100;
+    return parseInt(d.fee, 10) / 100;
     }}
 </script>
 </body>
