@@ -98,7 +98,7 @@
                             {field: 'leaveTime', title: '有效期至', width: 250, templet: '#leaveTimeTemp'},
                             {field: 'carRealType', title: '车辆类型', width: 100, templet: '#carRealType'},
                             {field: 'chargeType', title: '收费类型', width: 100, templet: '#chargeTypeTemp'},
-                            {field: 'fee', title: '收费金额', width: 100},
+                            {field: 'fee', title: '实收金额', width: 100, templet: '#feeTemp'},
                             // {field: 'discountAmount', title: '优惠金额', width: 100},
                             {field: 'time', title: '续费时间', width: 250, templet: '#timeTemp'},
                             {field: 'chargePersonnel', title: '收费人员', width: 100}
@@ -133,9 +133,9 @@
                 type : "POST",
                 data : data.field,
                 success : function(resp){
-                    $("#statistics_receivableFee").html(resp.totleReceivableFee);
-                    $("#statistics_discountAmount").html(resp.totleDiscountAmount);
-                    $("#statistics_fee").html(resp.totleFee);
+                    $("#statistics_receivableFee").html(parseInt(resp.totleReceivableFee, 10) / 100);
+                    $("#statistics_discountAmount").html(parseInt(resp.totleDiscountAmount, 10) / 100);
+                    $("#statistics_fee").html(parseInt(resp.totleFee, 10) / 100);
                 }
             });
 
@@ -193,6 +193,12 @@
 <script type="text/html" id="chargeTypeTemp">
     {{#
     return d.chargeType == "CASH_PAYMENT"?"线下收费":"线上收费";
+    }}
+</script>
+
+<script type="text/html" id="feeTemp">
+    {{#
+    return parseInt(d.fee, 10) / 100;
     }}
 </script>
 </body>
