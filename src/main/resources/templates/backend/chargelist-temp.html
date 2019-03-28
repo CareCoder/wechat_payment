@@ -127,9 +127,9 @@
                 type : "POST",
                 data : data.field,
                 success : function(resp){
-                    $("#statistics_receivableFee").html(resp.totleReceivableFee);
-                    $("#statistics_discountAmount").html(resp.totleDiscountAmount);
-                    $("#statistics_fee").html(resp.totleFee);
+                    $("#statistics_receivableFee").html(parseInt(resp.totleReceivableFee, 10) / 100);
+                    $("#statistics_discountAmount").html(parseInt(resp.totleDiscountAmount, 10) / 100);
+                    $("#statistics_fee").html(parseInt(resp.totleFee, 10) / 100);
                 }
             });
             table.reload('tableId', {

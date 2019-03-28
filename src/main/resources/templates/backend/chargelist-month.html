@@ -154,7 +154,7 @@
             url: '/report/charge/statistics?carType=' + carType,
             type : "POST",
             success : function(resp){
-                $("#statistics_fee").html(resp.totleFee);
+                $("#statistics_fee").html(parseInt(resp.totleFee, 10) / 100);
             }
         });
     })
