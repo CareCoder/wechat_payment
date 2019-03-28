@@ -133,8 +133,6 @@
                 type : "POST",
                 data : data.field,
                 success : function(resp){
-                    $("#statistics_receivableFee").html(parseInt(resp.totleReceivableFee, 10) / 100);
-                    $("#statistics_discountAmount").html(parseInt(resp.totleDiscountAmount, 10) / 100);
                     $("#statistics_fee").html(parseInt(resp.totleFee, 10) / 100);
                 }
             });
