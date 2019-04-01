@@ -1,7 +1,9 @@
 package com.itstyle.vo.inition.response;
 
 import com.itstyle.domain.caryard.CarYardName;
+import lombok.Data;
 
+@Data
 public class CarYardNameResp {
     public String parkingName;
     public Integer parkingNum;
