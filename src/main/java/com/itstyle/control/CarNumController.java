@@ -147,7 +147,10 @@ public class CarNumController {
         int status = Status.NORMAL;
         try {
             //先更新剩余车位数
-            globalSettingService.set(YstCommon.REMAINING_PARKING_NUM, remainingParkingNum);
+            if (remainingParkingNum != 10000) {
+                //remainingParkingNum 这个值为10000的时候，你不要把这个剩余车位数进行更新了，这里主要是我这边用来判断当信息网络不通，延迟用来补发上传数据的逻辑处理
+                globalSettingService.set(YstCommon.REMAINING_PARKING_NUM, remainingParkingNum);
+            }
             carNumVo.setLTime(leaveTime);
             carNumExtVo.setTime(leaveTime);//这里不要mvc自动注入 是因为两个注入对象的param相同了
             status = carNumService.upload(file, carNumVo, carNumExtVo);
