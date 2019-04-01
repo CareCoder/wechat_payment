@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.CarInfo;
-import com.itstyle.domain.car.manager.Fastigium;
 import com.itstyle.domain.car.manager.FastigiumList;
 import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType2;
@@ -34,7 +33,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -123,14 +121,15 @@ public class ExternalInterfaceService {
     }
 
 
-    private CarYardName carYardName() {
+    private CarYardNameResp carYardName() {
         CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
         //获取剩余车位数,如果未获取到则默认为车场总数
         Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
-        if (remainingParkingNum != null && carYardName != null) {
+        Integer totleParkingNum = carYardName.getParkingNum();
+        if (remainingParkingNum != null) {
             //如果获取到的剩余车位数大于等于总床位数，则让其等于总车位数
-            if(remainingParkingNum >= carYardName.getParkingNum()){
-                remainingParkingNum = carYardName.getParkingNum();
+            if(remainingParkingNum >= totleParkingNum){
+                remainingParkingNum = totleParkingNum;
                 globalSettingService.set(YstCommon.REMAINING_PARKING_NUM,remainingParkingNum);
             }else if(remainingParkingNum <= 0){
                 //如果获取到的剩余车位数小于等于0，则让其等于0
@@ -139,7 +138,9 @@ public class ExternalInterfaceService {
             }
             carYardName.setParkingNum(remainingParkingNum);
         }
-        return carYardName;
+        CarYardNameResp resp = CarYardNameResp.build(carYardName);
+        resp.totalParkingNum = totleParkingNum;
+        return resp;
     }
 
     private List<AccessAuthoritySetup> getAccessAuthoritySetup() {
@@ -206,9 +207,9 @@ public class ExternalInterfaceService {
      * 获取剩余车位数
      */
     public Integer restParkNum() {
-        CarYardName carYardName = carYardName();
+        CarYardNameResp carYardName = carYardName();
         if (carYardName != null) {
-            return carYardName.getParkingNum();
+            return carYardName.parkingNum;
         }
         return 0;
     }
@@ -245,8 +246,6 @@ public class ExternalInterfaceService {
 
     /**
      * 微信二维码
-     * @param args
-     * @return
      */
     public String createTemporaryQRCode(Integer args){
         try {
