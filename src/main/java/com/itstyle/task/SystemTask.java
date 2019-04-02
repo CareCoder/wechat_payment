@@ -1,5 +1,7 @@
 package com.itstyle.task;
 
+import com.itstyle.handler.MyTextWebSocketHandler;
+import com.itstyle.service.ExternalInterfaceService;
 import com.itstyle.service.LogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +25,17 @@ public class SystemTask {
         if (aLong > 0) {
             log.info("[SystemTask] 定时任务：成功入库 " + aLong + " 条系统日志");
         }
+    }
+
+    @Scheduled(fixedRate = 30000L)
+    public void pingPong() {
+        long now = System.currentTimeMillis();
+        MyTextWebSocketHandler.pingPoneMap.entrySet().stream()
+                .filter(e -> now - e.getValue() > 30000L)
+                .forEach(e -> {
+                    String username = e.getKey();
+                    log.info("pingPong timeout, username= {}", username);
+                    MyTextWebSocketHandler.closeSession(username);
+                });
     }
 }
