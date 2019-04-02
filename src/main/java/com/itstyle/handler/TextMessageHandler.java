@@ -3,29 +3,19 @@ package com.itstyle.handler;
 import com.google.gson.Gson;
 import com.itstyle.common.WebSocketData;
 import com.itstyle.common.WebSocketUserInfo;
-import com.itstyle.domain.car.manager.enums.WebSocketAction;
+import com.itstyle.domain.caryard.EquipmentStatus;
+import com.itstyle.service.ExternalInterfaceService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
 @Slf4j
 public class TextMessageHandler {
-    private static Gson gson = new Gson();
-    public static void handleTextMessage(WebSocketSession session, TextMessage message) {
-        String userName = (String) session.getAttributes().get(MyTextWebSocketHandler.WEB_SOCKET_USERNAME);
-        String msg = message.getPayload();
-        log.info("user " + userName + " send：" + msg);
-        WebSocketData webSocketData = gson.fromJson(msg, WebSocketData.class);
-        WebSocketAction action = webSocketData.getAction();
-        if (action == WebSocketAction.FORWARD_MSG) {
-            //向其他同样类型通道转发消息
-            forwardMsgToOthers(userName, webSocketData);
-        }else{
-            MyTextWebSocketHandler.sendMessageToUser(userName, "received");
-        }
+    static void uploadEquipmentStatus(String userName, WebSocketData webSocketData, ExternalInterfaceService service, Gson gson) {
+        EquipmentStatus equipmentStatus = gson.fromJson(gson.toJson(webSocketData.getData()), EquipmentStatus.class);
+        log.info("uploadEquipmentStatus userName = {}, equipmentStatus = {}",userName, gson.toJson(equipmentStatus));
+        service.uploadEquipmentStatus(equipmentStatus);
     }
 
-    private static void forwardMsgToOthers(String userName, WebSocketData webSocketData) {
+    static void forwardMsgToOthers(String userName, WebSocketData webSocketData) {
         WebSocketUserInfo webSocketUserInfo = MyTextWebSocketHandler.users.get(userName);
         MyTextWebSocketHandler.users.values().stream()
                 .filter(e -> {

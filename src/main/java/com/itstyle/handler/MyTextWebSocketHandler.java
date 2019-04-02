@@ -1,29 +1,53 @@
 package com.itstyle.handler;
 
+import com.google.gson.Gson;
+import com.itstyle.common.WebSocketData;
 import com.itstyle.common.WebSocketUserInfo;
 import com.itstyle.domain.car.manager.enums.PassType;
+import com.itstyle.domain.car.manager.enums.WebSocketAction;
+import com.itstyle.service.ExternalInterfaceService;
 import com.itstyle.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
+@Service
 public class MyTextWebSocketHandler extends TextWebSocketHandler {
     public static final String WEB_SOCKET_USERNAME = "WEB_SOCKET_USERNAME";
     public static final String WEB_SOCKET_PASS_TYPE = "WEB_SOCKET_PASS_TYPE";
+
+    @Resource
+    private Gson gson;
+    @Resource
+    private ExternalInterfaceService externalInterfaceService;
 
     protected static final Map<String, WebSocketUserInfo> users = new ConcurrentHashMap<>();
 
     //处理文本消息
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
-        TextMessageHandler.handleTextMessage(session, message);
+        String userName = (String) session.getAttributes().get(MyTextWebSocketHandler.WEB_SOCKET_USERNAME);
+        String msg = message.getPayload();
+        log.info("user " + userName + " send：" + msg);
+        WebSocketData webSocketData = gson.fromJson(msg, WebSocketData.class);
+        WebSocketAction action = webSocketData.getAction();
+        if (action == WebSocketAction.FORWARD_MSG) {
+            //向其他同样类型通道转发消息
+            TextMessageHandler.forwardMsgToOthers(userName, webSocketData);
+        } else if (action == WebSocketAction.STATUS_MSG) {
+            TextMessageHandler.uploadEquipmentStatus(userName, webSocketData, externalInterfaceService, gson);
+        } else {
+            MyTextWebSocketHandler.sendMessageToUser(userName, "received");
+        }
     }
 
     //连接建立后处理
@@ -45,6 +69,9 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         String username = (String) session.getAttributes().get(WEB_SOCKET_USERNAME);
+        //设备下线
+        externalInterfaceService.offlineEquipmentStatus(username);
+        //移除用户
         users.remove(username);
         log.info("afterConnectionClosed username = {}", username);
         super.afterConnectionClosed(session, status);

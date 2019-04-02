@@ -245,6 +245,20 @@ public class ExternalInterfaceService {
     }
 
     /**
+     * 设备下线
+     * @param passWayName 设备名字
+     */
+    public void offlineEquipmentStatus(String passWayName) {
+        log.info("offlineEquipmentStatus passWayName = {}",passWayName);
+        String equipmentStatusStr = redisDao.hget(YstCommon.EQUIPMENT_STATUS, passWayName);
+        if (StringUtils.isNotEmpty(equipmentStatusStr)) {
+            EquipmentStatus equipmentStatus = gson.fromJson(equipmentStatusStr, EquipmentStatus.class);
+            equipmentStatus.offline();
+            redisDao.hset(YstCommon.EQUIPMENT_STATUS, equipmentStatus.getPassWayName(), gson.toJson(equipmentStatus));
+        }
+    }
+
+    /**
      * 微信二维码
      */
     public String createTemporaryQRCode(Integer args){

@@ -17,4 +17,15 @@ public class EquipmentStatus {
 
     private String cashCode;// 0(正常)/1(故障)/2(离线)/3(无)       钱箱
 
+
+    /**
+     * 离线的时候把所有设备都设置为故障状态
+     */
+    public void offline() {
+        networkType = false;
+        camera = false;
+        gadget = "1";
+        printer = "1";
+        cashCode = "1";
+    }
 }
