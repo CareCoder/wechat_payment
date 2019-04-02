@@ -24,8 +24,14 @@ public class EquipmentStatus {
     public void offline() {
         networkType = false;
         camera = false;
-        gadget = "1";
-        printer = "1";
-        cashCode = "1";
+        if (! "3".equals(gadget)) {
+            gadget = "1";
+        }
+        if (! "3".equals(printer)) {
+            printer = "1";
+        }
+        if (! "3".equals(cashCode)) {
+            cashCode = "1";
+        }
     }
 }
