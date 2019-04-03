@@ -27,7 +27,7 @@ public class SystemTask {
         }
     }
 
-    @Scheduled(fixedRate = 30000L)
+    @Scheduled(fixedRate = 45000L)
     public void pingPong() {
         long now = System.currentTimeMillis();
         MyTextWebSocketHandler.pingPoneMap.entrySet().stream()
