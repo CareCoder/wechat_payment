@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Data
-@Table(name = "car_num_ext" , indexes = {@Index(name = "path_index", columnList = "path", unique = true)})
+@Table(name = "car_num_ext")
 @Entity
 public class CarNumExtVo {
     @Id
