@@ -46,7 +46,7 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
         WebSocketAction action = webSocketData.getAction();
         if (action == WebSocketAction.FORWARD_MSG) {
             //向其他同样类型通道转发消息
-            TextMessageHandler.forwardMsgToOthers(userName, webSocketData);
+            TextMessageHandler.forwardMsgToOthers(userName, webSocketData, gson);
         } else if (action == WebSocketAction.STATUS_MSG) {
             TextMessageHandler.uploadEquipmentStatus(userName, webSocketData, externalInterfaceService, gson);
         } else {

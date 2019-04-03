@@ -15,7 +15,7 @@ public class TextMessageHandler {
         service.uploadEquipmentStatus(equipmentStatus);
     }
 
-    static void forwardMsgToOthers(String userName, WebSocketData webSocketData) {
+    static void forwardMsgToOthers(String userName, WebSocketData webSocketData, Gson gson) {
         WebSocketUserInfo webSocketUserInfo = MyTextWebSocketHandler.users.get(userName);
         MyTextWebSocketHandler.users.values().stream()
                 .filter(e -> {
@@ -24,6 +24,6 @@ public class TextMessageHandler {
                     }
                     return e.passType == webSocketUserInfo.passType;
                 })
-                .forEach(e -> MyTextWebSocketHandler.sendMessageToUser(e.userName, (String) webSocketData.getData()));
+                .forEach(e -> MyTextWebSocketHandler.sendMessageToUser(e.userName, gson.toJson(webSocketData.getData())));
     }
 }
