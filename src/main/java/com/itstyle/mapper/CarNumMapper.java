@@ -34,4 +34,10 @@ public interface CarNumMapper extends JpaRepository<CarNumVo, Long>, JpaSpecific
     @Transactional
     @Query("delete from CarNumVo vo where vo.lTime is null and vo.carNum = ?1")
     Integer deleteExceptionData(String carNum);
+
+    @Modifying
+    @Transactional
+    @Query("delete from CarNumVo vo where vo.lTime is null and vo.carNum = ?1 and vo.time < ?2")
+    void deleteUnleaveCar(String carNum, Long time);
+
 }

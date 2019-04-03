@@ -104,14 +104,20 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 }
                 carNumMapper.save(saveVo);
                 fileResourceService.upload(file, uuid);
-                //兼容处理,如果还有同车牌车未出场,则让之出场
-                carNumMapper.deleteExceptionData(carNumVo.getCarNum());
+                deleteUnleaveCar(carNumVo.getCarNum(), carNumVo.getTime());
             } catch (Exception e) {
                 log.error("upload error",e);
                 status = Status.ERROR;
             }
             return status;
         }
+    }
+
+    /**
+     * 兼容处理,如果还有同车牌车未出场,则让之出场
+     */
+    private void deleteUnleaveCar(String carNum, Long time) {
+        carNumMapper.deleteUnleaveCar(carNum, time);
     }
 
     public ResponseEntity<byte[]> download(CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
