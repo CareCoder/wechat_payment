@@ -5,5 +5,6 @@ public enum WebSocketAction {
     CLEAR_PARKING_LOT,
     TEMPCARINFO_PAYMENT_CONFIRM,
     FORWARD_MSG,
-    STATUS_MSG
+    STATUS_MSG,
+    UPDATE_LCD_INFO
 }

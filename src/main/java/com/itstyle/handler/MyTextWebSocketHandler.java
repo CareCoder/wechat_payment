@@ -6,6 +6,7 @@ import com.itstyle.common.WebSocketUserInfo;
 import com.itstyle.domain.car.manager.enums.PassType;
 import com.itstyle.domain.car.manager.enums.WebSocketAction;
 import com.itstyle.service.ExternalInterfaceService;
+import com.itstyle.service.GlobalSettingService;
 import com.itstyle.utils.enums.Status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,8 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
             TextMessageHandler.forwardMsgToOthers(userName, webSocketData, gson);
         } else if (action == WebSocketAction.STATUS_MSG) {
             TextMessageHandler.uploadEquipmentStatus(userName, webSocketData, externalInterfaceService, gson);
+        }else if (action == WebSocketAction.UPDATE_LCD_INFO) {
+            TextMessageHandler.updateLcdInfo(userName, externalInterfaceService, gson);
         } else {
             MyTextWebSocketHandler.sendMessageToUser(userName, "received");
         }

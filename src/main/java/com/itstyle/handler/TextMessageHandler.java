@@ -16,6 +16,7 @@ public class TextMessageHandler {
     }
 
     static void forwardMsgToOthers(String userName, WebSocketData webSocketData, Gson gson) {
+        log.info("forwardMsgToOthers userName = {}, data = {}", gson, gson.toJson(webSocketData));
         WebSocketUserInfo webSocketUserInfo = MyTextWebSocketHandler.users.get(userName);
         MyTextWebSocketHandler.users.values().stream()
                 .filter(e -> {
@@ -25,5 +26,16 @@ public class TextMessageHandler {
                     return e.passType == webSocketUserInfo.passType;
                 })
                 .forEach(e -> MyTextWebSocketHandler.sendMessageToUser(e.userName, gson.toJson(webSocketData)));
+    }
+
+    public static void updateLcdInfo(ExternalInterfaceService externalInterfaceService, Gson gson) {
+        log.info("updateLcdInfo all user");
+        MyTextWebSocketHandler.sendMessageToAllUser(gson.toJson(externalInterfaceService.getImageDisplay()));
+    }
+
+
+    static void updateLcdInfo(String userName, ExternalInterfaceService externalInterfaceService, Gson gson) {
+        log.info("updateLcdInfo userName = {}", userName);
+        MyTextWebSocketHandler.sendMessageToUser(userName, gson.toJson(externalInterfaceService.getImageDisplay()));
     }
 }

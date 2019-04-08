@@ -79,7 +79,7 @@ public class ExternalInterfaceService {
         inition.vehicleManagement = getVehicleManagement();
         inition.carYardName = carYardName();
         inition.accessAuthoritySetup = getAccessAuthoritySetup();
-        inition.imageDisplay = getImageDisplay();
+//        inition.imageDisplay = getImageDisplay();
         inition.textDisplay = getTextDisplay();
         return inition;
     }
@@ -94,7 +94,7 @@ public class ExternalInterfaceService {
     /**
      * 获取针对LCD广告图片发布，界面参考新增功能文档
      */
-    private ImageDisplay getImageDisplay() {
+    public ImageDisplay getImageDisplay() {
         ImageDisplay imageDisplay = (ImageDisplay) globalSettingService.get(YstCommon.LCD_INFO, ImageDisplay.class);
         if (imageDisplay != null && imageDisplay.urlList != null) {
             imageDisplay.urlList = imageDisplay.urlList.stream().filter(e -> e != null && e.imageDownloadUrl != null).collect(Collectors.toList());

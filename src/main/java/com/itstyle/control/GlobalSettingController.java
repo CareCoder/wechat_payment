@@ -1,5 +1,6 @@
 package com.itstyle.control;
 
+import com.google.gson.Gson;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
@@ -11,7 +12,9 @@ import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.caryard.ResponseAccessType;
 import com.itstyle.domain.park.resp.Response;
+import com.itstyle.handler.TextMessageHandler;
 import com.itstyle.service.AccessTypeService;
+import com.itstyle.service.ExternalInterfaceService;
 import com.itstyle.service.FileResourceService;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.utils.enums.Status;
@@ -43,6 +46,10 @@ public class GlobalSettingController {
     private AccessTypeService accessTypeService;
     @Resource
     private FileResourceService fileResourceService;
+    @Resource
+    private ExternalInterfaceService externalInterfaceService;
+    @Resource
+    private Gson gson;
 
     @GetMapping("/get/fastigium")
     public String fastigiumInto(Model model) {
@@ -236,6 +243,8 @@ public class GlobalSettingController {
             urlList.add(index, new ImageDownloadUrl(fileResourceBo.getUrl()));
         }
         globalSettingService.set(YstCommon.LCD_INFO, imageDisplay);
+        //更新之后通知客户端
+        TextMessageHandler.updateLcdInfo(externalInterfaceService, gson);
         return Response.build(Status.NORMAL, null, null);
     }
 
