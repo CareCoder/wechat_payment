@@ -17,8 +17,8 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(value = {RuntimeException.class, Exception.class})
-    public Response defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-        log.error("Error in {}: {}", e.getClass().getSimpleName(), e.getMessage());
+    public Response defaultErrorHandler(HttpServletRequest req, Exception e) {
+        log.error("Error in {}: {}", e.getClass().getSimpleName(), e);
         e.printStackTrace();
         req.setAttribute("error", e.getMessage());
         return Response.build(Status.ERROR, e.getMessage(), null);
