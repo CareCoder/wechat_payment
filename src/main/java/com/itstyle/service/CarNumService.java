@@ -8,7 +8,10 @@ import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
-import com.itstyle.domain.car.manager.enums.*;
+import com.itstyle.domain.car.manager.enums.CarNumExtVo;
+import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.ChargeType;
+import com.itstyle.domain.car.manager.enums.WebSocketAction;
 import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.handler.MyTextWebSocketHandler;
@@ -21,7 +24,6 @@ import com.itstyle.vo.socket.TempCarInfoPayMentConfirm;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.jpa.criteria.OrderImpl;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,13 +34,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -297,6 +297,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         if (queryVo.getCarNum() != null && StringUtils.isEmpty(queryVo.getCarNum())) {
             queryVo.setCarNum(null);
         }
+        log.info("CarNumService queryComplex queryVo = {}", gson.toJson(queryVo));
         List<CarNumVo> carNumVos = carNumMapper.queryComplex(queryVo.getCarType() == null ? null : queryVo.getCarType().getValue(),
                 queryVo.getCarNum(), queryVo.getStartTime(), queryVo.getEndTime(),queryVo.getCarTypeLimit(),
                 (queryVo.getPage() - 1) * queryVo.getLimit(), queryVo.getLimit());
