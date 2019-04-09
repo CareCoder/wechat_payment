@@ -75,8 +75,12 @@ public class CarNumController {
         accessTypes = accessTypes.stream().filter(e -> e.getChannelTypeId() % 2 == 1).collect(Collectors.toList());
         model.addAttribute("accessTypes", accessTypes);
 
-        model.addAttribute("maxPage", Math.ceil((double)(pageResponse.getCount() / 4)));
+        model.addAttribute("maxPage", Math.ceil((double)pageResponse.getCount() / 4));
         return "/backend/tempcarinfo";
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Math.ceil((double)7 / 4));
     }
 
     @RequestMapping("/inner/car-info.html")
