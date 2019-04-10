@@ -119,7 +119,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
 
                 carNumMapper.save(saveVo);
                 fileResourceService.upload(file, uuid);
-                deleteUnleaveCar(carNumVo.getCarNum(), carNumVo.getTime());
+                deleteUnleaveCar(carNumVo.getShortCarNum(), carNumVo.getTime());
             } catch (Exception e) {
                 log.error("upload error",e);
                 status = Status.ERROR;
@@ -131,8 +131,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     /**
      * 兼容处理,如果还有同车牌车未出场,则让之出场
      */
-    private void deleteUnleaveCar(String carNum, Long time) {
-        carNumMapper.deleteUnleaveCar(carNum, time);
+    private void deleteUnleaveCar(String shortCarNum, Long time) {
+        carNumMapper.deleteUnleaveCar(shortCarNum, time);
     }
 
     public ResponseEntity<byte[]> download(CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
@@ -290,7 +290,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
 
             delete(id);
             //同时删除异常数据
-            carNumMapper.deleteExceptionData(carNumVo.getCarNum());
+            carNumMapper.deleteExceptionData(carNumVo.getShortCarNum());
 
             if (! flag) {
                 Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
