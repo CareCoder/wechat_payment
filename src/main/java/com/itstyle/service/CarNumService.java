@@ -77,6 +77,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                     saveVo = find.get(0);
                 }
             }
+            carNumVo.buildShortCarNum();
             carNumVo.setCarNumExtVos(null);//为下一个copy属性准备
             BeanUtilIgnore.copyPropertiesIgnoreNull(carNumVo, saveVo);
             //现在可以重复上传了，所以如果上传的type相同，则把之前的删除了。

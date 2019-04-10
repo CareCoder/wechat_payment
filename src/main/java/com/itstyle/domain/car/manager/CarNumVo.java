@@ -5,6 +5,7 @@ import com.itstyle.domain.car.manager.enums.CarNumExtVo;
 import com.itstyle.domain.car.manager.enums.CarNumType;
 import com.itstyle.domain.car.manager.enums.CarType;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ public class CarNumVo{
     private Long id;
 
     private String carNum;
+    private String shortCarNum;//省去省份的车牌号码
     private CarType carType;
     private CarColor carColor;
     private Integer fee;
@@ -79,5 +81,11 @@ public class CarNumVo{
             return;
         }
         this.enterWay = enterWay;
+    }
+
+    public void buildShortCarNum() {
+        if (StringUtils.isNotEmpty(carNum)) {
+            shortCarNum = carNum.substring(1);
+        }
     }
 }
