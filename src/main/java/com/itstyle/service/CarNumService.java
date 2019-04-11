@@ -103,6 +103,13 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                         saveVo.setStopTime(carNumVo.getLTime() - carNumVo.getTime());
                     }
                 }
+                //如果上传了金额,代表已经收费了,并且离场
+                if (carNumVo.getFee() != null) {
+                    saveVo.setFee(carNumVo.getFee());
+                    saveVo.setRecord(true);
+                    chargeRecord(saveVo, "纸币机");
+                }
+
                 carNumMapper.save(saveVo);
                 fileResourceService.upload(file, uuid);
                 deleteUnleaveCar(carNumVo.getCarNum(), carNumVo.getTime());
@@ -214,7 +221,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         carNumVo.setLTime(System.currentTimeMillis());
         carNumMapper.save(carNumVo);
         //生成明细
-        chargeRecord(carNumVo, account);
+        chargeRecord(carNumVo, account.getUsername() == null ? "" : account.getUsername());
         //通过socket通知所有客户端
         WebSocketData webSocketData = new WebSocketData();
         webSocketData.setAction(WebSocketAction.TEMPCARINFO_PAYMENT_CONFIRM);
@@ -231,11 +238,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         return info;
     }
 
-    private void chargeRecord(CarNumVo carNumVo, Account account) {
-        String username = "";
-        if (account != null) {
-            username = account.getUsername();
-        }
+    private void chargeRecord(CarNumVo carNumVo, String username) {
         ChargeRecord chargeRecord = new ChargeRecord();
         chargeRecord.setCarNum(carNumVo.getCarNum());
         chargeRecord.setCarType(CarType.TEMP_CAR_A);
