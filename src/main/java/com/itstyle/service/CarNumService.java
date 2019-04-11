@@ -8,10 +8,7 @@ import com.itstyle.domain.account.Account;
 import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.CarNumQueryVo;
 import com.itstyle.domain.car.manager.CarNumVo;
-import com.itstyle.domain.car.manager.enums.CarNumExtVo;
-import com.itstyle.domain.car.manager.enums.CarType;
-import com.itstyle.domain.car.manager.enums.ChargeType;
-import com.itstyle.domain.car.manager.enums.WebSocketAction;
+import com.itstyle.domain.car.manager.enums.*;
 import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.handler.MyTextWebSocketHandler;
@@ -104,7 +101,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                     }
                 }
                 //如果上传了金额,代表已经收费了,并且离场
-                if (carNumVo.getFee() != null) {
+                if (carNumVo.getFee() != null && carNumExtVo.getCarNumType() == CarNumType.LEAVE_BIG) {
                     saveVo.setFee(carNumVo.getFee());
                     saveVo.setRecord(true);
                     chargeRecord(saveVo, "纸币机");
