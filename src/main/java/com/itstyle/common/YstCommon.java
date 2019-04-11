@@ -14,7 +14,7 @@ public class YstCommon {
 	// 第三方用户唯一ID
 	public static String APPID = "wxeae418507d27aeeb";
 	// 第三方用户唯一凭证密码
-	public static String APP_SECRET = "4736f21c4eec49efe9bce00f249f82f9";
+	public static String APP_SECRET = "99a657740f6e19a4d546b17d8f0a47c2";
 	// 商户ID
 	public static String MCH_ID = "1271069001";
 	// 微信商户平台-账户设置-安全设置-api安全,配置32位key
