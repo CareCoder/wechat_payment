@@ -11,6 +11,7 @@ import com.itstyle.domain.feesettings.StandardCharges;
 import com.itstyle.domain.feesettings.response.FeeTestResponse;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.utils.enums.Status;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -59,6 +60,9 @@ public class FeeTestService {
 
     public Response byCharges(Integer carType, Long start, Long end) {
         String result = redisDao.hget(YstCommon.BY_CHARGES, mapperCarTyep.get(carType));
+        if (StringUtils.isEmpty(result)) {
+            result = redisDao.hget(YstCommon.BY_CHARGES, mapperCarTyep.get(0));
+        }
         ByCharges byCharges = gson.fromJson(result, ByCharges.class);
         if (start == null) {
             //如果客户端没上传入场信息,则按首段时间收费
@@ -74,6 +78,9 @@ public class FeeTestService {
 
     public Response standardCharges(Integer carType, Long start, Long end) {
         String result = redisDao.hget(YstCommon.STANDARD_CHARGES, mapperCarTyep.get(carType));
+        if (StringUtils.isEmpty(result)) {
+            result = redisDao.hget(YstCommon.STANDARD_CHARGES, mapperCarTyep.get(0));
+        }
         StandardCharges standardCharges = gson.fromJson(result, StandardCharges.class);
         if (start == null) {
             //如果客户端没上传入场信息,则按首段时间收费
@@ -89,6 +96,9 @@ public class FeeTestService {
 
     public Response szCharges(Integer carType, Long start, Long end) {
         String result = redisDao.hget(YstCommon.SZ_CHARGES, mapperCarTyep.get(carType));
+        if (StringUtils.isEmpty(result)) {
+            result = redisDao.hget(YstCommon.SZ_CHARGES, mapperCarTyep.get(0));
+        }
         SZCharges szCharges = gson.fromJson(result, SZCharges.class);
         if (start == null) {
             //如果客户端没上传入场信息,则按首段时间收费
