@@ -19,7 +19,7 @@ public interface CarNumMapper extends JpaRepository<CarNumVo, Long>, JpaSpecific
             " and if(?3 is not null,?3 <= time, 1 = 1 ) " +
             " and if(?4 is not null,?4 >= time, 1 = 1 ) " +
             " and if(?5 is not null,car_type<=?5, 1 = 1 ) " +
-            " and if(?6 is not null,record = 1, 1 = 1 ) " +
+            " and if(?6 is not null,record is null, 1 = 1 ) " +
             " ORDER BY id DESC limit ?7, ?8" ,nativeQuery = true)
     List<CarNumVo> queryComplex(Integer carType, String carNum, Long startTime, Long endTime, Integer carTypeLimit, Boolean record, Integer page, Integer limit);
 
@@ -29,7 +29,7 @@ public interface CarNumMapper extends JpaRepository<CarNumVo, Long>, JpaSpecific
             " and if(?3 is not null,car_type<=?3, 1 = 1 ) " +
             " and if(?4 is not null,?4 <= time, 1 = 1 ) " +
             " and if(?5 is not null,?5 >= time, 1 = 1 ) " +
-            " and if(?6 is not null,record = 1, 1 = 1 ) ) as c", nativeQuery = true)
+            " and if(?6 is not null,record is null, 1 = 1 ) ) as c", nativeQuery = true)
     Long distincCount(Integer carType, String carNum, Integer carTypeLimit, Long startTime, Long endTime, Boolean record);
 
     @Modifying
