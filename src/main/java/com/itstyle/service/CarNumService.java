@@ -229,7 +229,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         TempCarInfoPayMentConfirm data = new TempCarInfoPayMentConfirm();
         data.carNum = carNumVo.getCarNum();
         data.fee = carNumVo.getFee();
-        data.payTime = carNumVo.getLTime();
+        data.payTime = carNumVo.getLTime() == null ? System.currentTimeMillis() : carNumVo.getLTime();
         webSocketData.setData(data);
         MyTextWebSocketHandler.sendMessageToAllUser(gson.toJson(webSocketData));
 //        //删除所有异常数据 PS:异常数据具体就是删除这个车牌下面所有没有离场的
