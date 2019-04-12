@@ -64,6 +64,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
 
     public int upload(MultipartFile file, CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
         synchronized (UPLOAD_LOCK) {
+            log.info("CarNumService upload carNumVo = {}, carNumExtVo = {}", gson.toJson(carNumVo), gson.toJson(carNumExtVo));
             int status = Status.NORMAL;
             String uuid = UUID.randomUUID().toString();
             carNumExtVo.setUuid(uuid);
