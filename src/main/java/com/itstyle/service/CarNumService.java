@@ -304,10 +304,10 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         }
         log.info("CarNumService queryComplex queryVo = {}", gson.toJson(queryVo));
         List<CarNumVo> carNumVos = carNumMapper.queryComplex(queryVo.getCarType() == null ? null : queryVo.getCarType().getValue(),
-                queryVo.getCarNum(), queryVo.getStartTime(), queryVo.getEndTime(),queryVo.getCarTypeLimit(),
+                queryVo.getCarNum(), queryVo.getStartTime(), queryVo.getEndTime(),queryVo.getCarTypeLimit(),queryVo.getRecord(),
                 (queryVo.getPage() - 1) * queryVo.getLimit(), queryVo.getLimit());
         Long count = carNumMapper.distincCount(queryVo.getCarType() == null ? null : queryVo.getCarType().getValue(),
-                queryVo.getCarNum(), queryVo.getCarTypeLimit(), queryVo.getStartTime(), queryVo.getEndTime());
+                queryVo.getCarNum(), queryVo.getCarTypeLimit(), queryVo.getStartTime(), queryVo.getEndTime(), queryVo.getRecord());
         return new PageResponse<>(0, "", count, carNumVos);
     }
 }
