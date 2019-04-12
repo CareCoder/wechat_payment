@@ -232,9 +232,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         data.payTime = carNumVo.getLTime();
         webSocketData.setData(data);
         MyTextWebSocketHandler.sendMessageToAllUser(gson.toJson(webSocketData));
-        //删除所有异常数据 PS:异常数据具体就是删除这个车牌下面所有没有离场的
-        Integer deleteCount = carNumMapper.deleteExceptionData(carNumVo.getCarNum());
-        log.info("tempcarinfoPaymentConfirm deleteCount = {}", deleteCount);
+//        //删除所有异常数据 PS:异常数据具体就是删除这个车牌下面所有没有离场的
+//        Integer deleteCount = carNumMapper.deleteExceptionData(carNumVo.getCarNum());
+//        log.info("tempcarinfoPaymentConfirm deleteCount = {}", deleteCount);
         log.info("tempcarinfoPaymentConfirm info = {} id = {}", info, id);
         return info;
     }
@@ -246,7 +246,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         chargeRecord.setCarRealType(carNumVo.getCarType());
         chargeRecord.setChargeType(ChargeType.CASH_PAYMENT);
         chargeRecord.setEnterTime(carNumVo.getTime());
-        chargeRecord.setLeaveTime(carNumVo.getLTime());
+        chargeRecord.setLeaveTime(carNumVo.getLTime() == null ? System.currentTimeMillis() : carNumVo.getLTime());
         chargeRecord.setFee(carNumVo.getFee());
         chargeRecord.setChargePersonnel(username);
         chargeRecordService.upload(chargeRecord);
