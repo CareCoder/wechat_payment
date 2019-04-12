@@ -50,7 +50,7 @@ public class CarNumVo{
     public CarNumVo buildQueryVo() {
         CarNumVo vo = new CarNumVo();
         vo.setCarNum(this.carNum);
-        vo.setCarType(this.carType);
+//        vo.setCarType(this.carType);
         vo.setTime(this.time);
         return vo;
     }
