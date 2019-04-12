@@ -53,7 +53,7 @@ public class CarNumController {
         if (queryVo.getPage() <= 0) {
             queryVo.setPage(1);
         }
-//        queryVo.setRecord(false);//已经缴费的不在显示
+        queryVo.setRecord(false);//已经缴费的不在显示
 //        queryVo.setLeave(false);
         queryVo.setCarTypeLimit(CarType.TEMP_CAR_D.getValue());//限制为只查询临时车
         PageResponse pageResponse = carNumService.queryComplex(queryVo);
