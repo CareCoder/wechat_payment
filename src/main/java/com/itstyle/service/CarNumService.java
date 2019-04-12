@@ -103,8 +103,11 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 //如果上传了金额,代表已经收费了,并且离场
                 if (carNumVo.getFee() != null && carNumExtVo.getCarNumType() == CarNumType.LEAVE_BIG) {
                     saveVo.setFee(carNumVo.getFee());
-                    saveVo.setRecord(true);
-                    chargeRecord(saveVo, "纸币机");
+                    if (!saveVo.getRecord()) {
+                        //如果不是网页缴费,网页缴费会提前把记录生成
+                        saveVo.setRecord(true);
+                        chargeRecord(saveVo, "纸币机");
+                    }
                 }
 
                 carNumMapper.save(saveVo);
@@ -215,7 +218,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         String info = "放行成功";
         CarNumVo carNumVo = carNumMapper.getOne(id);
         carNumVo.setRecord(true);
-        carNumVo.setLTime(System.currentTimeMillis());
+        //这里服务器不设置离场时间,由客户端重新上传数据
+        //carNumVo.setLTime(System.currentTimeMillis());
         carNumMapper.save(carNumVo);
         //生成明细
         chargeRecord(carNumVo, account.getUsername() == null ? "" : account.getUsername());
