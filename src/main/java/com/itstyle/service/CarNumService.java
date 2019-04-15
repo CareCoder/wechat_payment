@@ -66,9 +66,6 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         synchronized (UPLOAD_LOCK) {
             log.info("CarNumService upload carNumVo = {}, carNumExtVo = {}", gson.toJson(carNumVo), gson.toJson(carNumExtVo));
             int status = Status.NORMAL;
-
-            carNumVo.rebuild();
-
             String uuid = UUID.randomUUID().toString();
             carNumExtVo.setUuid(uuid);
             List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo.buildQueryVo()));
@@ -78,6 +75,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                     saveVo = find.get(0);
                 }
             }
+            carNumVo.buildShortCarNum();
             carNumVo.setCarNumExtVos(null);//为下一个copy属性准备
             BeanUtilIgnore.copyPropertiesIgnoreNull(carNumVo, saveVo);
             //现在可以重复上传了，所以如果上传的type相同，则把之前的删除了。
@@ -121,7 +119,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
 
                 carNumMapper.save(saveVo);
                 fileResourceService.upload(file, uuid);
-                deleteUnleaveCar(carNumVo.getCarNum(), carNumVo.getTime());
+                deleteUnleaveCar(carNumVo.getShortCarNum(), carNumVo.getTime());
             } catch (Exception e) {
                 log.error("upload error",e);
                 status = Status.ERROR;
@@ -133,8 +131,8 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     /**
      * 兼容处理,如果还有同车牌车未出场,则让之出场
      */
-    private void deleteUnleaveCar(String carNum, Long time) {
-        carNumMapper.deleteUnleaveCar(carNum, time);
+    private void deleteUnleaveCar(String shortCarNum, Long time) {
+        carNumMapper.deleteUnleaveCar(shortCarNum, time);
     }
 
     public ResponseEntity<byte[]> download(CarNumVo carNumVo, CarNumExtVo carNumExtVo) {
@@ -292,7 +290,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
 
             delete(id);
             //同时删除异常数据
-            carNumMapper.deleteExceptionData(carNumVo.getCarNum());
+            carNumMapper.deleteExceptionData(carNumVo.getShortCarNum());
 
             if (! flag) {
                 Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);
