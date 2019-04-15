@@ -13,7 +13,7 @@ public interface CarNumMapper extends JpaRepository<CarNumVo, Long>, JpaSpecific
     @Query(value = "select COUNT(1) AS total FROM car_num as cn GROUP BY DAY(from_unixtime(cn.time/1000)) ORDER BY cn.time desc LIMIT 0 , ?1", nativeQuery = true)
     List<Object> statisticsAccess(Integer count);
 
-    @Query(value = "SELECT * FROM car_num cn WHERE id IN ( SELECT MAX(id) FROM car_num WHERE l_time IS NULL GROUP BY car_num )" +
+    @Query(value = "SELECT * FROM car_num cn WHERE id IN ( SELECT MAX(id) FROM car_num WHERE l_time IS NULL GROUP BY short_car_num )" +
             " and if(?1 is not null,car_type=?1 , 1 = 1 ) " +
             " and if(?2 is not null,car_num like CONCAT('%',?2,'%') , 1 = 1 ) " +
             " and if(?3 is not null,?3 <= time, 1 = 1 ) " +
@@ -23,7 +23,7 @@ public interface CarNumMapper extends JpaRepository<CarNumVo, Long>, JpaSpecific
             " ORDER BY id DESC limit ?7, ?8" ,nativeQuery = true)
     List<CarNumVo> queryComplex(Integer carType, String carNum, Long startTime, Long endTime, Integer carTypeLimit, Boolean record, Integer page, Integer limit);
 
-    @Query(value = "SELECT count(1) from (SELECT DISTINCT car_num from car_num cn where cn.l_time is null " +
+    @Query(value = "SELECT count(1) from (SELECT DISTINCT short_car_num from car_num cn where cn.l_time is null " +
             " and if(?1 is not null,car_type=?1 , 1 = 1 ) " +
             " and if(?2 is not null,car_num like CONCAT('%',?2,'%') , 1 = 1 ) " +
             " and if(?3 is not null,car_type<=?3, 1 = 1 ) " +
@@ -34,12 +34,12 @@ public interface CarNumMapper extends JpaRepository<CarNumVo, Long>, JpaSpecific
 
     @Modifying
     @Transactional
-    @Query("delete from CarNumVo vo where vo.lTime is null and vo.carNum = ?1")
-    Integer deleteExceptionData(String carNum);
+    @Query("delete from CarNumVo vo where vo.lTime is null and vo.shortCarNum = ?1")
+    Integer deleteExceptionData(String shortCarNum);
 
     @Modifying
     @Transactional
-    @Query("delete from CarNumVo vo where vo.lTime is null and vo.carNum = ?1 and vo.time < ?2")
-    void deleteUnleaveCar(String carNum, Long time);
+    @Query("delete from CarNumVo vo where vo.lTime is null and vo.shortCarNum = ?1 and vo.time < ?2")
+    void deleteUnleaveCar(String shortCarNum, Long time);
 
 }
