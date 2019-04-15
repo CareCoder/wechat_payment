@@ -104,7 +104,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 //如果上传了金额,代表已经收费了,并且离场
                 if (carNumVo.getFee() != null && carNumExtVo.getCarNumType() == CarNumType.LEAVE_BIG) {
                     saveVo.setFee(carNumVo.getFee());
-                    if (!saveVo.getRecord()) {
+                    if (saveVo.getRecord() == null || !saveVo.getRecord()) {
                         //如果不是网页缴费,网页缴费会提前把记录生成
                         saveVo.setRecord(true);
                         chargeRecord(saveVo, "纸币机");
