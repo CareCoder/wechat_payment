@@ -110,7 +110,10 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                         chargeRecord(saveVo, "纸币机");
                     }else{
                         //纸币机补缴
-                        chargeRecord(saveVo, "纸币机补缴");
+                        //如果补缴金额是0,则不生成记录
+                        if (saveVo.getFee() <= 0) {
+                            chargeRecord(saveVo, "纸币机补缴");
+                        }
                     }
                 }
 
