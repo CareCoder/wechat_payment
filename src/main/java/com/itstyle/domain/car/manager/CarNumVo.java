@@ -22,7 +22,7 @@ public class CarNumVo{
     private Long id;
 
     private String carNum;
-    private String shortCarNum;//省去省份的车牌号码
+    private String completeCarNum;//省去省份的车牌号码
     private CarType carType;
     private CarColor carColor;
     private Integer fee;
@@ -83,9 +83,10 @@ public class CarNumVo{
         this.enterWay = enterWay;
     }
 
-    public void buildShortCarNum() {
+    public void rebuild() {
+        completeCarNum = carNum;
         if (StringUtils.isNotEmpty(carNum)) {
-            shortCarNum = carNum.substring(1);
+            carNum = carNum.substring(1);
         }
     }
 }
