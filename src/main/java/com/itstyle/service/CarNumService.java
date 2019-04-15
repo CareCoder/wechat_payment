@@ -108,6 +108,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                         //如果不是网页缴费,网页缴费会提前把记录生成
                         saveVo.setRecord(true);
                         chargeRecord(saveVo, "纸币机");
+                    }else{
+                        //纸币机补缴
+                        chargeRecord(saveVo, "纸币机补缴");
                     }
                 }
 
