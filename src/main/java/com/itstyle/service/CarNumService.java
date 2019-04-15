@@ -66,6 +66,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         synchronized (UPLOAD_LOCK) {
             log.info("CarNumService upload carNumVo = {}, carNumExtVo = {}", gson.toJson(carNumVo), gson.toJson(carNumExtVo));
             int status = Status.NORMAL;
+
+            carNumVo.rebuild();
+
             String uuid = UUID.randomUUID().toString();
             carNumExtVo.setUuid(uuid);
             List<CarNumVo> find = carNumMapper.findAll(Example.of(carNumVo.buildQueryVo()));
@@ -75,7 +78,6 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                     saveVo = find.get(0);
                 }
             }
-            carNumVo.buildShortCarNum();
             carNumVo.setCarNumExtVos(null);//为下一个copy属性准备
             BeanUtilIgnore.copyPropertiesIgnoreNull(carNumVo, saveVo);
             //现在可以重复上传了，所以如果上传的type相同，则把之前的删除了。
