@@ -135,7 +135,8 @@ public class WxPayAllController {
 			}
 		} catch (Exception e) {
 			log.error("微信回调出错{}", e);
-			return null;
+			return "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
+					+ "<return_msg><![CDATA[FAIL]]></return_msg>" + "</xml> ";
 		}
 	}
 
