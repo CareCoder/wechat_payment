@@ -27,8 +27,7 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
     public static final String WEB_SOCKET_USERNAME = "WEB_SOCKET_USERNAME";
     public static final String WEB_SOCKET_PASS_TYPE = "WEB_SOCKET_PASS_TYPE";
 
-    @Resource
-    private Gson gson;
+    private static Gson gson = new Gson();
     @Resource
     private ExternalInterfaceService externalInterfaceService;
 
@@ -107,11 +106,17 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
      */
     private static int sendMessageToUser(String username, TextMessage message) {
         log.info("send （" + username + "）one message：" + message);
-        WebSocketSession user = users.get(username).webSocketSession;
-        if (user == null) {
-            return Status.USER_OFFLINE;
+        try {
+            WebSocketSession user = users.get(username).webSocketSession;
+            if (user == null) {
+                return Status.USER_OFFLINE;
+            }
+            doSendMessage(user, message);
+        } catch (Exception e) {
+            log.info("sendMessageToUser user map = {}", gson.toJson(users));
+            log.error("sendMessageToUser error", e);
         }
-        doSendMessage(user, message);
+
         return Status.NORMAL;
     }
 
