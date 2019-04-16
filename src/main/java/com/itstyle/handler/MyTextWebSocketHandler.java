@@ -106,12 +106,12 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
      * 给某个用户发送消息
      */
     private static int sendMessageToUser(String username, TextMessage message) {
+        log.info("send （" + username + "）one message：" + message);
         WebSocketSession user = users.get(username).webSocketSession;
         if (user == null) {
             return Status.USER_OFFLINE;
         }
         doSendMessage(user, message);
-        log.info("send （" + username + "）one message：" + message);
         return Status.NORMAL;
     }
 

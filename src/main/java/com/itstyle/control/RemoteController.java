@@ -40,6 +40,7 @@ public class RemoteController {
     @PostMapping("/gate/oper")
     @ResponseBody
     public int gateOper(String passName, GateOperType gateOperType) {
+        log.info("RemoteController gateOper passName = {}, gateOperType = {}", passName, gateOperType);
         WebSocketData data = new WebSocketData();
         data.setAction(WebSocketAction.REMOTE_GATE);
         data.setData(gateOperType.toString());
