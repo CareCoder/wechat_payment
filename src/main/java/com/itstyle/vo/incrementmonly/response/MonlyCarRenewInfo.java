@@ -14,6 +14,8 @@ public class MonlyCarRenewInfo {
 
     public Integer monlyCarPlateColor;//	月卡车辆车牌颜色(蓝/黄/黑)
 
+    public Integer vehicleType; //月租车里面的哪一种车辆类型
+
     public static MonlyCarRenewInfo convert(MonthCarInfo monthCarInfo) {
         MonlyCarRenewInfo mcri = new MonlyCarRenewInfo();
         mcri.plateID = monthCarInfo.getCarNum();
@@ -21,6 +23,7 @@ public class MonlyCarRenewInfo {
         mcri.monlyCardTimeEnd = DateUtil.format(monthCarInfo.getEndTime());
         mcri.monlyCardTimeRenew = DateUtil.format(System.currentTimeMillis());
         mcri.monlyCarPlateColor = monthCarInfo.getCarColor() != null ? monthCarInfo.getCarColor().ordinal() : null;
+        mcri.vehicleType = monthCarInfo.getCarType() != null ? monthCarInfo.getCarType().ordinal() : null;
         return mcri;
     }
 }
