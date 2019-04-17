@@ -134,7 +134,7 @@
                 type : "POST",
                 data : data.field,
                 success : function(resp){
-                    $("#statistics_fee").html(parseInt(resp.totleFee, 10) / 100);
+                    $("#statistics_fee").html(resp.totleFee);
                 }
             });
 
@@ -155,7 +155,7 @@
             url: '/report/charge/statistics?carType=' + carType,
             type : "POST",
             success : function(resp){
-                $("#statistics_fee").html(parseInt(resp.totleFee, 10) / 100);
+                $("#statistics_fee").html(resp.totleFee);
             }
         });
     })
