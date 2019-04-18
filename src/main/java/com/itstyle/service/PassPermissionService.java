@@ -23,4 +23,7 @@ public interface PassPermissionService {
 
     AccessType getAccessTypeId(Long id);
 
+    void generateDefault(Long accessTypeId);
+
+    void deleteByAccessTypeId(Long accessTypeId);
 }

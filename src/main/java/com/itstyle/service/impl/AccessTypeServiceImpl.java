@@ -9,6 +9,7 @@ import com.itstyle.exception.BusinessException;
 import com.itstyle.mapper.AccessTypeMapper;
 import com.itstyle.mapper.ChannelTypeMapper;
 import com.itstyle.service.AccessTypeService;
+import com.itstyle.service.PassPermissionService;
 import com.itstyle.utils.BeanUtilIgnore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,13 @@ public class AccessTypeServiceImpl implements AccessTypeService {
 
     private AccessTypeMapper accessTypeMapper;
     private ChannelTypeMapper channelTypeMapper;
+    private PassPermissionService passPermissionService;
 
     @Autowired
-    public AccessTypeServiceImpl(AccessTypeMapper accessTypeMapper, ChannelTypeMapper channelTypeMapper) {
+    public AccessTypeServiceImpl(AccessTypeMapper accessTypeMapper, ChannelTypeMapper channelTypeMapper, PassPermissionService passPermissionService) {
         this.accessTypeMapper = accessTypeMapper;
         this.channelTypeMapper = channelTypeMapper;
+        this.passPermissionService = passPermissionService;
     }
 
     @Override
@@ -53,7 +56,9 @@ public class AccessTypeServiceImpl implements AccessTypeService {
     public void save(AccessType accessType) {
         List<AccessType> byChannelName = accessTypeMapper.findByChannelName(accessType.getChannelName());
         AssertUtil.assertTrue(byChannelName.size() == 0, () -> new BusinessException("通道名称已存在，请重新添加"));
-        accessTypeMapper.save(accessType);
+        AccessType save = accessTypeMapper.save(accessType);
+        //添加成功后,设置默认的权限
+        passPermissionService.generateDefault(save.getId());
     }
 
     @Override
@@ -72,6 +77,8 @@ public class AccessTypeServiceImpl implements AccessTypeService {
     public AccessType delete(Long id) {
         AccessType one = accessTypeMapper.getOne(id);
         accessTypeMapper.delete(id);
+        //同时删除关联
+        passPermissionService.deleteByAccessTypeId(id);
         return one;
     }
 
