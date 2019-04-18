@@ -107,5 +107,23 @@ public class PassPermissionServiceImpl implements PassPermissionService {
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public void generateDefault(Long accessTypeId) {
+        PassCarStatus passCarStatus = new PassCarStatus();
+        passCarStatus.setAccessTypeId(accessTypeId);
+        passCarStatus.setBlackCar(1);
+        passCarStatus.setBlueCar(1);
+        passCarStatus.setGreenCar(1);
+        passCarStatus.setYellowCar(1);
+        passCarStatus.setMonlyCar_A(1);
+        passCarStatus.setMonlyCar_B(1);
+        passCarStatus.setMonlyCar_C(1);
+        passCarStatus.setSpecialCar(1);
+        save(passCarStatus);
+    }
 
+    @Override
+    public void deleteByAccessTypeId(Long accessTypeId) {
+        passPermissionMapper.deleteByAccessTypeId(accessTypeId);
+    }
 }
