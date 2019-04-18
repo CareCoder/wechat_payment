@@ -1,6 +1,7 @@
 package com.itstyle.domain.report;
 
 import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.ChargeSituation;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import lombok.Data;
 
@@ -38,14 +39,19 @@ public class ChargeRecord {
     private Integer fee;
 
     /**
-     * 应收金额
-     */
-    private Integer receivableFee;
-
-    /**
      * 收费类型
      */
     private ChargeType chargeType;
+
+    /**
+     * 收费情况
+     */
+    private ChargeSituation chargeSituation;
+
+    /**
+     * 应收金额
+     */
+    private Integer receivableFee;
 
     /**
      * 折扣金额

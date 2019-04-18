@@ -98,7 +98,7 @@
                     {field: 'discountAmount', title: '优惠金额', width: 100},
                     {field: 'fee', title: '实收金额', width: 100, templet: '#feeTemp'},
                     {field: 'chargeType', title: '收费类型', width: 100, templet: '#chargeTypeTemp'},
-                    {title: '收费情况', width: 100},
+                    {field: 'chargeSituation',title: '收费情况', width: 100, templet: '#chargeSituation'},
                     {field: 'chargePersonnel', title: '收费人员', width: 100}
                 ]
             ],
@@ -201,6 +201,23 @@
 <script type="text/html" id="feeTemp">
     {{#
     return parseInt(d.fee, 10) / 100;
+    }}
+</script>
+
+<script type="text/html" id="chargeSituation">
+    {{#
+    if(d.carRealType == "FREE_TIME"){
+    return "免费时长";
+    }else if(d.carRealType == "NORMAL_CHARGE"){
+    return "正常收费";
+    }else if(d.carRealType == "OVERTIME_CHARGE"){
+    return "超时收费";
+    }else if(d.carRealType == "CEILING"){
+    return "最高限额";
+    }else{
+    return "";
+    }
+
     }}
 </script>
 </body>

@@ -1,9 +1,6 @@
 package com.itstyle.domain.car.manager;
 
-import com.itstyle.domain.car.manager.enums.CarColor;
-import com.itstyle.domain.car.manager.enums.CarNumExtVo;
-import com.itstyle.domain.car.manager.enums.CarNumType;
-import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.*;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicUpdate;
@@ -26,6 +23,20 @@ public class CarNumVo{
     private CarType carType;
     private CarColor carColor;
     private Integer fee;
+    /**
+     * 收费情况
+     */
+    private ChargeSituation chargeSituation;
+
+    /**
+     * 应收金额
+     */
+    private Integer receivableFee;
+
+    /**
+     * 折扣金额
+     */
+    private Integer discountAmount;
     private Long time;
     private String enterPass;
     private String leavePass;
