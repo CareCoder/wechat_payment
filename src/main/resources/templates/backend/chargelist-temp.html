@@ -200,18 +200,21 @@
 
 <script type="text/html" id="feeTemp">
     {{#
+    if(d.fee == null) return "";
     return parseInt(d.fee, 10) / 100;
     }}
 </script>
 
 <script type="text/html" id="receivableFee">
     {{#
+    if(d.receivableFee == null) return "";
     return parseInt(d.receivableFee, 10) / 100;
     }}
 </script>
 
 <script type="text/html" id="discountAmount">
     {{#
+    if(d.discountAmount == null) return "";
     return parseInt(d.discountAmount, 10) / 100;
     }}
 </script>
