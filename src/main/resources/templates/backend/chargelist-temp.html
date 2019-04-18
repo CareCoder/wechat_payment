@@ -204,15 +204,27 @@
     }}
 </script>
 
+<script type="text/html" id="receivableFee">
+    {{#
+    return parseInt(d.receivableFee, 10) / 100;
+    }}
+</script>
+
+<script type="text/html" id="discountAmount">
+    {{#
+    return parseInt(d.discountAmount, 10) / 100;
+    }}
+</script>
+
 <script type="text/html" id="chargeSituation">
     {{#
-    if(d.carRealType == "FREE_TIME"){
+    if(d.chargeSituation == "FREE_TIME"){
     return "免费时长";
-    }else if(d.carRealType == "NORMAL_CHARGE"){
+    }else if(d.chargeSituation == "NORMAL_CHARGE"){
     return "正常收费";
-    }else if(d.carRealType == "OVERTIME_CHARGE"){
+    }else if(d.chargeSituation == "OVERTIME_CHARGE"){
     return "超时收费";
-    }else if(d.carRealType == "CEILING"){
+    }else if(d.chargeSituation == "CEILING"){
     return "最高限额";
     }else{
     return "";
