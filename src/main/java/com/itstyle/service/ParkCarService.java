@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.itstyle.common.YstCommon;
 import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.ChargeSituation;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.park.ParkCar;
 import com.itstyle.domain.park.ParkCarOrder;
@@ -225,6 +226,9 @@ public class ParkCarService {
         chargeRecord.setFee(order.fee);
         chargeRecord.setLeaveTime(System.currentTimeMillis());
         chargeRecord.setChargePersonnel(null);
+        chargeRecord.setChargeSituation(ChargeSituation.NORMAL_CHARGE);
+        chargeRecord.setReceivableFee(chargeRecord.getFee());
+        chargeRecord.setDiscountAmount(0);
         chargeRecordService.upload(chargeRecord);
     }
 

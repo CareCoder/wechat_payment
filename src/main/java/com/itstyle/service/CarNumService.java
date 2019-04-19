@@ -256,9 +256,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         chargeRecord.setLeaveTime(carNumVo.getLTime() == null ? System.currentTimeMillis() : carNumVo.getLTime());
         chargeRecord.setFee(carNumVo.getFee());
         chargeRecord.setChargePersonnel(username);
-        chargeRecord.setChargeSituation(carNumVo.getChargeSituation());
-        chargeRecord.setReceivableFee(carNumVo.getReceivableFee());
-        chargeRecord.setDiscountAmount(carNumVo.getDiscountAmount());
+        chargeRecord.setChargeSituation(carNumVo.getChargeSituation() == null ? ChargeSituation.NORMAL_CHARGE : carNumVo.getChargeSituation());
+        chargeRecord.setReceivableFee(carNumVo.getReceivableFee() == null ? carNumVo.getFee() : carNumVo.getReceivableFee());
+        chargeRecord.setDiscountAmount(carNumVo.getDiscountAmount() == null ? 0 : carNumVo.getDiscountAmount());
         chargeRecordService.upload(chargeRecord);
     }
 
