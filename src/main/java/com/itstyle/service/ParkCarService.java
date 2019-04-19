@@ -225,7 +225,7 @@ public class ParkCarService {
         chargeRecord.setEnterTime(order.enterTime);
         chargeRecord.setFee(order.fee);
         chargeRecord.setLeaveTime(System.currentTimeMillis());
-        chargeRecord.setChargePersonnel(null);
+        chargeRecord.setChargePersonnel("微信支付");
         chargeRecord.setChargeSituation(ChargeSituation.NORMAL_CHARGE);
         chargeRecord.setReceivableFee(chargeRecord.getFee());
         chargeRecord.setDiscountAmount(0);
