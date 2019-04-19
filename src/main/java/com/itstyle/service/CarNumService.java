@@ -251,7 +251,11 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
         chargeRecord.setCarNum(carNumVo.getCarNum());
         chargeRecord.setCarType(CarType.TEMP_CAR_A);
         chargeRecord.setCarRealType(carNumVo.getCarType());
-        chargeRecord.setChargeType(ChargeType.CASH_PAYMENT);
+        if ("微信支付".equals(username)) {
+            chargeRecord.setChargeType(ChargeType.ONLINE_PAYMENT);
+        }else{
+            chargeRecord.setChargeType(ChargeType.CASH_PAYMENT);
+        }
         chargeRecord.setEnterTime(carNumVo.getTime());
         chargeRecord.setLeaveTime(carNumVo.getLTime() == null ? System.currentTimeMillis() : carNumVo.getLTime());
         chargeRecord.setFee(carNumVo.getFee());

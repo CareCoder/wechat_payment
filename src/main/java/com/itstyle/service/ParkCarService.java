@@ -61,7 +61,7 @@ public class ParkCarService {
     /**
       上传车辆信息
      */
-    public int uploadBill(String mcNo, String carNo, Long operTime, Integer fee, String openId, Long enterTime,CarType carType) {
+    public int uploadBill(String mcNo, String carNo, Long operTime, Integer fee, String openId, Long enterTime,CarType carType,ChargeSituation chargeSituation) {
         log.info("[ParkCarService] uploadBill mcNo = {}, carNo = {}, operTime= {}, fee = {}, openId = {}, carType={}"
                 , mcNo, carNo, operTime, fee, openId,carType);
         try {
@@ -72,6 +72,7 @@ public class ParkCarService {
             order.fee = fee;
             order.enterTime = enterTime;
             order.carType = carType;
+            order.chargeSituation = chargeSituation;
             writeRedisOrder(openId, order);
             TemplateUtils.createOrder(queryPay(openId), assessTokenTask.getAssessToken(), false);
         } catch (Exception e) {
@@ -186,7 +187,10 @@ public class ParkCarService {
             writeRedis(parkCar.mcNo, parkCars);
             TemplateUtils.createOrder(queryPay(openId), assessTokenTask.getAssessToken(), true);
             //上传费用记录
-            chargeRecode(order);
+            if (order.chargeSituation == null || order.chargeSituation != ChargeSituation.OVERTIME_CHARGE) {
+                //未上传收费类型 或者 收费类型不是超时收费就生成记录
+                chargeRecode(order);
+            }
         } catch (Exception e) {
             log.error("[ParkCarService] done error", e);
             return Status.ERROR;

@@ -1,6 +1,7 @@
 package com.itstyle.domain.park;
 
 import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.domain.car.manager.enums.ChargeSituation;
 import com.itstyle.domain.park.enums.ParkCarStatus;
 
 public class ParkCarOrder {
@@ -13,6 +14,7 @@ public class ParkCarOrder {
     public Long enterTime;
     public String orderNo;
     public CarType carType;
+    public ChargeSituation chargeSituation;
 
     public static ParkCarOrder make(ParkCar parkCar) {
         ParkCarOrder order = new ParkCarOrder();
