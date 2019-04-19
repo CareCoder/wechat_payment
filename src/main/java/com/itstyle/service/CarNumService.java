@@ -107,12 +107,12 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                     if (saveVo.getRecord() == null || !saveVo.getRecord()) {
                         //如果不是网页缴费,网页缴费会提前把记录生成
                         saveVo.setRecord(true);
-                        chargeRecord(saveVo, "纸币机");
+                        chargeRecord(saveVo, saveVo.getPaymentWay());
                     }else{
                         //纸币机补缴
                         //如果补缴金额是0,则不生成记录
                         if (saveVo.getFee() > 0) {
-                            chargeRecord(saveVo, "纸币机补缴");
+                            chargeRecord(saveVo, saveVo.getPaymentWay());
                         }
                     }
                 }

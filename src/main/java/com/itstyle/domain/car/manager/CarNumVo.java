@@ -45,6 +45,7 @@ public class CarNumVo{
     private Boolean record;//这次临时停车是否已经生成明细
     private Boolean fixedParkingSpace;//是否固定车位
     private Long stopTime;//停车时长, stopTime+time=缴费时间<=lTime 这个关系一定要理解
+    private String paymentWay;//支付方式
 
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.ALL})
     @JoinColumn(name = "car_num_id"
