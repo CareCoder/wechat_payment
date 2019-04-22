@@ -121,6 +121,17 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
     }
 
     /**
+     * 给某个用户发送标准结构体消息
+     */
+    public static int sendDataToUser(String username, Object data, WebSocketAction action) {
+        WebSocketData webSocketData = new WebSocketData();
+        webSocketData.setData(data);
+        webSocketData.setAction(action);
+        log.info("MyTextWebSocketHandler sendDataToUser webSocketData = {}", webSocketData);
+        return sendMessageToUser(username, new TextMessage(gson.toJson(webSocketData)));
+    }
+
+    /**
      * 给某个用户发送消息
      */
     public static int sendMessageToUser(String username, String message) {
@@ -142,6 +153,17 @@ public class MyTextWebSocketHandler extends TextWebSocketHandler {
      */
     public static void sendMessageToAllUser(String message) {
         sendMessageToAllUser(new TextMessage(message));
+    }
+
+    /**
+     * 给所有在线用户发送标准结构体消息
+     */
+    public static void sendDataToAllUser(Object data, WebSocketAction action) {
+        WebSocketData webSocketData = new WebSocketData();
+        webSocketData.setData(data);
+        webSocketData.setAction(action);
+        log.info("MyTextWebSocketHandler sendDataToUser webSocketData = {}", webSocketData);
+        sendMessageToAllUser(gson.toJson(webSocketData));
     }
 
     private static void doSendMessage(WebSocketSession user, TextMessage message){

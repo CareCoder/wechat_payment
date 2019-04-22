@@ -121,7 +121,7 @@ public class ExternalInterfaceService {
     }
 
 
-    private CarYardNameResp carYardName() {
+    public CarYardNameResp carYardName() {
         CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
         //获取剩余车位数,如果未获取到则默认为车场总数
         Integer remainingParkingNum = (Integer) globalSettingService.get(YstCommon.REMAINING_PARKING_NUM, Integer.class);

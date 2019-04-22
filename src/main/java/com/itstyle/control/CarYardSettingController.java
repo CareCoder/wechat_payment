@@ -1,14 +1,16 @@
 package com.itstyle.control;
 
-import com.google.gson.Gson;
 import com.itstyle.common.PageResponse;
 import com.itstyle.common.SystemLoggerHelper;
 import com.itstyle.common.YstCommon;
 import com.itstyle.domain.car.manager.FixedCarManager;
+import com.itstyle.domain.car.manager.enums.WebSocketAction;
 import com.itstyle.domain.caryard.*;
 import com.itstyle.domain.park.resp.Response;
 import com.itstyle.exception.AssertUtil;
 import com.itstyle.exception.BusinessException;
+import com.itstyle.handler.MyTextWebSocketHandler;
+import com.itstyle.service.ExternalInterfaceService;
 import com.itstyle.service.GlobalSettingService;
 import com.itstyle.service.PassPermissionService;
 import com.itstyle.utils.BeanUtilIgnore;
@@ -28,12 +30,15 @@ public class CarYardSettingController {
 
     private GlobalSettingService globalSettingService;
     private PassPermissionService passPermissionService;
+    private ExternalInterfaceService externalInterfaceService;
 
     @Autowired
     public CarYardSettingController(GlobalSettingService globalSettingService,
-                                    PassPermissionService passPermissionService) {
+                                    PassPermissionService passPermissionService,
+                                    ExternalInterfaceService externalInterfaceService) {
         this.globalSettingService = globalSettingService;
         this.passPermissionService = passPermissionService;
+        this.externalInterfaceService = externalInterfaceService;
     }
 
     @GetMapping("/name/query")
@@ -48,6 +53,8 @@ public class CarYardSettingController {
     public Response setCarYardName(CarYardName carYardName) {
         globalSettingService.set(YstCommon.CAR_YARD_NAME, carYardName);
         SystemLoggerHelper.log("修改", "车场信息重新设置");
+        //发送websocket消息给客户端
+        MyTextWebSocketHandler.sendDataToAllUser(externalInterfaceService.carYardName(), WebSocketAction.UPDATE_PARKING_SETUP);
         return Response.build(Status.NORMAL, null, null);
     }
 
