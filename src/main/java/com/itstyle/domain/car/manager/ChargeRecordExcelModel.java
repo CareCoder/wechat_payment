@@ -2,6 +2,7 @@ package com.itstyle.domain.car.manager;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
+import com.itstyle.domain.car.manager.enums.ChargeSituation;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.utils.DateUtil;
 import lombok.Data;
@@ -17,13 +18,13 @@ public class ChargeRecordExcelModel  extends BaseRowModel{
     /**
      * 入场时间
      */
-    @ExcelProperty(value = "开始时间" ,index = 1)
+    @ExcelProperty(value = "入场时间" ,index = 1)
     private String enterTime;
 
     /**
      * 出场时间
      */
-    @ExcelProperty(value = "结束时间" ,index = 2)
+    @ExcelProperty(value = "出场时间" ,index = 2)
     private String leaveTime;
     /**
      * 车辆真实类型
@@ -32,28 +33,40 @@ public class ChargeRecordExcelModel  extends BaseRowModel{
     private String carRealType;
 
     /**
-     * 收费金额
+     * 应收金额
      */
-    @ExcelProperty(value = "收费金额" ,index = 4)
-    private Integer fee;
+    @ExcelProperty(value = "车牌号码" ,index = 4)
+    private Integer receivableFee;
 
     /**
-     * 折扣金额
+     * 优惠金额
      */
-    @ExcelProperty(value = "折扣金额" ,index = 5)
+    @ExcelProperty(value = "优惠金额" ,index = 5)
     private Integer discountAmount;
+
+    /**
+     * 实收金额
+     */
+    @ExcelProperty(value = "实收金额" ,index = 6)
+    private Integer fee;
 
     /**
      * 收费类型
      */
-    @ExcelProperty(value = "收费类型" ,index = 6)
+    @ExcelProperty(value = "收费类型" ,index = 7)
     private String chargeType;
 
 
     /**
+     * 收费情况
+     */
+    @ExcelProperty(value = "收费情况" ,index = 8)
+    private String chargeSituation;
+
+    /**
      * 收费员
      */
-    @ExcelProperty(value = "收费员" ,index = 7)
+    @ExcelProperty(value = "收费员" ,index = 9)
     private String chargePersonnel;
 
     public static ChargeRecordExcelModel convert(ChargeRecord c) {
@@ -62,9 +75,11 @@ public class ChargeRecordExcelModel  extends BaseRowModel{
         m.setEnterTime(DateUtil.format(c.getEnterTime()));
         m.setLeaveTime(DateUtil.format(c.getLeaveTime()));
         m.setCarRealType(c.getCarRealType() == null ? "" : c.getCarRealType().getName());
+        m.setReceivableFee(c.getReceivableFee());
         m.setDiscountAmount(c.getDiscountAmount());
         m.setFee(c.getFee());
         m.setChargeType(c.getChargeType() == null ? "" : c.getChargeType().getName());
+        m.setChargeSituation(c.getChargeSituation() == null ? "" : c.getChargeSituation().getName());
         m.setChargePersonnel(c.getChargePersonnel());
         return m;
     }
