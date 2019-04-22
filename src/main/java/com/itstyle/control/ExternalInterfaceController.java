@@ -97,9 +97,7 @@ public class ExternalInterfaceController {
     @GetMapping("/inition")
     @ResponseBody
     public Inition inition() {
-        Inition inition = externalInterfaceService.inition();
-        inition.chargeRule = charges();
-        return inition;
+        return externalInterfaceService.inition();
     }
 
     /**
@@ -165,59 +163,9 @@ public class ExternalInterfaceController {
     @GetMapping("/charges")
     @ResponseBody
     public Object getCharges() {
-        return charges();
+        return externalInterfaceService.charges();
     }
 
-    private Object charges() {
-        String currentCharges = redisDao.get(YstCommon.CURRENT_CHARGES);
-        if (currentCharges == null) {
-            return null;
-        }
-        Map<Object, Object> map = redisDao.hgetAll(currentCharges);
-        if (YstCommon.SZ_CHARGES.equals(currentCharges)) {
-            ChargesResponse<SZChargesResponseVo> c = new ChargesResponse<>();
-            c.setChargeModel(3);
-            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), SZChargesResponse.ChargeRule.class))
-                    .map(chargeRule -> {
-                        SZChargesResponseVo szChargesResponseVo = new SZChargesResponseVo();
-                        BeanUtilIgnore.copyPropertiesIgnoreNull(chargeRule, szChargesResponseVo);
-                        CarType carType = Enum.valueOf(CarType.class, chargeRule.getCarType());
-                        szChargesResponseVo.setPlateColor(carType.ordinal());
-                        return szChargesResponseVo;
-                    })
-                    .sorted(Comparator.comparing(SZChargesResponseVo::getPlateColor)).collect(Collectors.toList()));
-            return c;
-        }
-        if (YstCommon.STANDARD_CHARGES.equals(currentCharges)) {
-            ChargesResponse<StandardChargesResponseVo> c = new ChargesResponse<>();
-            c.setChargeModel(2);
-            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), StandardChargesResponse.ChargeRule.class))
-                    .map(chargeRule -> {
-                        StandardChargesResponseVo responseVo = new StandardChargesResponseVo();
-                        BeanUtilIgnore.copyPropertiesIgnoreNull(chargeRule, responseVo);
-                        CarType carType = Enum.valueOf(CarType.class, chargeRule.getCarType());
-                        responseVo.setPlateColor(carType.ordinal());
-                        return responseVo;
-                    })
-                    .sorted(Comparator.comparing(StandardChargesResponseVo::getPlateColor)).collect(Collectors.toList()));
-            return c;
-        }
-        if (YstCommon.BY_CHARGES.equals(currentCharges)) {
-            ChargesResponse<ByChargesResponseVo> c = new ChargesResponse<>();
-            c.setChargeModel(1);
-            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), ByChargesResponse.ChargeRule.class))
-                    .map(chargeRule -> {
-                        ByChargesResponseVo byChargesResponseVo = new ByChargesResponseVo();
-                        BeanUtilIgnore.copyPropertiesIgnoreNull(chargeRule, byChargesResponseVo);
-                        CarType carType = Enum.valueOf(CarType.class, chargeRule.getCarType());
-                        byChargesResponseVo.setPlateColor(carType.ordinal());
-                        return byChargesResponseVo;
-                    })
-                    .sorted(Comparator.comparing(ByChargesResponseVo::getPlateColor)).collect(Collectors.toList()));
-            return c;
-        }
-        return "查询无数据";
-    }
 
     @RequestMapping("/getPhoneNumber")
     @ResponseBody

@@ -8,13 +8,22 @@ import com.itstyle.dao.RedisDao;
 import com.itstyle.domain.car.manager.CarInfo;
 import com.itstyle.domain.car.manager.FastigiumList;
 import com.itstyle.domain.car.manager.MonthCarInfo;
+import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.car.manager.enums.CarType2;
 import com.itstyle.domain.caryard.CarYardName;
 import com.itstyle.domain.caryard.EquipmentStatus;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
+import com.itstyle.domain.feesettings.response.ByChargesResponse;
+import com.itstyle.domain.feesettings.response.SZChargesResponse;
+import com.itstyle.domain.feesettings.response.StandardChargesResponse;
 import com.itstyle.domain.report.DeleteRecord;
 import com.itstyle.task.AssessTokenTask;
+import com.itstyle.utils.BeanUtilIgnore;
 import com.itstyle.utils.HttpUtils;
+import com.itstyle.vo.charges.reponse.ByChargesResponseVo;
+import com.itstyle.vo.charges.reponse.ChargesResponse;
+import com.itstyle.vo.charges.reponse.SZChargesResponseVo;
+import com.itstyle.vo.charges.reponse.StandardChargesResponseVo;
 import com.itstyle.vo.deletevehicleinfo.response.DeleteInfo;
 import com.itstyle.vo.deletevehicleinfo.response.DeleteVehicleInfo;
 import com.itstyle.vo.incrementmonly.response.IncrementMonly;
@@ -32,7 +41,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,6 +92,7 @@ public class ExternalInterfaceService {
         inition.accessAuthoritySetup = getAccessAuthoritySetup();
 //        inition.imageDisplay = getImageDisplay();
         inition.textDisplay = getTextDisplay();
+        inition.chargeRule = charges();
         return inition;
     }
 
@@ -143,7 +155,7 @@ public class ExternalInterfaceService {
         return resp;
     }
 
-    private List<AccessAuthoritySetup> getAccessAuthoritySetup() {
+    public List<AccessAuthoritySetup> getAccessAuthoritySetup() {
         List<ResponsePassCarStatus> list = passPermissionService.list();
         if (list != null) {
             return list.stream().map(responsePassCarStatus -> {
@@ -277,5 +289,56 @@ public class ExternalInterfaceService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Object charges() {
+        String currentCharges = redisDao.get(YstCommon.CURRENT_CHARGES);
+        if (currentCharges == null) {
+            return null;
+        }
+        Map<Object, Object> map = redisDao.hgetAll(currentCharges);
+        if (YstCommon.SZ_CHARGES.equals(currentCharges)) {
+            ChargesResponse<SZChargesResponseVo> c = new ChargesResponse<>();
+            c.setChargeModel(3);
+            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), SZChargesResponse.ChargeRule.class))
+                    .map(chargeRule -> {
+                        SZChargesResponseVo szChargesResponseVo = new SZChargesResponseVo();
+                        BeanUtilIgnore.copyPropertiesIgnoreNull(chargeRule, szChargesResponseVo);
+                        CarType carType = Enum.valueOf(CarType.class, chargeRule.getCarType());
+                        szChargesResponseVo.setPlateColor(carType.ordinal());
+                        return szChargesResponseVo;
+                    })
+                    .sorted(Comparator.comparing(SZChargesResponseVo::getPlateColor)).collect(Collectors.toList()));
+            return c;
+        }
+        if (YstCommon.STANDARD_CHARGES.equals(currentCharges)) {
+            ChargesResponse<StandardChargesResponseVo> c = new ChargesResponse<>();
+            c.setChargeModel(2);
+            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), StandardChargesResponse.ChargeRule.class))
+                    .map(chargeRule -> {
+                        StandardChargesResponseVo responseVo = new StandardChargesResponseVo();
+                        BeanUtilIgnore.copyPropertiesIgnoreNull(chargeRule, responseVo);
+                        CarType carType = Enum.valueOf(CarType.class, chargeRule.getCarType());
+                        responseVo.setPlateColor(carType.ordinal());
+                        return responseVo;
+                    })
+                    .sorted(Comparator.comparing(StandardChargesResponseVo::getPlateColor)).collect(Collectors.toList()));
+            return c;
+        }
+        if (YstCommon.BY_CHARGES.equals(currentCharges)) {
+            ChargesResponse<ByChargesResponseVo> c = new ChargesResponse<>();
+            c.setChargeModel(1);
+            c.setData(map.values().stream().map(o -> gson.fromJson(o.toString(), ByChargesResponse.ChargeRule.class))
+                    .map(chargeRule -> {
+                        ByChargesResponseVo byChargesResponseVo = new ByChargesResponseVo();
+                        BeanUtilIgnore.copyPropertiesIgnoreNull(chargeRule, byChargesResponseVo);
+                        CarType carType = Enum.valueOf(CarType.class, chargeRule.getCarType());
+                        byChargesResponseVo.setPlateColor(carType.ordinal());
+                        return byChargesResponseVo;
+                    })
+                    .sorted(Comparator.comparing(ByChargesResponseVo::getPlateColor)).collect(Collectors.toList()));
+            return c;
+        }
+        return "查询无数据";
     }
 }

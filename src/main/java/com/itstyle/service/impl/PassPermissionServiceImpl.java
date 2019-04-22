@@ -1,15 +1,19 @@
 package com.itstyle.service.impl;
 
 import com.itstyle.common.PageResponse;
+import com.itstyle.common.WebSocketData;
+import com.itstyle.domain.car.manager.enums.WebSocketAction;
 import com.itstyle.domain.caryard.AccessType;
 import com.itstyle.domain.caryard.ChannelType;
 import com.itstyle.domain.caryard.PassCarStatus;
 import com.itstyle.domain.caryard.ResponsePassCarStatus;
 import com.itstyle.exception.AssertUtil;
 import com.itstyle.exception.BusinessException;
+import com.itstyle.handler.MyTextWebSocketHandler;
 import com.itstyle.mapper.AccessTypeMapper;
 import com.itstyle.mapper.ChannelTypeMapper;
 import com.itstyle.mapper.PassPermissionMapper;
+import com.itstyle.service.ExternalInterfaceService;
 import com.itstyle.service.PassPermissionService;
 import com.itstyle.utils.BeanUtilIgnore;
 import lombok.extern.slf4j.Slf4j;
@@ -25,18 +29,14 @@ import java.util.stream.Collectors;
 @Service
 public class PassPermissionServiceImpl implements PassPermissionService {
 
-    private PassPermissionMapper passPermissionMapper;
-    private ChannelTypeMapper channelTypeMapper;
-    private AccessTypeMapper accessTypeMapper;
-
     @Autowired
-    public PassPermissionServiceImpl(PassPermissionMapper passPermissionMapper,
-                                     ChannelTypeMapper channelTypeMapper,
-                                     AccessTypeMapper accessTypeMapper) {
-        this.passPermissionMapper = passPermissionMapper;
-        this.channelTypeMapper = channelTypeMapper;
-        this.accessTypeMapper = accessTypeMapper;
-    }
+    private PassPermissionMapper passPermissionMapper;
+    @Autowired
+    private ChannelTypeMapper channelTypeMapper;
+    @Autowired
+    private AccessTypeMapper accessTypeMapper;
+    @Autowired
+    private ExternalInterfaceService externalInterfaceService;
 
     @Override
     public PageResponse<ResponsePassCarStatus> list(int page, int limit) {
@@ -59,6 +59,7 @@ public class PassPermissionServiceImpl implements PassPermissionService {
         if (save == null) {
             throw new BusinessException("修改失败，请稍后重试");
         }
+        notifyClient();
     }
 
     @Override
@@ -74,11 +75,13 @@ public class PassPermissionServiceImpl implements PassPermissionService {
         if (save == null) {
             throw new BusinessException("修改失败，请稍后重试");
         }
+        notifyClient();
     }
 
     @Override
     public void delete(Long id) {
         passPermissionMapper.delete(id);
+        notifyClient();
     }
 
     @Override
@@ -125,5 +128,9 @@ public class PassPermissionServiceImpl implements PassPermissionService {
     @Override
     public void deleteByAccessTypeId(Long accessTypeId) {
         passPermissionMapper.deleteByAccessTypeId(accessTypeId);
+    }
+
+    private void notifyClient() {
+        MyTextWebSocketHandler.sendDataToAllUser(externalInterfaceService.getAccessAuthoritySetup(),WebSocketAction.UPDATE_ACCESS_AUTHORITY);
     }
 }
