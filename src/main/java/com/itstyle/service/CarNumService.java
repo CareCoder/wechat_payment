@@ -310,6 +310,7 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                 globalSettingService.set(YstCommon.REMAINING_PARKING_NUM, remainingParkingNum);
                 WebSocketData data = new WebSocketData();
                 data.setAction(WebSocketAction.CLEAR_PARKING_LOT);
+                data.setData(carNumVo);
                 MyTextWebSocketHandler.sendMessageToAllUser(gson.toJson(data));
             }
         }
