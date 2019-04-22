@@ -247,6 +247,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
     }
 
     private void chargeRecord(CarNumVo carNumVo, String username) {
+        if (carNumVo.getCarType().getValue() > CarType.TEMP_CAR_D.getValue()) {
+            return;
+        }
         ChargeRecord chargeRecord = new ChargeRecord();
         chargeRecord.setCarNum(carNumVo.getCarNum());
         chargeRecord.setCarType(CarType.TEMP_CAR_A);
