@@ -20,7 +20,7 @@ public class ChargeRecordExcelModel  extends BaseRowModel{
     private String leaveTime;
     @ExcelProperty(value = "车辆类型" ,index = 3)
     private String carRealType;
-    @ExcelProperty(value = "车牌号码" ,index = 4)
+    @ExcelProperty(value = "应收金额" ,index = 4)
     private Integer receivableFee;
     @ExcelProperty(value = "优惠金额" ,index = 5)
     private Integer discountAmount;
