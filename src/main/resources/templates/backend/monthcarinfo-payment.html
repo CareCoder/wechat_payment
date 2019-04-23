@@ -110,6 +110,7 @@
         });
 
         function updateUI(month) {
+            month = parseInt(month);
             var endDate = new Date(endTime);
             endDate.setMonth(endDate.getMonth() + month);
 
