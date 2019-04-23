@@ -37,6 +37,13 @@
                         <option value="4">四个月</option>
                         <option value="5">五个月</option>
                         <option value="6">六个月</option>
+                        <option value="7">七个月</option>
+                        <option value="8">八个月</option>
+                        <option value="9">九个月</option>
+                        <option value="10">十个月</option>
+                        <option value="11">十一个月</option>
+                        <option value="12">一年</option>
+                        <option value="24">两年</option>
                     </select>
                 </div>
             </div>
@@ -95,39 +102,54 @@
         $("input[name='id']").val(id);
         $("#span_carNum").html(carNum);
         $("#span_name").html(name);
-        $("#span_endTime").html(new Date(endTime).toLocaleDateString());
-        var restDay = (endTime - new Date().getTime()) / (24 * 60 * 60 * 1000);
-        restDay = restDay > 0 ? restDay : 0;
-        restDay = Math.floor(restDay);
-        $("#span_restDay").html(restDay);
-        $("#span_fee").html(monthFee);
+
+        updateUI(1);//默认显示一个月
 
         form.on('select(month)', function(data){
-            debugger;
-            $("#span_fee").html(monthFee*data.value);
-        })
+            updateUI(data.value);
+        });
 
+        function updateUI(month) {
+            var endDate = new Date(endTime);
+            endDate.setMonth(endDate.getMonth() + month);
+
+            var restDay = (endDate.getTime() - new Date().getTime()) / (24 * 60 * 60 * 1000);
+            restDay = restDay > 0 ? restDay : 0;
+            restDay = Math.floor(restDay);
+            $("#span_restDay").html(restDay);
+
+            $("#span_endTime").html(endDate.toLocaleDateString());
+            $("#span_fee").html(monthFee*month);
+
+        }
+
+        var click = false;
 
         form.on('submit(add)', function (data) {
-            $.ajax({
-                url: "/monthcarinfo/payment",
-                type: "POST",
-                data: {
-                    id: id,
-                    month: data.field.month
-                },
-                success: function (resp) {
-                    console.log(resp);
-                    layer.msg("修改成功！", {icon: 6, time: 1000, anim: 4}, function () {
-                        parent.layer.close(parent.layer.getFrameIndex(window.name));
-                    });
-                },
-                error: function () {
-                    layer.msg("修改失败！", {icon: 6, time: 1000, anim: 4}, function () {
-                        parent.layer.close(parent.layer.getFrameIndex(window.name));
-                    });
-                }
-            });
+            if (!click) {
+                click = true;
+                $.ajax({
+                    url: "/monthcarinfo/payment",
+                    type: "POST",
+                    data: {
+                        id: id,
+                        month: data.field.month
+                    },
+                    success: function (resp) {
+                        console.log(resp);
+                        layer.msg("修改成功！", {icon: 6, time: 1000, anim: 4}, function () {
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    },
+                    error: function () {
+                        layer.msg("修改失败！", {icon: 6, time: 1000, anim: 4}, function () {
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    }
+                });
+                click = false;
+                return false;
+            }
             return false;
         });
 
