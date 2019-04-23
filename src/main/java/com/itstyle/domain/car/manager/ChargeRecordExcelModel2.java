@@ -25,7 +25,7 @@ public class ChargeRecordExcelModel2 extends BaseRowModel{
     private Integer fee;
     @ExcelProperty(value = "续费时间" ,index = 6)
     private String time;
-    @ExcelProperty(value = "收费员" ,index = 7)
+    @ExcelProperty(value = "收费人员" ,index = 7)
     private String chargePersonnel;
 
     public static ChargeRecordExcelModel2 convert(ChargeRecord c, List<FixedCarManager> f) {

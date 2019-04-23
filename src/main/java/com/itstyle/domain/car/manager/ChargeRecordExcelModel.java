@@ -30,7 +30,7 @@ public class ChargeRecordExcelModel  extends BaseRowModel{
     private String chargeType;
     @ExcelProperty(value = "收费情况" ,index = 8)
     private String chargeSituation;
-    @ExcelProperty(value = "收费员" ,index = 9)
+    @ExcelProperty(value = "收费人员" ,index = 9)
     private String chargePersonnel;
 
     public static ChargeRecordExcelModel convert(ChargeRecord c,  List<FixedCarManager> f) {
