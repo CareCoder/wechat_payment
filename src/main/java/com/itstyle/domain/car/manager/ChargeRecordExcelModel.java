@@ -4,8 +4,11 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.itstyle.domain.car.manager.enums.ChargeSituation;
 import com.itstyle.domain.report.ChargeRecord;
+import com.itstyle.utils.BusinessUtils;
 import com.itstyle.utils.DateUtil;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class ChargeRecordExcelModel  extends BaseRowModel{
@@ -69,12 +72,12 @@ public class ChargeRecordExcelModel  extends BaseRowModel{
     @ExcelProperty(value = "收费员" ,index = 9)
     private String chargePersonnel;
 
-    public static ChargeRecordExcelModel convert(ChargeRecord c) {
+    public static ChargeRecordExcelModel convert(ChargeRecord c,  List<FixedCarManager> f) {
         ChargeRecordExcelModel m = new ChargeRecordExcelModel();
         m.setCarNum(c.getCarNum());
         m.setEnterTime(DateUtil.format(c.getEnterTime()));
         m.setLeaveTime(DateUtil.format(c.getLeaveTime()));
-        m.setCarRealType(c.getCarRealType() == null ? "" : c.getCarRealType().getName());
+        m.setCarRealType(BusinessUtils.fetchCustomName(c.getCarRealType(), f));
         m.setReceivableFee(c.getReceivableFee());
         m.setDiscountAmount(c.getDiscountAmount());
         m.setFee(c.getFee());

@@ -15,6 +15,8 @@ public class BusinessUtils {
                     .findAny();
             if (any.isPresent()) {
                 return any.get().getCustomName();
+            }else{
+                return carType.getName();
             }
         }
         return "";

@@ -1,7 +1,9 @@
 package com.itstyle.service;
 
 import com.itstyle.common.PageResponse;
+import com.itstyle.common.YstCommon;
 import com.itstyle.domain.car.manager.ChargeRecordExcelModel;
+import com.itstyle.domain.car.manager.FixedCarManager;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
@@ -31,6 +33,8 @@ import java.util.stream.Collectors;
 public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
     @Resource
     private ChargeRecordMapper chargeRecordMapper;
+    @Resource
+    private GlobalSettingService globalSettingService;
 
     @PostConstruct
     private void init() {
@@ -73,8 +77,9 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
     }
 
     public ResponseEntity<byte[]> exportExcel(CarType carType) {
+        List<FixedCarManager> f = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
         List<ChargeRecord> chargeRecordList = chargeRecordMapper.findByCarType(carType);
-        List<ChargeRecordExcelModel> data = chargeRecordList.stream().map(ChargeRecordExcelModel::convert).collect(Collectors.toList());
+        List<ChargeRecordExcelModel> data = chargeRecordList.stream().map(m -> ChargeRecordExcelModel.convert(m, f)).collect(Collectors.toList());
         String fileName;
         if (carType == CarType.TEMP_CAR_A) {
             fileName = "临时车收费明细.xlsx";
