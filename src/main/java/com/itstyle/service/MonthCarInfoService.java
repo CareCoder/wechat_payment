@@ -202,7 +202,8 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
      */
     public ResponseEntity<byte[]> exportExcel() {
         List<MonthCarInfo> carInfos = monthCarInfoMapper.findAll();
-        List<CarInfoExcelModel> data = carInfos.stream().map(CarInfoExcelModel::convert).collect(Collectors.toList());
+        List<FixedCarManager> f = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
+        List<CarInfoExcelModel> data = carInfos.stream().map(m -> CarInfoExcelModel.convert(m, f)).collect(Collectors.toList());
         return FileUtils.buildExcelResponseEntity(data, CarInfoExcelModel.class, "月租车数据.xlsx");
     }
 
@@ -211,7 +212,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         try {
             inputStream = excel.getInputStream();
             // 解析每行结果在listener中处理
-            MonthCarExcelListener listener = new MonthCarExcelListener(this, account);
+            MonthCarExcelListener listener = new MonthCarExcelListener(globalSettingService,this, account);
 
             ExcelReader excelReader = new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, listener);
 

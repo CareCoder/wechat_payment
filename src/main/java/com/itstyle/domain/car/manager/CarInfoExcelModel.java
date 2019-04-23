@@ -2,13 +2,13 @@ package com.itstyle.domain.car.manager;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
-import com.itstyle.domain.car.manager.enums.CarColor;
 import com.itstyle.domain.car.manager.enums.CarType;
+import com.itstyle.utils.BusinessUtils;
 import com.itstyle.utils.CommonUtils;
 import com.itstyle.utils.DateUtil;
 import lombok.Data;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -43,12 +43,12 @@ public class CarInfoExcelModel extends BaseRowModel {
 //    @ExcelProperty(value = "车颜色" ,index = 9)
 //    private String carColor;
 
-    public static CarInfoExcelModel convert(MonthCarInfo m) {
+    public static CarInfoExcelModel convert(MonthCarInfo m, List<FixedCarManager> f) {
         CarInfoExcelModel c = new CarInfoExcelModel();
         c.setName(m.getName());
         c.setCarNum(m.getCarNum());
         c.setPhone(m.getPhone());
-        c.setCarType(m.getCarType() != null ? m.getCarType().getName() : "");
+        c.setCarType(BusinessUtils.fetchCustomName(m.getCarType(), f));
         c.setStartTime(DateUtil.format(m.getStartTime()));
         c.setEndTime(DateUtil.format(m.getEndTime()));
         c.setCarGroup(m.getCarGroup());
@@ -58,13 +58,13 @@ public class CarInfoExcelModel extends BaseRowModel {
         return c;
     }
 
-    public static MonthCarInfo convert(CarInfoExcelModel c) {
+    public static MonthCarInfo convert(CarInfoExcelModel c, List<FixedCarManager> f) {
         MonthCarInfo m = new MonthCarInfo();
         m.setName(c.getName());
         m.setCarNum(c.getCarNum());
         m.setPhone(c.getPhone());
         if (c.getCarType() != null) {
-            m.setCarType(CommonUtils.fetchEnum(c.carType, CarType.class));
+            m.setCarType(BusinessUtils.fetchCarTypeName(c.carType, f));
         }
         m.setStartTime(Objects.requireNonNull(DateUtil.parse(c.getStartTime())).getTime());
         m.setEndTime(Objects.requireNonNull(DateUtil.parse(c.getEndTime())).getTime());
