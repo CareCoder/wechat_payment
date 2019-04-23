@@ -292,7 +292,9 @@ public class CarNumService extends BaseDaoService<CarNumVo, Long> {
                         || carNumVo.getCarType() == CarType.MONTH_CAR_B
                         || carNumVo.getCarType() == CarType.MONTH_CAR_C) {
                     //当是否选定固定车位为选中状态 ,进入的月租车也是不减车位数的
-                    flag = BooleanUtils.toBoolean(carNumVo.getFixedParkingSpace());
+//                    flag = BooleanUtils.toBoolean(carNumVo.getFixedParkingSpace());
+                    CarYardName carYardName = (CarYardName) globalSettingService.get(YstCommon.CAR_YARD_NAME, CarYardName.class);
+                    flag = carYardName.getFixedParkingSpace();
                 } else if (carNumVo.getCarType() == CarType.VIP_CAR) {
                     flag = true;
                 }
