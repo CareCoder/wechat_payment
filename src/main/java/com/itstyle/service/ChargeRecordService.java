@@ -88,7 +88,7 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
         }else{
             fileName = "月租车明细.xlsx";
             List<ChargeRecordExcelModel2> data = chargeRecordList.stream().map(m -> ChargeRecordExcelModel2.convert(m, f)).collect(Collectors.toList());
-            return FileUtils.buildExcelResponseEntity(data, ChargeRecordExcelModel.class, fileName);
+            return FileUtils.buildExcelResponseEntity(data, ChargeRecordExcelModel2.class, fileName);
         }
     }
 
