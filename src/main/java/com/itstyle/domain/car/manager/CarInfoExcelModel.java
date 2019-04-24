@@ -49,8 +49,8 @@ public class CarInfoExcelModel extends BaseRowModel {
         c.setCarNum(m.getCarNum());
         c.setPhone(m.getPhone());
         c.setCarType(BusinessUtils.fetchCustomName(m.getCarType(), f));
-        c.setStartTime(DateUtil.format(m.getStartTime()));
-        c.setEndTime(DateUtil.format(m.getEndTime()));
+        c.setStartTime(DateUtil.format2Date(m.getStartTime()));
+        c.setEndTime(DateUtil.format2Date(m.getEndTime()));
         c.setCarGroup(m.getCarGroup());
         c.setRemarks(m.getRemarks());
         c.setIdCardNum(m.getIdCardNum());
@@ -66,8 +66,8 @@ public class CarInfoExcelModel extends BaseRowModel {
         if (c.getCarType() != null) {
             m.setCarType(BusinessUtils.fetchCarTypeName(c.carType, f));
         }
-        m.setStartTime(Objects.requireNonNull(DateUtil.parse(c.getStartTime())).getTime());
-        m.setEndTime(Objects.requireNonNull(DateUtil.parse(c.getEndTime())).getTime());
+        m.setStartTime(Objects.requireNonNull(DateUtil.parse2Date(c.getStartTime())).getTime());
+        m.setEndTime(Objects.requireNonNull(DateUtil.parse2Date(c.getEndTime())).getTime());
         m.setCarGroup(c.getCarGroup());
         m.setRemarks(c.getRemarks());
         m.setIdCardNum(c.getIdCardNum());

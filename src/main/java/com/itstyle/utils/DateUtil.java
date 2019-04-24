@@ -16,6 +16,9 @@ import java.util.Date;
 public class DateUtil {
     private static final String format = "yyyy/MM/dd HH:mm:ss";
     private static final SimpleDateFormat sdf = new SimpleDateFormat(format);
+
+    private static final String format2 = "yyyy/MM/dd";
+    private static final SimpleDateFormat sdf2 = new SimpleDateFormat(format2);
     /***
      * 获取某年某月的开始时间
      * @param year 年
@@ -106,11 +109,27 @@ public class DateUtil {
         return sdf.format(new Date(time));
     }
 
+    public static String format2Date(Long time) {
+        if (time == null) {
+            return "";
+        }
+        return sdf2.format(new Date(time));
+    }
+
     public static Date parse(String time) {
         try {
             return sdf.parse(time);
         } catch (ParseException e) {
             log.error("parse error ", e);
+        }
+        return null;
+    }
+
+    public static Date parse2Date(String time) {
+        try {
+            return sdf2.parse(time);
+        } catch (ParseException e) {
+            log.error("parse2Date error ", e);
         }
         return null;
     }
