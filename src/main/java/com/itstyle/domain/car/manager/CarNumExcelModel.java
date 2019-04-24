@@ -2,8 +2,11 @@ package com.itstyle.domain.car.manager;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.metadata.BaseRowModel;
+import com.itstyle.utils.BusinessUtils;
 import com.itstyle.utils.DateUtil;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class CarNumExcelModel extends BaseRowModel{
@@ -22,10 +25,10 @@ public class CarNumExcelModel extends BaseRowModel{
     @ExcelProperty(value = "入场类型" ,index = 6)
     private String enterWay;
 
-    public static CarNumExcelModel convert(CarNumVo c) {
+    public static CarNumExcelModel convert(CarNumVo c, List<FixedCarManager> f) {
         CarNumExcelModel m = new CarNumExcelModel();
         m.setCarNum(c.getCarNum());
-        m.setCarType(c.getCarType() == null ? "" : c.getCarType().getName());
+        m.setCarType(BusinessUtils.fetchCustomName(c.getCarType(), f));
         m.setTime(DateUtil.format(c.getTime()));
         m.setLeaveTime(DateUtil.format(c.getLTime()));
         m.setEnterPass(c.getEnterPass());

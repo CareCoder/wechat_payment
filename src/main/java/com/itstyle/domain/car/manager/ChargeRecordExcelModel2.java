@@ -5,6 +5,7 @@ import com.alibaba.excel.metadata.BaseRowModel;
 import com.itstyle.domain.report.ChargeRecord;
 import com.itstyle.utils.BusinessUtils;
 import com.itstyle.utils.DateUtil;
+import com.itstyle.utils.FeeUtil;
 import lombok.Data;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class ChargeRecordExcelModel2 extends BaseRowModel{
     @ExcelProperty(value = "收费类型" ,index = 4)
     private String chargeType;
     @ExcelProperty(value = "实收金额" ,index = 5)
-    private Integer fee;
+    private String fee;
     @ExcelProperty(value = "续费时间" ,index = 6)
     private String time;
     @ExcelProperty(value = "收费人员" ,index = 7)
@@ -31,11 +32,11 @@ public class ChargeRecordExcelModel2 extends BaseRowModel{
     public static ChargeRecordExcelModel2 convert(ChargeRecord c, List<FixedCarManager> f) {
         ChargeRecordExcelModel2 m = new ChargeRecordExcelModel2();
         m.setCarNum(c.getCarNum());
-        m.setEnterTime(DateUtil.format(c.getEnterTime()));
-        m.setLeaveTime(DateUtil.format(c.getLeaveTime()));
+        m.setEnterTime(DateUtil.format2Date(c.getEnterTime()));
+        m.setLeaveTime(DateUtil.format2Date(c.getLeaveTime()));
         m.setCarRealType(BusinessUtils.fetchCustomName(c.getCarRealType(), f));
         m.setChargeType(c.getChargeType() == null ? "" : c.getChargeType().getName());
-        m.setFee(c.getFee());
+        m.setFee(FeeUtil.convert(c.getFee()));
         m.setTime(DateUtil.format(c.getTime()));
         m.setChargePersonnel(c.getChargePersonnel());
         return m;

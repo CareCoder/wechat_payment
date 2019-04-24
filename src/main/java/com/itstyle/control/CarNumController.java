@@ -242,7 +242,8 @@ public class CarNumController {
 
     @RequestMapping("exportExcel")
     public ResponseEntity<byte[]> exportExcel() {
-        List<CarNumExcelModel> data = carNumService.list().stream().map(CarNumExcelModel::convert).collect(Collectors.toList());
+        List<FixedCarManager> f = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
+        List<CarNumExcelModel> data = carNumService.list().stream().map(m -> CarNumExcelModel.convert(m, f)).collect(Collectors.toList());
         return FileUtils.buildExcelResponseEntity(data, CarNumExcelModel.class, "出入报表.xlsx");
     }
 }
