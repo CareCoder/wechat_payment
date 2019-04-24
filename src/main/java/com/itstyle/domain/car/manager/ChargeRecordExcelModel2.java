@@ -23,7 +23,7 @@ public class ChargeRecordExcelModel2 extends BaseRowModel{
     @ExcelProperty(value = "收费类型" ,index = 4)
     private String chargeType;
     @ExcelProperty(value = "实收金额" ,index = 5)
-    private String fee;
+    private Integer fee;
     @ExcelProperty(value = "续费时间" ,index = 6)
     private String time;
     @ExcelProperty(value = "收费人员" ,index = 7)
@@ -36,7 +36,7 @@ public class ChargeRecordExcelModel2 extends BaseRowModel{
         m.setLeaveTime(DateUtil.format2Date(c.getLeaveTime()));
         m.setCarRealType(BusinessUtils.fetchCustomName(c.getCarRealType(), f));
         m.setChargeType(c.getChargeType() == null ? "" : c.getChargeType().getName());
-        m.setFee(FeeUtil.convert(c.getFee()));
+        m.setFee(c.getFee());
         m.setTime(DateUtil.format(c.getTime()));
         m.setChargePersonnel(c.getChargePersonnel());
         return m;
