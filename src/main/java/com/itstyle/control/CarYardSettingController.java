@@ -109,12 +109,12 @@ public class CarYardSettingController {
 
     private void wrapModel(Model model) {
         List<FixedCarManager> f = globalSettingService.list(YstCommon.FIXEDCARMANAGER_KEY, FixedCarManager.class);
-        if (f != null && f.size() > 3) {
+        if (f != null && f.size() >= 3) {
             model.addAttribute("MONTH_CAR_A", f.get(0));
             model.addAttribute("MONTH_CAR_B", f.get(1));
             model.addAttribute("MONTH_CAR_C", f.get(2));
-            model.addAttribute("VIP_CAR", "贵宾车");
         }
+        model.addAttribute("VIP_CAR", "贵宾车");
     }
 
 }
