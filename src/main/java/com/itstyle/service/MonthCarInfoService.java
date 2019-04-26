@@ -115,8 +115,11 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
             monthCarInfo.setStartTime(null);
             monthCarInfo.setEndTime(null);
             monthCarInfo.setModifyTime(new Date());
-            if(result!=""){
-                return result;
+            MonthCarInfo byId = findById(monthCarInfo.getId());
+            if (!byId.getCarNum().equals(monthCarInfo.getCarNum())) {
+                if(result!=""){
+                    return result;
+                }
             }
             update(monthCarInfo.getId(), monthCarInfo);
             return "修改成功！";
