@@ -114,7 +114,6 @@ public class CarYardSettingController {
             model.addAttribute("MONTH_CAR_B", f.get(1));
             model.addAttribute("MONTH_CAR_C", f.get(2));
         }
-        model.addAttribute("VIP_CAR", "贵宾车");
     }
 
 }
