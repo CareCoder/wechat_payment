@@ -64,6 +64,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
                 Predicate p2 = cb.equal(root.get("phone").as(String.class), queryStr);
                 query.where(cb.or(p1, p2));
             }
+            query.orderBy(cb.desc(root.get("startTime")));
             return query.getRestriction();
         };
         Page<MonthCarInfo> all = monthCarInfoMapper.findAll(sp, pageRequest);
