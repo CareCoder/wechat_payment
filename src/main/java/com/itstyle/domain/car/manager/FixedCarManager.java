@@ -20,8 +20,8 @@ public class FixedCarManager {
      */
     public static List<FixedCarManager> defaultList() {
         List<FixedCarManager> list = new ArrayList<>();
-        String[] names = {"月租车A", "月租车B", "月租车C", "贵宾车"};
-        CarType[] carTypes = {CarType.MONTH_CAR_A, CarType.MONTH_CAR_B, CarType.MONTH_CAR_C, CarType.VIP_CAR};
+        String[] names = {"月租车A", "月租车B", "月租车C"};
+        CarType[] carTypes = {CarType.MONTH_CAR_A, CarType.MONTH_CAR_B, CarType.MONTH_CAR_C};
         for (int i = 0; i < names.length; i++) {
             FixedCarManager f = new FixedCarManager();
             f.setCarType(carTypes[i]);
