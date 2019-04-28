@@ -67,7 +67,7 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
                                     e.setCarNum(monthCarInfo.getCarNum());
                                 }
                                 if (monthCarInfo.getCarType() != null) {
-                                    e.setCarType(monthCarInfo.getCarType());
+                                    e.setCarRealType(monthCarInfo.getCarType());
                                 }
                             }
                         }
