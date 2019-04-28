@@ -79,6 +79,12 @@ public class ChargeRecord {
 
     private Long time;
 
+    /**
+     * 关联的id 不一定指定关联
+     */
+    private Long associateId;
+
+
     public void setFee(Integer fee) {
         this.fee = fee;
         if (discountAmount != null && fee != null) {

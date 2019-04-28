@@ -183,6 +183,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
         chargeRecord.setLeaveTime(one.getEndTime());
         chargeRecord.setFee(fee);
         chargeRecord.setChargePersonnel(account.getUsername());
+        chargeRecord.setAssociateId(one.getId());
         chargeRecordService.upload(chargeRecord);
     }
 
