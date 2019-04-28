@@ -5,6 +5,7 @@ import com.itstyle.common.YstCommon;
 import com.itstyle.domain.car.manager.ChargeRecordExcelModel;
 import com.itstyle.domain.car.manager.ChargeRecordExcelModel2;
 import com.itstyle.domain.car.manager.FixedCarManager;
+import com.itstyle.domain.car.manager.MonthCarInfo;
 import com.itstyle.domain.car.manager.enums.CarType;
 import com.itstyle.domain.car.manager.enums.ChargeType;
 import com.itstyle.domain.report.ChargeRecord;
@@ -36,6 +37,8 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
     private ChargeRecordMapper chargeRecordMapper;
     @Resource
     private GlobalSettingService globalSettingService;
+    @Resource
+    private MonthCarInfoService monthCarInfoService;
 
     @PostConstruct
     private void init() {
@@ -52,6 +55,25 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
         PageRequest pageRequest = PageResponse.getPageRequest(page, limit);
         Specification<ChargeRecord> sp = fillSpecification(chargeType, carType, carRealType, carNum, chargePersonnel, startTime, endTime);
         Page<ChargeRecord> all = chargeRecordMapper.findAll(sp, pageRequest);
+        //月租车特殊处理,需要查询关联月租车
+        if (carType == CarType.MONTH_CAR_A) {
+            List<ChargeRecord> monthContent = all.getContent();
+            monthContent.forEach(e -> {
+                        Long associateId = e.getAssociateId();
+                        if (associateId != null) {
+                            MonthCarInfo monthCarInfo = monthCarInfoService.findById(associateId);
+                            if (monthCarInfo != null) {
+                                if (StringUtils.isNotEmpty(monthCarInfo.getCarNum())) {
+                                    e.setCarNum(monthCarInfo.getCarNum());
+                                }
+                                if (monthCarInfo.getCarType() != null) {
+                                    e.setCarType(monthCarInfo.getCarType());
+                                }
+                            }
+                        }
+                    });
+            return new PageResponse<>((long) monthContent.size(), monthContent);
+        }
         return PageResponse.build(all);
     }
 
