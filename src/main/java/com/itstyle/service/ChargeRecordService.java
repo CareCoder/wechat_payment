@@ -58,23 +58,27 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
         //月租车特殊处理,需要查询关联月租车
         if (carType == CarType.MONTH_CAR_A) {
             List<ChargeRecord> monthContent = all.getContent();
-            monthContent.forEach(e -> {
-                        Long associateId = e.getAssociateId();
-                        if (associateId != null) {
-                            MonthCarInfo monthCarInfo = monthCarInfoService.findById(associateId);
-                            if (monthCarInfo != null) {
-                                if (StringUtils.isNotEmpty(monthCarInfo.getCarNum())) {
-                                    e.setCarNum(monthCarInfo.getCarNum());
-                                }
-                                if (monthCarInfo.getCarType() != null) {
-                                    e.setCarRealType(monthCarInfo.getCarType());
-                                }
-                            }
-                        }
-                    });
+            monthCarAssociated(monthContent);
             return new PageResponse<>((long) monthContent.size(), monthContent);
         }
         return PageResponse.build(all);
+    }
+
+    private void monthCarAssociated(List<ChargeRecord> monthContent) {
+        monthContent.forEach(e -> {
+                    Long associateId = e.getAssociateId();
+                    if (associateId != null) {
+                        MonthCarInfo monthCarInfo = monthCarInfoService.findById(associateId);
+                        if (monthCarInfo != null) {
+                            if (StringUtils.isNotEmpty(monthCarInfo.getCarNum())) {
+                                e.setCarNum(monthCarInfo.getCarNum());
+                            }
+                            if (monthCarInfo.getCarType() != null) {
+                                e.setCarRealType(monthCarInfo.getCarType());
+                            }
+                        }
+                    }
+                });
     }
 
     public ChargeRecordStatistics statistics(ChargeType chargeType, CarType carType, CarType carRealType, String carNum, String chargePersonnel, Long startTime, Long endTime) {
@@ -109,6 +113,7 @@ public class ChargeRecordService extends BaseDaoService<ChargeRecord, Long> {
             return FileUtils.buildExcelResponseEntity(data, ChargeRecordExcelModel.class, fileName);
         }else{
             fileName = "月租车明细.xlsx";
+            monthCarAssociated(chargeRecordList);
             List<ChargeRecordExcelModel2> data = chargeRecordList.stream().map(m -> ChargeRecordExcelModel2.convert(m, f)).collect(Collectors.toList());
             return FileUtils.buildExcelResponseEntity(data, ChargeRecordExcelModel2.class, fileName);
         }
