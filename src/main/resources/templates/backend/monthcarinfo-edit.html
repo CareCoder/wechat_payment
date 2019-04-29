@@ -66,7 +66,7 @@
             </div>
             <label class="layui-form-label">缴费月数</label>
             <div class="layui-input-block">
-                <select name="month" lay-filter="month" class="select" lay-verify="type" disabled>
+                <select name="month" lay-filter="month" class="select" lay-verify="type">
                     <option value="1">一个月</option>
                     <option value="2">二个月</option>
                     <option value="3">三个月</option>
@@ -125,6 +125,7 @@
         $("input[name='id']").val(id);
         if (id != '') {
             $("input[name='startTime']").attr("disabled", "disabled");
+            $("select[name='month']").attr("disabled", "disabled");
         }
 
         var carNum = '[[${monthCarInfo?.carNum}]]';
