@@ -101,7 +101,7 @@ public class MonthCarInfoService extends BaseDaoService<MonthCarInfo, Long>{
                 monthCarInfo.setStartTime(now);
             }
             if (month != null) {
-                monthCarInfo.setEndTime(DateUtil.calcAfterMonthTime(now, month));
+                monthCarInfo.setEndTime(DateUtil.calcAfterMonthTime(monthCarInfo.getStartTime(), month));
             }
             monthCarInfo.setCreateTime(new Date(now));
             if(!result.equals("")){
